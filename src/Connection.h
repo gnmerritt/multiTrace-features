@@ -20,10 +20,14 @@ public:
 	Connection();
 	virtual ~Connection();
 
+	float getOutput() {
+		return (ltcs + stcs)*activity;
+	}
+
 	// connection strengths, see Sonntag (1991, pg94)
 	float ltcs, stcs;
 
-	// activity of the Assembly on the presynaptic end
+	// activity of the presynaptic Assembly
 	float activity;
 };
 

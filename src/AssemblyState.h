@@ -4,7 +4,7 @@
  *	Contains the state variables for an Assembly.
  *
  *	  activity -> current activation of the Assembly
- *	  output -> output of the Assembly
+ *	  output -> output of the Assembly (A(t-1))
  *	  fatige -> grows with increasing activation
  *
  *	  Measures of the Assembly's ability to self-activate:
