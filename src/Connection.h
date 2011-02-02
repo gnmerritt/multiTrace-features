@@ -28,7 +28,9 @@ public:
 	Connection() : ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), activity(INITIAL_ACTIVITY) {
 		pthread_mutex_init(&lock, NULL);
 	}
-	virtual ~Connection();
+	virtual ~Connection() {
+		pthread_mutex_destroy(&lock);
+	}
 
 	float getOutput() {
 		pthread_mutex_lock(&lock);

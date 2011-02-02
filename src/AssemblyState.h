@@ -23,6 +23,11 @@ public:
 	AssemblyState();
 	virtual ~AssemblyState();
 
+	//Copy constructor
+	AssemblyState(const AssemblyState &a) :
+		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs), fatigue(a.fatigue) {
+	}
+
 	float activity;
 	float output;
 	float ltcs;

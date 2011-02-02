@@ -9,31 +9,44 @@
 
 #import <cmath>
 
-const float v = 0; // normalization of sensitivity;
+// used in ΔActivity
+const float v = 0.01; // normalization of sensitivity, calculateV()
 const float thetaC = 0;
 const float thetaL = 0;
+
+// used in calculateInput
 const float phi = 0.5; // input resistance
 
+// used in ΔLTCS
 const float deltaLTCS = 0;
 
-SonntagUpdate::SonntagUpdate() {
-	// TODO Auto-generated constructor stub
+// used in ΔSTCS
+const float sigmaG = 0;
+const float sigmaD = 0;
 
-}
-
-SonntagUpdate::~SonntagUpdate() {
-	// TODO Auto-generated destructor stub
-}
+// used in ΔFatigue
+const float thetaG = 0;
+const float thetaD = 0;
 
 /*
- *
+ * Handles the updating of the Assembly state variables, as per the
+ * Sonntag difference equations
  */
-void SonntagUpdate::tick(AssemblyState *state, ConnectionVector *input) {
+void SonntagUpdate::tick(AssemblyState *inState, ConnectionVector *input) {
+	pthread_mutex_lock(&lock);
+
 	// store parameters locally for helper methods
-	currentState = state;
+	currentState = new AssemblyState(*inState);
 	currentInput = input;
 
-	float inputNet = calculateInput();
+	// now add the delta functions to the inState, updating the Assembly
+	inState->output = currentState->activity;
+	inState->activity += calculateDeltaActivity();
+	inState->ltcs += calculateDeltaLTCS();
+	inState->stcs += calculateDeltaSTCS();
+	inState->fatigue += calculateDeltaFatigue();
+
+	pthread_mutex_unlock(&lock);
 }
 
 /*
@@ -45,7 +58,7 @@ float SonntagUpdate::calculateInput() {
 	float netInput = 0;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
-		netInput += *input->getOutput();
+		netInput += (*input)->getOutput();
 	}
 
 	float squashedInput = 1 / (1 + (1 / pow(netInput, phi)));
@@ -54,14 +67,34 @@ float SonntagUpdate::calculateInput() {
 }
 
 /*
- * See the derivations of ^A in SonntagUpdate.h
+ * See the derivations of ΔA in SonntagUpdate.h
  */
 float SonntagUpdate::calculateDeltaActivity() {
-	return 0;
+	float A = currentState->activity;
+	float I = calculateInput();
+	float V = calculateV();
+
+	// equation 4.6, pg79
+	float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow(
+			(1 - A), thetaC)) * (1 - V);
+
+	return deltaA;
 }
 
 /*
- * Trivial, since ^LTCS = 0 at all time points.
+ * From equation 4.3, pg 78
+ * See derivations in SonntagUpdate.h
+ */
+float SonntagUpdate::calculateV() {
+	float L = currentState->ltcs;
+	float S = currentState->stcs;
+	float F = currentState->fatigue;
+
+	return ((L + S)*(1 - F)) / v;
+}
+
+/*
+ * Trivial, since ΔLTCS = 0 at all time points.
  * We aren't modeling internal learning, so this doesn't change
  */
 float SonntagUpdate::calculateDeltaLTCS() {
@@ -72,12 +105,19 @@ float SonntagUpdate::calculateDeltaLTCS() {
  *
  */
 float SonntagUpdate::calculateDeltaSTCS() {
-	return 0;
+	float A = currentState->activity;
+	float S = currentState->stcs;
+
+	return ((sigmaG * A) * pow((1 - S), 2)) - (sigmaD * S);
 }
 
 /*
- *
+ * Similar equation to Fatigue, see calculateDeltaSTCS & derivations
+ * in Sonntag.h
  */
 float SonntagUpdate::calculateDeltaFatigue() {
-	return 0;
+	float A = currentState->activity;
+	float F = currentState->fatigue;
+
+	return (thetaG * A) * pow((1 - F), 2) - (thetaD * F);
 }
