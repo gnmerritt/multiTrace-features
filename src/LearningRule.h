@@ -14,7 +14,7 @@
 
 class LearningRule {
 public:
-	virtual LearningRule() = 0;
+	LearningRule();
 	virtual ~LearningRule();
 
 	virtual void tick() = 0;

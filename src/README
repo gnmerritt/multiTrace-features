@@ -1,0 +1,36 @@
+multiTRACE with Features
+
+Author: Nathan Merritt
+Date: January, 2011
+
+Overview:
+
+The aim of this project is to develop a multiple layer cell-assembly network
+that is capable of general pattern recognition. Initial testing will begin
+with highly controlled, static input patterns. Once the network has been
+configured and is capable of producing the results Sonntag (1991) obtained
+in his dissertation, the networks input layer will be reworked to process
+the results of a SIFT/SURF feature detection algorithm. The key points from
+the vision algorithm will be fed into the network, and hopefully allow it
+to recognize objects in a cognitively inspired manner. 
+
+This directory contains the implementation of the multiTRACE network. test/
+contains the unit tests that were used during development. 
+
+Usage:
+
+none yet.
+
+References:
+
+Evans C (2009) Notes on the OpenSURF Library. Available at: 
+	http://www.chrisevansdev.com.
+
+Lesperance RM-K (1990) The location system: using approximate location and 
+	size information for scene segmentation.
+
+Lowe DG (2004) Distinctive Image Features from Scale-Invariant Keypoints. 
+	International Journal of Computer Vision 60:91-110
+
+Sonntag M (1991) Learning sequences in an associative network: A step 
+	towards cognitive structure.

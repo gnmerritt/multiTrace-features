@@ -8,15 +8,14 @@
 #ifndef UPDATEMODEL_H_
 #define UPDATEMODEL_H_
 
+#include "AssemblyState.h"
+
 class UpdateModel {
 public:
-	virtual UpdateModel(AssemblyState *_state) = 0;
+	UpdateModel();
 	virtual ~UpdateModel();
 
 	virtual void tick() = 0;
-
-public:
-	AssemblyState *state;
 };
 
 #endif /* UPDATEMODEL_H_ */

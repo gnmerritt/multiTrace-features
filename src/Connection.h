@@ -15,8 +15,6 @@
 
 #include <vector>
 
-typedef std::vector<Connection*> ConnectionVector;
-
 class Connection {
 public:
 	Connection();
@@ -28,5 +26,7 @@ public:
 	// activity of the Assembly on the presynaptic end
 	float activity;
 };
+
+typedef std::vector<Connection*> ConnectionVector;
 
 #endif /* CONNECTION_H_ */

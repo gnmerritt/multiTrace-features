@@ -19,13 +19,14 @@
 
 #include <vector>
 
+#include "Assembly.h"
 #include "ConnectionPattern.h"
 
-typedef std::vector<std::vector<Assembly>> AssemblyLayer;
+typedef std::vector<std::vector<Assembly> > AssemblyLayer;
 
 class Layer {
 public:
-	Layer(Layer *above, Layer *below);
+	Layer();
 	virtual ~Layer();
 
 	void tick();
