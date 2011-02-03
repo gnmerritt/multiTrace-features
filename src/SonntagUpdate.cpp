@@ -15,7 +15,8 @@ const float thetaC = 0;
 const float thetaL = 0;
 
 // used in calculateInput
-const float phi = 0.5; // input resistance
+const float phi_pos = 0.5; // input resistance
+const float phi_neg = 0.5;
 
 // used in ΔLTCS
 const float deltaLTCS = 0;
@@ -52,18 +53,32 @@ void SonntagUpdate::tick(AssemblyState *inState, ConnectionVector *input) {
 /*
  * Calculates raw input by finding the linear sum of all inputs (Eq 4.12, pg87)
  * then "squashes" the input to range [0,1] (eq 4.13, pg87)
+ *
+ * "Squashing" is done once for positive and once for negative inputs. Then,
+ * excitatory input is multiplied by the inverse of the inhibitory input to produce
+ * total net input.
+ * See: Sonntag (eq5.6, pg104)
  */
 float SonntagUpdate::calculateInput() {
 	ConnectionVector::iterator input;
-	float netInput = 0;
+	float netPosInput = 0;
+	float netNegInput = 0;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
-		netInput += (*input)->getOutput();
+		float signal = (*input)->getOutput();
+		if (signal > 0) {
+			netPosInput += signal;
+		} else {
+			netNegInput += signal;
+		}
 	}
 
-	float squashedInput = 1 / (1 + (1 / pow(netInput, phi)));
+	float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
+	float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
 
-	return squashedInput;
+	float totalNetInput = posInput * (1 - negInput);
+
+	return totalNetInput;
 }
 
 /*
