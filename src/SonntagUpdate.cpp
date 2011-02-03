@@ -10,24 +10,27 @@
 #import <cmath>
 
 // used in ΔActivity
-const float v = 0.01; // normalization of sensitivity, calculateV()
-const float thetaC = 0;
-const float thetaL = 0;
+const float v = 1.5; // normalization of sensitivity, calculateV()
+// C=Competition, L=Loss
+const float thetaC = 9;
+const float thetaL = 5;
 
 // used in calculateInput
-const float phi_pos = 0.5; // input resistance
-const float phi_neg = 0.5;
+const float phi_pos = 9.0; // input resistance
+const float phi_neg = 5.0;
+const float external_dampening = 0.5;
 
 // used in ΔLTCS
 const float deltaLTCS = 0;
 
 // used in ΔSTCS
-const float sigmaG = 0;
-const float sigmaD = 0;
+// G=Growth, D=Decline
+const float sigmaG = 4;
+const float sigmaD = 0.00015;
 
 // used in ΔFatigue
-const float thetaG = 0;
-const float thetaD = 0;
+const float thetaG = 0.14;
+const float thetaD = 0.0001;
 
 /*
  * Handles the updating of the Assembly state variables, as per the
@@ -56,27 +59,23 @@ void SonntagUpdate::tick(AssemblyState *inState, ConnectionVector *input) {
  *
  * "Squashing" is done once for positive and once for negative inputs. Then,
  * excitatory input is multiplied by the inverse of the inhibitory input to produce
- * total net input.
+ * total net input. Inhibitory input is a measure of the total regional activation
  * See: Sonntag (eq5.6, pg104)
  */
 float SonntagUpdate::calculateInput() {
 	ConnectionVector::iterator input;
 	float netPosInput = 0;
-	float netNegInput = 0;
+	float netNegInput = currentState->regional_activation;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
 		float signal = (*input)->getOutput();
-		if (signal > 0) {
-			netPosInput += signal;
-		} else {
-			netNegInput += signal;
-		}
+		netPosInput += signal;
 	}
 
 	float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
 	float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
 
-	float totalNetInput = posInput * (1 - negInput);
+	float totalNetInput = posInput * (1 - negInput) * (1 - external_dampening);
 
 	return totalNetInput;
 }
@@ -105,7 +104,7 @@ float SonntagUpdate::calculateV() {
 	float S = currentState->stcs;
 	float F = currentState->fatigue;
 
-	return ((L + S)*(1 - F)) / v;
+	return ((L + S) * (1 - F)) / v;
 }
 
 /*

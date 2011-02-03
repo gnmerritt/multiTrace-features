@@ -25,14 +25,18 @@ public:
 
 	//Copy constructor
 	AssemblyState(const AssemblyState &a) :
-		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs), fatigue(a.fatigue) {
+		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs),
+				fatigue(a.fatigue), regional_activation(a.regional_activation) {
 	}
-
+	// multiTRACE variables
 	float activity;
 	float output;
 	float ltcs;
 	float stcs;
 	float fatigue;
+
+	// set by Layer when it calls tick() on each assembly
+	float regional_activation;
 };
 
 #endif /* ASSEMBLYSTATE_H_ */

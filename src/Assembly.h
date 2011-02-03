@@ -25,11 +25,14 @@ public:
 	void setIncomingConnections(ConnectionVector in);
 	void setOutgoingConnections(ConnectionVector out);
 
-	void tick();
+	void tick(float regional_activation);
+
+private:
+	void initializeConnectionStrengths();
 
 private:
 	AssemblyState *state;
-	UpdateModel *model;
+	UpdateModel *updateModel;
 	LearningRule *learningRule;
 	ConnectionVector *input, *output;
 };
