@@ -18,10 +18,16 @@
 #ifndef ASSEMBLYSTATE_H_
 #define ASSEMBLYSTATE_H_
 
+// constant, this is intra-assembly so we don't model it
+const float INITIAL_INTRA_LTCS = 0.5;
+
 class AssemblyState {
 public:
-	AssemblyState();
-	virtual ~AssemblyState();
+	AssemblyState() :
+		ltcs(INITIAL_INTRA_LTCS) {
+	}
+	virtual ~AssemblyState() {
+	}
 
 	//Copy constructor
 	AssemblyState(const AssemblyState &a) :
@@ -31,7 +37,7 @@ public:
 	// multiTRACE variables
 	float activity;
 	float output;
-	float ltcs;
+	const float ltcs;
 	float stcs;
 	float fatigue;
 

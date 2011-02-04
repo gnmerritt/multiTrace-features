@@ -11,7 +11,7 @@
 
 // used in ΔActivity
 const float v = 1.5; // normalization of sensitivity, calculateV()
-// C=Competition, L=Loss
+// C=Competition, L=Loss (exponential decay terms)
 const float thetaC = 9;
 const float thetaL = 5;
 
@@ -27,10 +27,18 @@ const float deltaLTCS = 0;
 // G=Growth, D=Decline
 const float sigmaG = 4;
 const float sigmaD = 0.00015;
+const float STCS_GAIN = 0.8;
 
 // used in ΔFatigue
 const float thetaG = 0.14;
 const float thetaD = 0.0001;
+
+/*
+ * Constructor. Nothing really happens here, but see implicitly called UpdateModel()
+ */
+SonntagUpdate::SonntagUpdate() {
+
+}
 
 /*
  * Handles the updating of the Assembly state variables, as per the
@@ -46,8 +54,7 @@ void SonntagUpdate::tick(AssemblyState *inState, ConnectionVector *input) {
 	// now add the delta functions to the inState, updating the Assembly
 	inState->output = currentState->activity;
 	inState->activity += calculateDeltaActivity();
-	inState->ltcs += calculateDeltaLTCS();
-	inState->stcs += calculateDeltaSTCS();
+	inState->stcs += (calculateDeltaSTCS() * STCS_GAIN);
 	inState->fatigue += calculateDeltaFatigue();
 
 	pthread_mutex_unlock(&lock);
@@ -77,6 +84,8 @@ float SonntagUpdate::calculateInput() {
 
 	float totalNetInput = posInput * (1 - negInput) * (1 - external_dampening);
 
+	printf("totalNetInput: %f\n", totalNetInput);
+
 	return totalNetInput;
 }
 
@@ -92,6 +101,12 @@ float SonntagUpdate::calculateDeltaActivity() {
 	float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow(
 			(1 - A), thetaC)) * (1 - V);
 
+	printf("current A: %f\n", A);
+	printf("current I: %f\n", I);
+	printf("V term: %f\n", V);
+
+	printf("deltaA: %f\n", deltaA);
+
 	return deltaA;
 }
 
@@ -105,14 +120,6 @@ float SonntagUpdate::calculateV() {
 	float F = currentState->fatigue;
 
 	return ((L + S) * (1 - F)) / v;
-}
-
-/*
- * Trivial, since ΔLTCS = 0 at all time points.
- * We aren't modeling internal learning, so this doesn't change
- */
-float SonntagUpdate::calculateDeltaLTCS() {
-	return deltaLTCS;
 }
 
 /*

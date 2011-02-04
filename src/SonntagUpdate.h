@@ -42,8 +42,7 @@
 
 class SonntagUpdate: public UpdateModel {
 public:
-	SonntagUpdate() {
-	}
+	SonntagUpdate();
 	virtual ~SonntagUpdate() {
 	}
 
@@ -53,7 +52,6 @@ private:
 	float calculateInput();
 	float calculateDeltaActivity();
 	float calculateV();
-	float calculateDeltaLTCS();
 	float calculateDeltaSTCS();
 	float calculateDeltaFatigue();
 };

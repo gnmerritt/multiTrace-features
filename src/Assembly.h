@@ -19,11 +19,18 @@
 
 class Assembly {
 public:
-	Assembly(AssemblyState *_state, UpdateModel *_model, LearningRule *_learningRule);
+	Assembly(UpdateModel *_model, LearningRule *_learningRule);
 	virtual ~Assembly();
 
-	void setIncomingConnections(ConnectionVector in);
-	void setOutgoingConnections(ConnectionVector out);
+	void setIncomingConnections(ConnectionVector *in);
+	void setOutgoingConnections(ConnectionVector *out);
+
+	float getActivation() const { // A(t)
+		return state->activity;
+	}
+	float getOutput() const { // A(t-1)
+		return state->output;
+	}
 
 	void tick(float regional_activation);
 
