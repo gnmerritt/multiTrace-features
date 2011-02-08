@@ -1,4 +1,4 @@
-/*
+/**
  * AssemblyIncludes.h
  *
  *	Convenience file to makes #includes in test files easier
