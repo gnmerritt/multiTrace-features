@@ -31,6 +31,18 @@ public:
 	float getOutput() const { // A(t-1)
 		return state->output;
 	}
+	float getLTCS() const { // L(t) (constant)
+		return state->ltcs;
+	}
+	float getSTCS() const { //S(t)
+		return state->stcs;
+	}
+	float getFatigue() const { // F(t)
+		return state->fatigue;
+	}
+	float getRegionalInhibition() const {
+		return state->regional_activation;
+	}
 
 	void tick(float regional_activation);
 

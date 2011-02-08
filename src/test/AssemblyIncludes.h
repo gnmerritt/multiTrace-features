@@ -12,6 +12,6 @@
 
 #include "../Assembly.h"
 #include "../SonntagUpdate.h"
-#include "../HebbianLearning.h"
+#include "../NoLearning.h"
 
 #endif /* ASSEMBLYINCLUDES_H_ */

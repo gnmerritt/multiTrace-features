@@ -33,6 +33,8 @@ const float STCS_GAIN = 0.8;
 const float thetaG = 0.14;
 const float thetaD = 0.0001;
 
+//#define DEBUG_UPDATES
+
 /*
  * Constructor. Nothing really happens here, but see implicitly called UpdateModel()
  */
@@ -84,7 +86,9 @@ float SonntagUpdate::calculateInput() {
 
 	float totalNetInput = posInput * (1 - negInput) * (1 - external_dampening);
 
+#ifdef DEBUG_UPDATES
 	printf("totalNetInput: %f\n", totalNetInput);
+#endif
 
 	return totalNetInput;
 }
@@ -101,11 +105,13 @@ float SonntagUpdate::calculateDeltaActivity() {
 	float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow(
 			(1 - A), thetaC)) * (1 - V);
 
+#ifdef DEBUG_UPDATES
 	printf("current A: %f\n", A);
 	printf("current I: %f\n", I);
 	printf("V term: %f\n", V);
 
 	printf("deltaA: %f\n", deltaA);
+#endif
 
 	return deltaA;
 }
@@ -129,7 +135,13 @@ float SonntagUpdate::calculateDeltaSTCS() {
 	float A = currentState->activity;
 	float S = currentState->stcs;
 
-	return ((sigmaG * A) * pow((1 - S), 2)) - (sigmaD * S);
+	float deltaSTCS = ((sigmaG * A) * pow((1 - S), 2)) - (sigmaD * S);
+
+#ifdef DEBUG_UPDATES
+	printf("deltaSTCS: %f\n", deltaSTCS);
+#endif
+
+	return deltaSTCS;
 }
 
 /*
@@ -140,5 +152,11 @@ float SonntagUpdate::calculateDeltaFatigue() {
 	float A = currentState->activity;
 	float F = currentState->fatigue;
 
-	return (thetaG * A) * pow((1 - F), 2) - (thetaD * F);
+	float deltaFatigue = (thetaG * A) * pow((1 - F), 2) - (thetaD * F);
+
+#ifdef DEBUG_UPDATES
+	printf("deltaFatigue: %f\n", deltaFatigue);
+#endif
+
+	return deltaFatigue;
 }

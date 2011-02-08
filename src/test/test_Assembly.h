@@ -16,10 +16,21 @@
 #include <stdio.h>
 #include <iostream>
 
+#define DEBUG_OUTPUT
+
 Assembly* initializeAssembly();
 
 bool noInput();
 bool singleInput();
-bool multipleInputs;
+bool multipleInputs();
+
+
+
+#ifdef DEBUG_OUTPUT
+	FILE *noInput_f, *singleInput_f, *multipleInputs_f;
+
+	void initializeDebugFiles();
+	void closeDebugFiles();
+#endif
 
 #endif /* TEST_ASSEMBLY_H_ */
