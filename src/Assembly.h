@@ -41,13 +41,14 @@ public:
 		return state->fatigue;
 	}
 	float getRegionalInhibition() const {
-		return state->regional_activation;
+		return state->regional_activation; // set from our Layer by tick()
 	}
 
 	void tick(float regional_activation);
 
 private:
 	void initializeConnectionStrengths();
+	void updateOutgoingConnections();
 
 private:
 	AssemblyState *state;

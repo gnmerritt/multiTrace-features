@@ -7,9 +7,7 @@
 
 #include "Assembly.h"
 
-const float INITIAL_TOTAL_LTCS = 0.5f;
-
-const float STCS_GAIN = 0.0;
+const float INITIAL_TOTAL_LTCS = 0.4f;
 
 Assembly::Assembly(UpdateModel *_model, LearningRule *_learningRule) :
 	state(new AssemblyState()), updateModel(_model), learningRule(_learningRule) {
@@ -33,7 +31,7 @@ void Assembly::tick(float regional_activation) {
 
 	updateModel->tick(state, input);
 
-	// TODO: update outgoing connections
+	updateOutgoingConnections();
 }
 
 /*
@@ -56,8 +54,20 @@ void Assembly::setOutgoingConnections(ConnectionVector *out) {
 }
 
 /*
- * Intra-unit LTCS = 0.5, and doesn't change.
- * So we have 0.5 LTCS to spread among each of our n incoming connections
+ * Sets the activation level of each outgoing connection to our output,
+ * so that we communicate with connected assemblies.
+ */
+void Assembly::updateOutgoingConnections() {
+	ConnectionVector::iterator out;
+
+	for (out = output->begin(); out != output->end(); ++out) {
+		(*out)->setActivity(state->output);
+	}
+}
+
+/*
+ * Intra-unit LTCS doesn't change.
+ * So we have (1-LTCS) to spread among each of our n incoming connections
  */
 void Assembly::initializeConnectionStrengths() {
 	int numConnections = input->size();
@@ -67,7 +77,7 @@ void Assembly::initializeConnectionStrengths() {
 	}
 
 	ConnectionVector::iterator in;
-	float perConnection = INITIAL_TOTAL_LTCS / numConnections;
+	float perConnection = (1-INITIAL_TOTAL_LTCS) / numConnections;
 
 	for (in = input->begin(); in != input->end(); ++in) {
 		(*in)->setLTCS(perConnection);
