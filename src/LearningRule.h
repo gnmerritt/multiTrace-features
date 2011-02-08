@@ -18,13 +18,11 @@ public:
 	LearningRule() {}
 	virtual ~LearningRule() {}
 
-	virtual void tick() = 0;
+	virtual void tick(AssemblyState *state, ConnectionVector *input) = 0;
 
-private:
-	// TODO: not sure if I want to store a reference, or only have one
-	// instance of LearningRule active for all the Assemblies in a Layer
-	AssemblyState *state;
-
+protected:
+	AssemblyState *postSynapticState;
+	ConnectionVector *incomingConnections;
 };
 
 #endif /* LEARNINGRULE_H_ */

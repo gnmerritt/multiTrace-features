@@ -23,7 +23,7 @@ public:
 	NoLearning() {}
 	virtual ~NoLearning() {}
 
-	void tick() {}
+	void tick(AssemblyState *state, ConnectionVector *input) {}
 };
 
 #endif /* NOLEARNING_H_ */
