@@ -1,4 +1,4 @@
-/*
+/**
  * NoLearning.h
  *
  *	Placeholder class for when we don't want the network to automatically update
@@ -8,6 +8,9 @@
  *
  *  Created on: Feb 8, 2011
  *      Author: Nathan Merritt
+ *
+ *  @see LearningRule.h
+ *  @see HebbianLearning.h
  */
 
 #ifndef NOLEARNING_H_

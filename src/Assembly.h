@@ -1,4 +1,4 @@
-/*
+/**
  * Assembly.h
  *
  *	The unit of basic computation in a multiTrace network. Each assembly

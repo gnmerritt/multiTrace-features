@@ -1,4 +1,4 @@
-/*
+/**
  * Connection.h
  *
  *	Model of an inter-Assembly connection. Has long-term and short-term
@@ -59,10 +59,10 @@ public:
 	}
 
 private:
-	// connection strengths, see Sonntag (1991, pg94)
+	/** connection strengths, see Sonntag (1991, pg94) */
 	float ltcs, stcs;
 
-	// activity of the presynaptic Assembly
+	/** activity of the presynaptic Assembly */
 	float activity;
 
 	pthread_mutex_t lock;

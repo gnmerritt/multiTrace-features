@@ -1,4 +1,4 @@
-/*
+/**
  * Assembly.cpp
  *
  *  Created on: Feb 2, 2011
@@ -22,9 +22,11 @@ Assembly::~Assembly() {
 	// TODO Auto-generated destructor stub
 }
 
-/*
+/**
  * Passes our state & connections to the UpdateModel
  *
+ * @param regional_activation sum of A(t) for all Assemblies in this layer
+ * @see UpdateModel
  */
 void Assembly::tick(float regional_activation) {
 	state->regional_activation = regional_activation;
@@ -34,9 +36,11 @@ void Assembly::tick(float regional_activation) {
 	updateOutgoingConnections();
 }
 
-/*
+/**
  * Sets up a pre-configured array of input Connections, and assigns them
  * an initial LTCS based on in.size()
+ *
+ * @param in a pointer to a ConnectionVector which we will use as input
  */
 void Assembly::setIncomingConnections(ConnectionVector *in) {
 	input = in;
@@ -44,16 +48,18 @@ void Assembly::setIncomingConnections(ConnectionVector *in) {
 	initializeConnectionStrengths();
 }
 
-/*
+/**
  * Processing of weights is handled post-synaptically, so we don't need
  * to do anything to these connections except update their activity
  * level when we tick().
+ *
+ * @param out a pointer to a ConnectionVector which we will keep updated with our activity
  */
 void Assembly::setOutgoingConnections(ConnectionVector *out) {
 	output = out;
 }
 
-/*
+/**
  * Sets the activation level of each outgoing connection to our output,
  * so that we communicate with connected assemblies.
  */
@@ -65,9 +71,11 @@ void Assembly::updateOutgoingConnections() {
 	}
 }
 
-/*
+/**
  * Intra-unit LTCS doesn't change.
  * So we have (1-LTCS) to spread among each of our n incoming connections
+ *
+ * @see updateOutgoingConnections()
  */
 void Assembly::initializeConnectionStrengths() {
 	int numConnections = input->size();

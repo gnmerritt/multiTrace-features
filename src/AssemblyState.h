@@ -1,4 +1,4 @@
-/*
+/**
  * AssemblyState.h
  *
  *	Contains the state variables for an Assembly.
@@ -13,12 +13,13 @@
  *
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt
+ *
+ *  @see Assembly.h
  */
 
 #ifndef ASSEMBLYSTATE_H_
 #define ASSEMBLYSTATE_H_
 
-// constant, this is intra-assembly so we don't model it
 const float INITIAL_INTRA_LTCS = 0.5;
 
 class AssemblyState {
@@ -34,14 +35,14 @@ public:
 		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs),
 				fatigue(a.fatigue), regional_activation(a.regional_activation) {
 	}
-	// multiTRACE variables
+	/** multiTRACE variables */
 	float activity;
 	float output;
-	const float ltcs;
+	const float ltcs; /** const because we are not modeling intra-Assembly learning */
 	float stcs;
 	float fatigue;
 
-	// set by Layer when it calls tick() on each assembly
+	/** set by Layer when it calls tick() on each assembly */
 	float regional_activation;
 };
 

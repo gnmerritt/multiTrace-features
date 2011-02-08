@@ -1,4 +1,4 @@
-/*
+/**
  * HebbianLearning.h
  *
  *	Changes long term connection strength for each connection according

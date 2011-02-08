@@ -1,4 +1,4 @@
-/*
+/**
  * LearningRule.h
  *
  *	Abstract class for updating connection strength of a given Assembly.

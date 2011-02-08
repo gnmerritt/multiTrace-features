@@ -1,4 +1,4 @@
-/*
+/**
  * HebbianLearning.cpp
  *
  *  Created on: Feb 2, 2011

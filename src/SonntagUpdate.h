@@ -1,4 +1,4 @@
-/*
+/**
  * SonntagUpdate.h
  *
  *	Updates the Assembly state according to the equations derived in

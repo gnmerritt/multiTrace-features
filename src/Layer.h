@@ -1,4 +1,4 @@
-/*
+/**
  * Layer.h
  *
  *	A Layer manages a 2d array of Assemblies. It constructs them, sets up

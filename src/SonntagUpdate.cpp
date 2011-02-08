@@ -9,42 +9,45 @@
 
 #import <cmath>
 
-// used in ΔActivity
-const float v = 1.5; // normalization of sensitivity, calculateV()
-// C=Competition, L=Loss (exponential decay terms)
+/** used in ΔActivity */
+const float v = 1.5; /** normalization of sensitivity, calculateV() */
+/** C=Competition, L=Loss (exponential decay terms) */
 const float thetaC = 9;
 const float thetaL = 5;
 
-// used in calculateInput
-const float phi_pos = 9.0; // input resistance
+/** used in calculateInput */
+const float phi_pos = 9.0; /** input resistance */
 const float phi_neg = 5.0;
 const float external_dampening = 0.5;
 
-// used in ΔLTCS
+/** used in ΔLTCS */
 const float deltaLTCS = 0;
 
-// used in ΔSTCS
-// G=Growth, D=Decline
+/** used in ΔSTCS
+ G=Growth, D=Decline */
 const float sigmaG = 4;
 const float sigmaD = 0.00015;
 const float STCS_GAIN = 0.8;
 
-// used in ΔFatigue
+/** used in ΔFatigue */
 const float thetaG = 0.14;
 const float thetaD = 0.0001;
 
 //#define DEBUG_UPDATES
 
-/*
+/**
  * Constructor. Nothing really happens here, but see implicitly called UpdateModel()
  */
 SonntagUpdate::SonntagUpdate() {
 
 }
 
-/*
+/**
  * Handles the updating of the Assembly state variables, as per the
  * Sonntag difference equations
+ *
+ * @param inState pointer to the Assembly's state we're updating
+ * @param input pointer to the Assembly's vector of input connections
  */
 void SonntagUpdate::tick(AssemblyState *inState, ConnectionVector *input) {
 	pthread_mutex_lock(&lock);
@@ -62,7 +65,7 @@ void SonntagUpdate::tick(AssemblyState *inState, ConnectionVector *input) {
 	pthread_mutex_unlock(&lock);
 }
 
-/*
+/**
  * Calculates raw input by finding the linear sum of all inputs (Eq 4.12, pg87)
  * then "squashes" the input to range [0,1] (eq 4.13, pg87)
  *
@@ -93,8 +96,10 @@ float SonntagUpdate::calculateInput() {
 	return totalNetInput;
 }
 
-/*
+/**
  * See the derivations of ΔA in SonntagUpdate.h
+ *
+ * @see SonntagUpdate.h
  */
 float SonntagUpdate::calculateDeltaActivity() {
 	float A = currentState->activity;
@@ -116,7 +121,7 @@ float SonntagUpdate::calculateDeltaActivity() {
 	return deltaA;
 }
 
-/*
+/**
  * From equation 4.3, pg 78
  * See derivations in SonntagUpdate.h
  */
@@ -128,8 +133,8 @@ float SonntagUpdate::calculateV() {
 	return ((L + S) * (1 - F)) / v;
 }
 
-/*
- *
+/**
+ * @see calculateDeltaFatigue()
  */
 float SonntagUpdate::calculateDeltaSTCS() {
 	float A = currentState->activity;
@@ -145,8 +150,10 @@ float SonntagUpdate::calculateDeltaSTCS() {
 }
 
 /*
- * Similar equation to Fatigue, see calculateDeltaSTCS & derivations
+ * Similar equation to STCS, see calculateDeltaSTCS & derivations
  * in Sonntag.h
+ *
+ * @see calculateDeltaSTCS()
  */
 float SonntagUpdate::calculateDeltaFatigue() {
 	float A = currentState->activity;

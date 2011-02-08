@@ -1,4 +1,4 @@
-/*
+/**
  * UpdateModel.h
  *
  *	Abstract class responsible for updating the state variables of an
