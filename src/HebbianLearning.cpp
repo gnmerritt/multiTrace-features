@@ -7,7 +7,8 @@
 
 #include "HebbianLearning.h"
 
-HebbianLearning::HebbianLearning() {
+HebbianLearning::HebbianLearning(AssemblyState *state, ConnectionVector *input) :
+	LearningRule(state, input) {
 	// TODO Auto-generated constructor stub
 
 }
@@ -19,13 +20,9 @@ HebbianLearning::~HebbianLearning() {
 /**
  * Main method for handling Hebbian update of input connections to an Assembly
  *
- * @param state the state of the post-synaptic Assembly we're updating
- * @param input a pointer to the incoming connections onto this Assembly
  * @see LearningRule.h
  */
-void HebbianLearning::tick(AssemblyState *state, ConnectionVector *input) {
-	postSynapticState = state;
-	incomingConnections = input;
+void HebbianLearning::tick() {
 
 	// TODO: think about this
 }

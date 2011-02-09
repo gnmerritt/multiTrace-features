@@ -13,11 +13,10 @@ const float FIRING_THRESH = 0.7f; /** the level at which an Assembly is consider
  *
  * @return a pointer to the configured Assembly
  */
-Assembly* initializeAssembly() {
+Assembly_t* initializeAssembly() {
 	SonntagUpdate *update = new SonntagUpdate();
-	NoLearning *learningRule = new NoLearning();
 
-	Assembly *assembly = new Assembly(update, learningRule);
+	Assembly_t *assembly = new Assembly_t(update);
 
 	return assembly;
 }
@@ -31,7 +30,7 @@ Assembly* initializeAssembly() {
  * @return true if activation stays at 0
  */
 bool noInput() {
-	Assembly *a = initializeAssembly();
+	Assembly_t *a = initializeAssembly();
 	int i;
 
 	for (i = 0; i < 20; ++i) {
@@ -62,7 +61,7 @@ bool noInput() {
  * @return true if the Assembly becomes highly activated (fires) after this input
  */
 bool singleInput() {
-	Assembly *a = initializeAssembly();
+	Assembly_t *a = initializeAssembly();
 	int i;
 
 	// awkward, I know...
@@ -111,7 +110,7 @@ bool singleInput() {
  * @return true if the Assembly fires twice (2nd time after the second input)
  */
 bool multipleInputs() {
-	Assembly *a = initializeAssembly();
+	Assembly_t *a = initializeAssembly();
 	int i;
 
 	const int SECOND_INPUT = 250;
@@ -164,7 +163,7 @@ bool multipleInputs() {
  * @return true if the Assembly does not fully fire (some increase in Activity is okay)
  */
 bool testInhibition() {
-	Assembly *a = initializeAssembly();
+	Assembly_t *a = initializeAssembly();
 	int i;
 
 	ConnectionVector input;

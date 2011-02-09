@@ -15,10 +15,13 @@
 
 class LearningRule {
 public:
-	LearningRule() {}
-	virtual ~LearningRule() {}
+	LearningRule(AssemblyState *state, ConnectionVector *input) :
+		postSynapticState(state), incomingConnections(input) {
+	}
+	virtual ~LearningRule() {
+	}
 
-	virtual void tick(AssemblyState *state, ConnectionVector *input) = 0;
+	virtual void tick() = 0;
 
 protected:
 	AssemblyState *postSynapticState;

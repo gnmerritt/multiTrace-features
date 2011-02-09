@@ -20,7 +20,7 @@
 
 #define DEBUG_OUTPUT
 
-Assembly* initializeAssembly();
+Assembly_t* initializeAssembly();
 
 bool noInput();
 bool singleInput();

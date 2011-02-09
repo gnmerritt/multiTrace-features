@@ -17,9 +17,10 @@
 #include "UpdateModel.h"
 #include "Connection.h"
 
+template <class LearningTemplate>
 class Assembly {
 public:
-	Assembly(UpdateModel *_model, LearningRule *_learningRule);
+	Assembly(UpdateModel *_model);
 	virtual ~Assembly();
 
 	void setIncomingConnections(ConnectionVector *in);
@@ -49,11 +50,12 @@ public:
 private:
 	void initializeConnectionStrengths();
 	void updateOutgoingConnections();
+	void initializeLearningRule();
 
 private:
 	AssemblyState *state;
 	UpdateModel *updateModel;
-	LearningRule *learningRule;
+	LearningTemplate *learningRule;
 	ConnectionVector *input, *output;
 };
 

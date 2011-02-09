@@ -20,10 +20,14 @@
 
 class NoLearning: public LearningRule {
 public:
-	NoLearning() {}
-	virtual ~NoLearning() {}
+	NoLearning(AssemblyState *state, ConnectionVector *input) :
+		LearningRule(state, input) {
+	}
+	virtual ~NoLearning() {
+	}
 
-	void tick(AssemblyState *state, ConnectionVector *input) {}
+	void tick() {
+	}
 };
 
 #endif /* NOLEARNING_H_ */

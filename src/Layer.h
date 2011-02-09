@@ -20,16 +20,29 @@
 #include <vector>
 
 #include "Assembly.h"
+#include "Assembly.cpp" // for template class functions
 #include "ConnectionPattern.h"
 
-typedef std::vector<std::vector<Assembly> > AssemblyLayer;
+// types of LearningRules
+#include "NoLearning.h"
+#include "HebbianLearning.h"
+
+typedef Assembly<NoLearning> NonLearningAssembly;
+typedef Assembly<HebbianLearning> HebbianAssembly;
+
+typedef NonLearningAssembly Assembly_t; // which Assembly are we currently using
+
+typedef std::vector<std::vector<Assembly_t> > AssemblyLayer;
 
 class Layer {
 public:
-	Layer();
+	Layer(int rows, int cols);
 	virtual ~Layer();
 
 	void tick();
+
+private:
+	float calculateRegionalInhibition();
 
 private:
 	AssemblyLayer assemblies;

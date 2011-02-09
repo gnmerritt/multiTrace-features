@@ -15,12 +15,12 @@
 
 #include "LearningRule.h"
 
-class HebbianLearning : public LearningRule {
+class HebbianLearning: public LearningRule {
 public:
-	HebbianLearning();
+	HebbianLearning(AssemblyState *state, ConnectionVector *input);
 	virtual ~HebbianLearning();
 
-	void tick(AssemblyState *state, ConnectionVector *input);
+	void tick();
 };
 
 #endif /* HEBBIANLEARNING_H_ */

@@ -14,4 +14,6 @@
 #include "../SonntagUpdate.h"
 #include "../NoLearning.h"
 
+#include "../Layer.h"
+
 #endif /* ASSEMBLYINCLUDES_H_ */
