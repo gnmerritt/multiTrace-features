@@ -21,7 +21,8 @@
 
 #include "Assembly.h"
 #include "Assembly.cpp" // for template class functions
-#include "ConnectionPattern.h"
+#include "UNR.h"
+#include "SonntagUpdate.h"
 
 // types of LearningRules
 #include "NoLearning.h"
@@ -32,7 +33,8 @@ typedef Assembly<HebbianLearning> HebbianAssembly;
 
 typedef NonLearningAssembly Assembly_t; // which Assembly are we currently using
 
-typedef std::vector<std::vector<Assembly_t> > AssemblyLayer;
+typedef std::vector<Assembly_t> AssemblyVector;
+typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
 
 class Layer {
 public:

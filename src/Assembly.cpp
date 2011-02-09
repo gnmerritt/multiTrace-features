@@ -22,7 +22,10 @@ Assembly<LearningTemplate>::Assembly(UpdateModel *_model) :
 
 template <class LearningTemplate>
 Assembly<LearningTemplate>::~Assembly() {
-	// TODO Auto-generated destructor stub
+	delete input;
+	delete output;
+	delete state;
+	delete learningRule;
 }
 
 template <class LearningTemplate>
