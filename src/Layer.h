@@ -18,6 +18,7 @@
 #define LAYER_H_
 
 #include <vector>
+#include <utility>
 
 #include "Assembly.h"
 #include "Assembly.cpp" // for template class functions
@@ -28,26 +29,41 @@
 #include "NoLearning.h"
 #include "HebbianLearning.h"
 
+// convenient naming
 typedef Assembly<NoLearning> NonLearningAssembly;
 typedef Assembly<HebbianLearning> HebbianAssembly;
 
-typedef NonLearningAssembly Assembly_t; // which Assembly are we currently using
+// which Assembly are we currently using
+typedef NonLearningAssembly Assembly_t;
 
+// holds our Assemblies (of type Assembly_t)
 typedef std::vector<Assembly_t> AssemblyVector;
 typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
 
+// used for connecting AssemblyLayers of different Layers
+typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
+typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
+
+template<class ConnectionTemplate> /** Should inherit from ConnectionPattern */
 class Layer {
 public:
-	Layer(int rows, int cols);
+	Layer(int rows, int cols, int layerID);
 	virtual ~Layer();
 
 	void tick();
 
-private:
 	float calculateRegionalInhibition();
 
 private:
+
+
+	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
+
+private:
 	AssemblyLayer assemblies;
+	const int layerID; /** 0 is the input layer */
 };
 
 #endif /* LAYER_H_ */

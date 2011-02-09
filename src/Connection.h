@@ -25,40 +25,16 @@ const float INITIAL_ACTIVITY = 0;
 
 class Connection {
 public:
-	Connection() : ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), activity(INITIAL_ACTIVITY) {
-		pthread_mutex_init(&lock, NULL);
-	}
-	virtual ~Connection() {
-		pthread_mutex_destroy(&lock);
-	}
+	Connection();
+	virtual ~Connection();
 
-	float getOutput() {
-		pthread_mutex_lock(&lock);
-		float output = (ltcs + stcs)*activity;
-		pthread_mutex_unlock(&lock);
+	float getOutput();
 
-		return output;
-	}
+	void setLTCS(float _ltcs);
+	void setSTCS(float _stcs);
+	void setActivity(float _activity);
 
-	void setLTCS(float _ltcs) {
-		pthread_mutex_lock(&lock);
-		ltcs = _ltcs;
-		pthread_mutex_unlock(&lock);
-	}
-
-	void setSTCS(float _stcs) {
-		pthread_mutex_lock(&lock);
-		stcs = _stcs;
-		pthread_mutex_unlock(&lock);
-	}
-
-	void setActivity(float _activity) {
-		pthread_mutex_lock(&lock);
-		activity = _activity;
-		pthread_mutex_unlock(&lock);
-	}
-
-private:
+public:
 	/** connection strengths, see Sonntag (1991, pg94) */
 	float ltcs, stcs;
 

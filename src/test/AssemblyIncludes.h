@@ -15,5 +15,7 @@
 #include "../NoLearning.h"
 
 #include "../Layer.h"
+#include "../Layer.cpp" // for template class includes
+#include "../UNR.h"
 
 #endif /* ASSEMBLYINCLUDES_H_ */

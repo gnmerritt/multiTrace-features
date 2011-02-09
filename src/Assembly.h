@@ -17,11 +17,14 @@
 #include "UpdateModel.h"
 #include "Connection.h"
 
-template <class LearningTemplate>
+template<class LearningTemplate>
 class Assembly {
 public:
 	Assembly(UpdateModel *_model);
 	virtual ~Assembly();
+
+	void addIncomingConnection(Connection *newInput);
+	void addOutgoingConnection(Connection *newOutput);
 
 	void setIncomingConnections(ConnectionVector *in);
 	void setOutgoingConnections(ConnectionVector *out);

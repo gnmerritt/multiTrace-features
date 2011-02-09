@@ -9,9 +9,9 @@
 
 const float INITIAL_TOTAL_LTCS = 0.4f;
 
-template <class LearningTemplate>
+template<class LearningTemplate>
 Assembly<LearningTemplate>::Assembly(UpdateModel *_model) :
-	state(new AssemblyState()), updateModel(_model) {
+	state(new AssemblyState()), updateModel(_model), learningRule(0) {
 
 	// set these as empty by default
 	input = new ConnectionVector();
@@ -20,17 +20,41 @@ Assembly<LearningTemplate>::Assembly(UpdateModel *_model) :
 	initializeLearningRule();
 }
 
-template <class LearningTemplate>
+template<class LearningTemplate>
 Assembly<LearningTemplate>::~Assembly() {
-	delete input;
-	delete output;
-	delete state;
-	delete learningRule;
 }
 
-template <class LearningTemplate>
+/**
+ * Used to wire up inter-Assembly connections
+ *
+ * @see connectAssemblyToAssembly()
+ * @param newInput Connection added to our input vector
+ * @sideeffect reinitializes the initial connection strengths (undoes learning)
+ */
+template<class LearningTemplate>
+void Assembly<LearningTemplate>::addIncomingConnection(Connection *newInput) {
+	input->push_back(newInput);
+
+	initializeConnectionStrengths();
+}
+
+/**
+ * Used to wire up inter-Assembly connections
+ *
+ * @see connectAssemblyToAssembly()
+ * @param newOutput Connection added to our output vector
+ */
+template<class LearningTemplate>
+void Assembly<LearningTemplate>::addOutgoingConnection(Connection *newOutput) {
+	output->push_back(newOutput);
+}
+
+/**
+ * Run the learning rule constructor
+ */
+template<class LearningTemplate>
 void Assembly<LearningTemplate>::initializeLearningRule() {
-	delete(learningRule);
+	delete (learningRule);
 
 	learningRule = new LearningTemplate(state, input);
 }
@@ -44,7 +68,7 @@ void Assembly<LearningTemplate>::initializeLearningRule() {
  * @see UpdateModel.h
  * @see LearningRule.h
  */
-template <class LearningTemplate>
+template<class LearningTemplate>
 void Assembly<LearningTemplate>::tick(float regional_activation) {
 	state->regional_activation = regional_activation;
 
@@ -61,9 +85,9 @@ void Assembly<LearningTemplate>::tick(float regional_activation) {
  *
  * @param in a pointer to a ConnectionVector which we will use as input
  */
-template <class LearningTemplate>
+template<class LearningTemplate>
 void Assembly<LearningTemplate>::setIncomingConnections(ConnectionVector *in) {
-	delete(input);
+	delete (input);
 
 	input = in;
 
@@ -78,9 +102,9 @@ void Assembly<LearningTemplate>::setIncomingConnections(ConnectionVector *in) {
  *
  * @param out a pointer to a ConnectionVector which we will keep updated with our activity
  */
-template <class LearningTemplate>
+template<class LearningTemplate>
 void Assembly<LearningTemplate>::setOutgoingConnections(ConnectionVector *out) {
-	delete(output);
+	delete (output);
 	output = out;
 }
 
@@ -88,7 +112,7 @@ void Assembly<LearningTemplate>::setOutgoingConnections(ConnectionVector *out) {
  * Sets the activation level of each outgoing connection to our output,
  * so that we communicate with connected assemblies.
  */
-template <class LearningTemplate>
+template<class LearningTemplate>
 void Assembly<LearningTemplate>::updateOutgoingConnections() {
 	ConnectionVector::iterator out;
 
@@ -103,7 +127,7 @@ void Assembly<LearningTemplate>::updateOutgoingConnections() {
  *
  * @see updateOutgoingConnections()
  */
-template <class LearningTemplate>
+template<class LearningTemplate>
 void Assembly<LearningTemplate>::initializeConnectionStrengths() {
 	int numConnections = input->size();
 
@@ -112,7 +136,7 @@ void Assembly<LearningTemplate>::initializeConnectionStrengths() {
 	}
 
 	ConnectionVector::iterator in;
-	float perConnection = (1-INITIAL_TOTAL_LTCS) / numConnections;
+	float perConnection = (1 - INITIAL_TOTAL_LTCS) / numConnections;
 
 	for (in = input->begin(); in != input->end(); ++in) {
 		(*in)->setLTCS(perConnection);
