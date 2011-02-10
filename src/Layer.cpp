@@ -81,6 +81,7 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLaye
 	AssemblyLayer *projecting = sendingLayer.first;
 	int projectingID = sendingLayer.second;
 
+	// do all the connecting
 	for (unsigned int row = 0; row < projecting->size(); ++row) {
 		for (unsigned int col = 0; col < projecting->at(row).size(); ++col) {
 			AssemblyLocation location(row, col, projectingID);
@@ -88,6 +89,17 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLaye
 			LocalizedAssembly sendingAssembly(&(projecting->at(row)[col]), &location);
 
 			connectAssemblyToLayer(sendingAssembly, receivingLayer);
+		}
+	}
+
+	// and now recalculate the incoming connection weights in the receivingLayer
+	AssemblyLayer::iterator row;
+	AssemblyVector::iterator col;
+	AssemblyLayer *receiving = receivingLayer.first;
+
+	for (row = receiving->begin(); row != receiving->end(); ++row) {
+		for (col = row->begin(); col != row->end(); ++col) {
+			col->initializeIncConnectionStrengths();
 		}
 	}
 }

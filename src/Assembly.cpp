@@ -34,8 +34,6 @@ Assembly<LearningTemplate>::~Assembly() {
 template<class LearningTemplate>
 void Assembly<LearningTemplate>::addIncomingConnection(Connection *newInput) {
 	input->push_back(newInput);
-
-	initializeConnectionStrengths();
 }
 
 /**
@@ -92,7 +90,7 @@ void Assembly<LearningTemplate>::setIncomingConnections(ConnectionVector *in) {
 	input = in;
 
 	initializeLearningRule();
-	initializeConnectionStrengths();
+	initializeIncConnectionStrengths();
 }
 
 /**
@@ -128,7 +126,7 @@ void Assembly<LearningTemplate>::updateOutgoingConnections() {
  * @see updateOutgoingConnections()
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::initializeConnectionStrengths() {
+void Assembly<LearningTemplate>::initializeIncConnectionStrengths() {
 	int numConnections = input->size();
 
 	if (numConnections == 0) {

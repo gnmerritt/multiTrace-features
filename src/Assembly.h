@@ -50,8 +50,9 @@ public:
 
 	void tick(float regional_activation);
 
+	void initializeIncConnectionStrengths(); // danger: will destroy all learning
+
 private:
-	void initializeConnectionStrengths();
 	void updateOutgoingConnections();
 	void initializeLearningRule();
 

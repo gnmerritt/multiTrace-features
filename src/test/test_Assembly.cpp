@@ -305,6 +305,7 @@ int main() {
 	}
 
 	printf("30 x 30 Layer, no input...");
+	fflush(stdout);
 	if (noInputLayer30_30()) {
 		printf("passed!\n");
 	} else {
