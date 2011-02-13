@@ -15,11 +15,6 @@
 
 #include "AssemblyIncludes.h"
 
-#include <stdio.h>
-#include <iostream>
-
-//#define DEBUG_OUTPUT
-
 Assembly_t* initializeAssembly();
 
 // Assembly-level
@@ -28,17 +23,14 @@ bool singleInput();
 bool multipleInputs();
 bool testInhibition();
 
-// Layer-level
-bool noInputLayer1_1();
-bool noInputLayer30_30();
-
 #ifdef DEBUG_OUTPUT
 	FILE *noInput_f, *singleInput_f, *multipleInputs_f, *testInhibition_f;
 
-	FILE *noInputLayer1_1_f;
+	void initializeAssemblyDebugFiles();
+	void closeAssemblyDebugFiles();
 
-	void initializeDebugFiles();
-	void closeDebugFiles();
+	char* assembly_tick = "%d\t%f\t%f\t%f\t%f\t%f\n";
+	char* assembly_init = "Time\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
 #endif
 
 #endif /* TEST_ASSEMBLY_H_ */

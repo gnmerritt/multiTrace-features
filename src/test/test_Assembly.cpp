@@ -34,8 +34,8 @@ bool noInput() {
 	int i;
 
 	for (i = 0; i < 20; ++i) {
-#ifdef DEBUG_OUTPUT
-		fprintf(noInput_f, "%d\t%f\t%f\t%f\t%f\t%f\n", i, a->getActivation(), a->getLTCS(),
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+		fprintf(noInput_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
 				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
 #endif
 
@@ -75,8 +75,8 @@ bool singleInput() {
 	float assembly_max = 0;
 
 	for (i = 0; i < 500; ++i) {
-#ifdef DEBUG_OUTPUT
-		fprintf(singleInput_f, "%d\t%f\t%f\t%f\t%f\t%f\n", i, a->getActivation(), a->getLTCS(),
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+		fprintf(singleInput_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
 				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
 #endif
 
@@ -125,8 +125,8 @@ bool multipleInputs() {
 	float assembly_max = 0;
 
 	for (i = 0; i < 500; ++i) {
-#ifdef DEBUG_OUTPUT
-		fprintf(multipleInputs_f, "%d\t%f\t%f\t%f\t%f\t%f\n", i, a->getActivation(), a->getLTCS(),
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+		fprintf(multipleInputs_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
 				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
 #endif
 
@@ -172,8 +172,8 @@ bool testInhibition() {
 	float assembly_max = 0;
 
 	for (i = 0; i < 500; ++i) {
-#ifdef DEBUG_OUTPUT
-		fprintf(testInhibition_f, "%d\t%f\t%f\t%f\t%f\t%f\n", i, a->getActivation(), a->getLTCS(),
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+		fprintf(testInhibition_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
 				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
 #endif
 
@@ -192,60 +192,22 @@ bool testInhibition() {
 	return true;
 }
 
-bool noInputLayer1_1() {
-	Layer<UNR> *layer = new Layer<UNR> (1, 1, 0); // 1x1, layerID=0
-	int i;
-
-	for (i = 0; i < 500; ++i) {
-		float avgOutput = layer->calculateRegionalInhibition();
-
-		//printf("layer avg output at time %d: %f\n", i, avgOutput);
-
-		if (avgOutput != (float) 0.0f) {
-			return false;
-		}
-
-		layer->tick();
-	}
-
-	return true;
-}
-
-bool noInputLayer30_30() {
-	Layer<UNR> *layer = new Layer<UNR> (30, 30, 0); // 1x1, layerID=0
-	int i;
-
-	for (i = 0; i < 500; ++i) {
-		layer->tick();
-
-		float avgOutput = layer->calculateRegionalInhibition();
-
-		//printf("layer avg output at time %d: %f\n", i, avgOutput);
-
-		if (avgOutput > (float) 0.1f) {
-			return false;
-		}
-	}
-
-	return true;
-}
-
-#ifdef DEBUG_OUTPUT
-void initializeDebugFiles() {
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+void initializeAssemblyDebugFiles() {
 	noInput_f = fopen("/tmp/noInput.xls", "w");
-	fprintf(noInput_f, "Time\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n");
+	fprintf(noInput_f, assembly_init);
 
 	singleInput_f = fopen("/tmp/singleInput.xls", "w");
-	fprintf(singleInput_f, "Time\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n");
+	fprintf(singleInput_f, assembly_init);
 
 	multipleInputs_f = fopen("/tmp/multipleInputs.xls", "w");
-	fprintf(multipleInputs_f, "Time\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n");
+	fprintf(multipleInputs_f, assembly_init);
 
 	testInhibition_f = fopen("/tmp/testInhibition.xls", "w");
-	fprintf(testInhibition_f, "Time\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n");
+	fprintf(testInhibition_f, assembly_init);
 }
 
-void closeDebugFiles() {
+void closeAssemblyDebugFiles() {
 	fclose(noInput_f);
 	fclose(singleInput_f);
 	fclose(multipleInputs_f);
@@ -253,68 +215,3 @@ void closeDebugFiles() {
 }
 #endif
 
-/** Runs the unit tests, reporting results to stdout!
- *
- * @see noInput()
- * @see singleInput()
- * @see multipleInputs()
- * @see testInhibition()
- */
-int main() {
-#ifdef DEBUG_OUTPUT
-	initializeDebugFiles();
-#endif
-
-	printf("Assembly-level tests:\n\n");
-
-	printf("No Input baseline test...");
-	if (noInput()) {
-		printf("passed!\n");
-	} else {
-		printf("failed!\n");
-	}
-
-	printf("Single Input fire then decay test...");
-	if (singleInput()) {
-		printf("passed!\n");
-	} else {
-		printf("failed!\n");
-	}
-
-	printf("Double Input, fire & fire then decay test...");
-	if (multipleInputs()) {
-		printf("passed!\n");
-	} else {
-		printf("failed!\n");
-	}
-
-	printf("Regional inhbition test: no firing, constant max input...");
-	if (testInhibition()) {
-		printf("passed!\n");
-	} else {
-		printf("failed!\n");
-	}
-
-	printf("\nLayer-level tests:\n\n");
-
-	printf("1 x 1 Layer, no input...");
-	if (noInputLayer1_1()) {
-		printf("passed!\n");
-	} else {
-		printf("failed!\n");
-	}
-
-	printf("30 x 30 Layer, no input...");
-	fflush(stdout);
-	if (noInputLayer30_30()) {
-		printf("passed!\n");
-	} else {
-		printf("failed!\n");
-	}
-
-#ifdef DEBUG_OUTPUT
-	closeDebugFiles();
-#endif
-
-	return 0;
-}
