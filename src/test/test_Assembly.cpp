@@ -9,6 +9,8 @@
 
 const float FIRING_THRESH = 0.7f; /** the level at which an Assembly is considered fully active */
 
+static int assemblyCounter = 0;
+
 /** Initialize all the components of an assembly, so we can test it
  *
  * @return a pointer to the configured Assembly
@@ -16,7 +18,9 @@ const float FIRING_THRESH = 0.7f; /** the level at which an Assembly is consider
 Assembly_t* initializeAssembly() {
 	SonntagUpdate *update = new SonntagUpdate();
 
-	Assembly_t *assembly = new Assembly_t(update);
+	assemblyCounter++;
+
+	Assembly_t *assembly = new Assembly_t(assemblyCounter, update);
 
 	return assembly;
 }
@@ -34,11 +38,6 @@ bool noInput() {
 	int i;
 
 	for (i = 0; i < 20; ++i) {
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-		fprintf(noInput_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
-				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
-#endif
-
 		float out = a->getOutput();
 		a->tick(0);
 
@@ -75,11 +74,6 @@ bool singleInput() {
 	float assembly_max = 0;
 
 	for (i = 0; i < 500; ++i) {
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-		fprintf(singleInput_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
-				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
-#endif
-
 		float out = a->getOutput();
 		a->tick(0);
 		assembly_last = out;
@@ -125,11 +119,6 @@ bool multipleInputs() {
 	float assembly_max = 0;
 
 	for (i = 0; i < 500; ++i) {
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-		fprintf(multipleInputs_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
-				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
-#endif
-
 		float out = a->getOutput();
 
 		a->tick(0);
@@ -172,11 +161,6 @@ bool testInhibition() {
 	float assembly_max = 0;
 
 	for (i = 0; i < 500; ++i) {
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-		fprintf(testInhibition_f, assembly_tick, i, a->getActivation(), a->getLTCS(),
-				a->getSTCS(), a->getFatigue(), a->getRegionalInhibition());
-#endif
-
 		float out = a->getOutput();
 		a->tick(99); /** inhibition maximized here */
 
@@ -191,27 +175,4 @@ bool testInhibition() {
 
 	return true;
 }
-
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-void initializeAssemblyDebugFiles() {
-	noInput_f = fopen("/tmp/noInput.xls", "w");
-	fprintf(noInput_f, assembly_init);
-
-	singleInput_f = fopen("/tmp/singleInput.xls", "w");
-	fprintf(singleInput_f, assembly_init);
-
-	multipleInputs_f = fopen("/tmp/multipleInputs.xls", "w");
-	fprintf(multipleInputs_f, assembly_init);
-
-	testInhibition_f = fopen("/tmp/testInhibition.xls", "w");
-	fprintf(testInhibition_f, assembly_init);
-}
-
-void closeAssemblyDebugFiles() {
-	fclose(noInput_f);
-	fclose(singleInput_f);
-	fclose(multipleInputs_f);
-	fclose(testInhibition_f);
-}
-#endif
 

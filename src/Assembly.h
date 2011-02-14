@@ -12,15 +12,25 @@
 #ifndef ASSEMBLY_H_
 #define ASSEMBLY_H_
 
+#include <string>
+#include <cstring>
+#include <sstream>
+
 #include "AssemblyState.h"
 #include "LearningRule.h"
 #include "UpdateModel.h"
 #include "Connection.h"
 
+static const int MINIMUM_FULL_ID = 1000000;
+static const int ROW_ID = 100000; // row is middle 3 digits nnn,___,nnn
+static const int COLUMN_ID = 100; // column is last three digits
+
+#define DEBUG_ASSEMBLY_OUTPUT
+
 template<class LearningTemplate>
 class Assembly {
 public:
-	Assembly(UpdateModel *_model);
+	Assembly(int _id, UpdateModel *_model);
 	virtual ~Assembly();
 
 	void addIncomingConnection(Connection *newInput);
@@ -28,6 +38,25 @@ public:
 
 	void setIncomingConnections(ConnectionVector *in);
 	void setOutgoingConnections(ConnectionVector *out);
+
+	int getId() const {
+		return id;
+	}
+	int getLayer() const {
+		if (id < MINIMUM_FULL_ID)
+			return 0;
+		return id - getRow() - getCol();
+	}
+	int getRow() const {
+		if (id < MINIMUM_FULL_ID)
+			return 0;
+		return (id % ROW_ID) - getCol();
+	}
+	int getCol() const {
+		if (id < MINIMUM_FULL_ID)
+			return 0;
+		return id % COLUMN_ID;
+	}
 
 	float getActivation() const { // A(t)
 		return state->activity;
@@ -57,10 +86,18 @@ private:
 	void initializeLearningRule();
 
 private:
+	int id; /** unique in a network, contains row,col,layerId @see getAssemblyID */
+
+	int timestep; /** how many times tick() has been called */
+
 	AssemblyState *state;
 	UpdateModel *updateModel;
 	LearningTemplate *learningRule;
 	ConnectionVector *input, *output;
+
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+	FILE *tick_f;
+#endif
 };
 
 #endif /* ASSEMBLY_H_ */

@@ -15,6 +15,8 @@
 
 #include "AssemblyIncludes.h"
 
+#define DEBUG_ASSEMBLY_OUTPUT
+
 Assembly_t* initializeAssembly();
 
 // Assembly-level
@@ -22,15 +24,5 @@ bool noInput();
 bool singleInput();
 bool multipleInputs();
 bool testInhibition();
-
-#ifdef DEBUG_OUTPUT
-	FILE *noInput_f, *singleInput_f, *multipleInputs_f, *testInhibition_f;
-
-	void initializeAssemblyDebugFiles();
-	void closeAssemblyDebugFiles();
-
-	char* assembly_tick = "%d\t%f\t%f\t%f\t%f\t%f\n";
-	char* assembly_init = "Time\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
-#endif
 
 #endif /* TEST_ASSEMBLY_H_ */

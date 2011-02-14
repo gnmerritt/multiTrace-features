@@ -9,19 +9,39 @@
 
 const float INITIAL_TOTAL_LTCS = 0.4f;
 
+// used by debug printf's
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+const std::string assembly_tick = "%d\t%f\t%f\t%f\t%f\t%f\n";
+const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
+#endif
+
 template<class LearningTemplate>
-Assembly<LearningTemplate>::Assembly(UpdateModel *_model) :
-	state(new AssemblyState()), updateModel(_model), learningRule(0) {
+Assembly<LearningTemplate>::Assembly(int _id, UpdateModel *_model) :
+	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model), learningRule(0) {
 
 	// set these as empty by default
 	input = new ConnectionVector();
 	output = new ConnectionVector();
 
 	initializeLearningRule();
+
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+	std::stringstream out;
+	out << "/tmp/assembly_" << getId() << ".xls";
+
+	std::string filename = out.str();
+
+	tick_f = fopen(filename.c_str(), "w");
+
+	fprintf(tick_f, "%s", assembly_init.c_str());
+#endif
 }
 
 template<class LearningTemplate>
 Assembly<LearningTemplate>::~Assembly() {
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+	fclose(tick_f);
+#endif
 }
 
 /**
@@ -68,13 +88,23 @@ void Assembly<LearningTemplate>::initializeLearningRule() {
  */
 template<class LearningTemplate>
 void Assembly<LearningTemplate>::tick(float regional_activation) {
+	// update our internal state with layer data
 	state->regional_activation = regional_activation;
 
+	// tick the internal state
 	updateModel->tick(state, input);
 
+	// adjust incoming connections
 	learningRule->tick();
 
+	// push our activity to our outgoing connections
 	updateOutgoingConnections();
+
+	// log timestep activity to our debug file in /tmp
+#ifdef DEBUG_ASSEMBLY_OUTPUT
+	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
+			getFatigue(), getRegionalInhibition());
+#endif
 }
 
 /**

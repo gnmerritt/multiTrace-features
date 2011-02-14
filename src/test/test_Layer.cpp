@@ -8,7 +8,7 @@
 #include "test_Layer.h"
 
 bool noInputLayer1_1() {
-	Layer<UNR> *layer = new Layer<UNR> (1, 1, 0); // 1x1, layerID=0
+	Layer<UNR> *layer = new Layer<UNR> (1, 1, 1); // 1x1, layerID=1
 	int i;
 
 	for (i = 0; i < 500; ++i) {
@@ -27,7 +27,7 @@ bool noInputLayer1_1() {
 }
 
 bool noInputLayer30_30() {
-	Layer<UNR> *layer = new Layer<UNR> (30, 30, 0); // 1x1, layerID=0
+	Layer<UNR> *layer = new Layer<UNR> (5, 5, 1); // 1x1, layerID=1
 	int i;
 
 	for (i = 0; i < 500; ++i) {

@@ -20,7 +20,7 @@
  */
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
-	layerID(_layerID) {
+	layerID(_layerID), connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
 	// TODO: make this threaded
 	SonntagUpdate *updateModel = new SonntagUpdate();
@@ -32,7 +32,9 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 		assemblies.push_back(AssemblyVector());
 
 		for (int curCol = 0; curCol < cols; ++curCol) {
-			Assembly_t *a = new Assembly_t(updateModel);
+			int id = getAssemblyID(curRow, curCol);
+
+			Assembly_t *a = new Assembly_t(id, updateModel);
 			assemblies.back().push_back(*a);
 		}
 	}
@@ -81,6 +83,9 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLaye
 	AssemblyLayer *projecting = sendingLayer.first;
 	int projectingID = sendingLayer.second;
 
+	// initialize the random variable here
+	srand( time(NULL) );
+
 	// do all the connecting
 	for (unsigned int row = 0; row < projecting->size(); ++row) {
 		for (unsigned int col = 0; col < projecting->at(row).size(); ++col) {
@@ -120,8 +125,6 @@ void Layer<ConnectionTemplate>::connectAssemblyToLayer(LocalizedAssembly sender,
 	int receivingID = receivingLayer.second;
 
 	AssemblyLocation sendingLoc = *sender.second;
-
-	ConnectionTemplate connectionPattern;
 
 	for (unsigned int row = 0; row < receiving->size(); ++row) {
 		for (unsigned int col = 0; col < receiving->at(row).size(); ++col) {
@@ -183,4 +186,23 @@ float Layer<ConnectionTemplate>::calculateRegionalInhibition() {
 	}
 
 	return sum / numAssemblies;
+}
+
+/*
+ * Calculates the unique identifier for the Assembly at row,col in this Layer.
+ * Currently implemented as an integer with three parts: (layerID, row, col) = (___,___,___)
+ * Limits us to 100 Layers of 100x100 (1 million Assemblies)
+ *
+ * @param row Assembly's row in AssemblyLayer
+ * @param col Assembly's col in AssemblyLayer
+ * @return the unique identification number of the Assembly at (col,row,layerID)
+ */
+template<class ConnectionTemplate>
+int Layer<ConnectionTemplate>::getAssemblyID(int row, int col) {
+	int layer_field = layerID * 1000000;
+	int row_field = row * 1000;
+
+	int id = layer_field + row_field + col;
+
+	return id;
 }

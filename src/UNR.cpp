@@ -7,11 +7,10 @@
 
 #include "UNR.h"
 
-const float PERCENT_CONNECTED = 0.9;
+const float PERCENT_CONNECTED = 0.85;
 const int MAX_CONNECTION_Z = 1;
 
 UNR::UNR() {
-	srand( time(NULL) );
 }
 
 UNR::~UNR() {
@@ -36,7 +35,7 @@ bool UNR::areConnected(AssemblyLocation sender, AssemblyLocation receiver) {
 		return false;
 	}
 
-	float random = rand()/RAND_MAX;
+	float random = rand()/double(RAND_MAX);
 
-	return random < PERCENT_CONNECTED;
+	return (random < PERCENT_CONNECTED);
 }

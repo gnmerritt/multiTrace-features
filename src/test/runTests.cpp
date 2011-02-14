@@ -16,14 +16,6 @@
  * @see testInhibition()
  */
 int main() {
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-	initializeAssemblyDebugFiles();
-#endif
-
-#ifdef DEBUG_LAYER_OUTPUT
-
-#endif
-
 	printf("Assembly-level tests:\n\n");
 
 	printf("No Input baseline test...");
@@ -70,10 +62,6 @@ int main() {
 	} else {
 		printf("failed!\n");
 	}
-
-#ifdef DEBUG_ASSEMBLY_OUTPUT
-	closeAssemblyDebugFiles();
-#endif
 
 	return 0;
 }

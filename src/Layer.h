@@ -55,15 +55,17 @@ public:
 	float calculateRegionalInhibition();
 
 private:
-
-
 	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
+	int getAssemblyID(int row, int col);
+
 private:
 	AssemblyLayer assemblies;
 	const int layerID; /** 0 is the input layer */
+
+	ConnectionTemplate connectionPattern;
 };
 
 #endif /* LAYER_H_ */
