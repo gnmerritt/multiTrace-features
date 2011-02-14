@@ -40,13 +40,18 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 	}
 
 	// and wire up our intra-Layer connections
-	AssemblyLayer_ID thisLayer(&assemblies, layerID);
+	AssemblyLayer_ID thisLayer = getAssemblyLayer();
 	connectLayerToLayer(thisLayer, thisLayer);
 }
 
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::~Layer() {
 	delete &assemblies;
+}
+
+template<class ConnectionTemplate>
+AssemblyLayer_ID Layer<ConnectionTemplate>::getAssemblyLayer() {
+	return AssemblyLayer_ID(&assemblies, layerID);
 }
 
 /**
@@ -166,7 +171,7 @@ void Layer<ConnectionTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
 template<class ConnectionTemplate>
 float Layer<ConnectionTemplate>::calculateRegionalInhibition() {
 	double sum = 0;
-	int numAssemblies = assemblies.size()*assemblies.front().size();
+	int numAssemblies = assemblies.size() * assemblies.front().size();
 
 	AssemblyLayer::iterator row;
 	AssemblyVector::iterator col;

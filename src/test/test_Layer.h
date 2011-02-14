@@ -13,5 +13,6 @@
 // Layer-level
 bool noInputLayer1_1();
 bool noInputLayer30_30();
+bool singleInputLayer10_10();
 
 #endif /* TEST_LAYER_H_ */

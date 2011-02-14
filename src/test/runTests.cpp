@@ -63,5 +63,13 @@ int main() {
 		printf("failed!\n");
 	}
 
+	printf("10 x 10 Layer, partial input at t=0 to t=10...");
+	fflush(stdout);
+	if (singleInputLayer10_10()) {
+		printf("passed!\n");
+	} else {
+		printf("failed!\n");
+	}
+
 	return 0;
 }

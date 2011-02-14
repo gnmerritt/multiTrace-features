@@ -56,6 +56,8 @@ public:
 		return lastActivationAverage;
 	}
 
+	AssemblyLayer_ID getAssemblyLayer();
+
 private:
 	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
@@ -67,7 +69,7 @@ private:
 
 private:
 	AssemblyLayer assemblies;
-	const int layerID; /** 0 is the input layer */
+	const int layerID; /** 1 is the input layer */
 
 	float lastActivationAverage;
 
