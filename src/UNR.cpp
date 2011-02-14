@@ -11,6 +11,7 @@ const float PERCENT_CONNECTED = 0.85;
 const int MAX_CONNECTION_Z = 1;
 
 UNR::UNR() {
+	srand( time(NULL) );
 }
 
 UNR::~UNR() {

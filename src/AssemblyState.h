@@ -25,15 +25,15 @@ const float INITIAL_INTRA_LTCS = 0.5;
 class AssemblyState {
 public:
 	AssemblyState() :
-		ltcs(INITIAL_INTRA_LTCS) {
+		activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0) {
 	}
 	virtual ~AssemblyState() {
 	}
 
 	//Copy constructor
 	AssemblyState(const AssemblyState &a) :
-		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs),
-				fatigue(a.fatigue), regional_activation(a.regional_activation) {
+		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs), fatigue(a.fatigue),
+				regional_activation(a.regional_activation) {
 	}
 	/** multiTRACE variables */
 	float activity;

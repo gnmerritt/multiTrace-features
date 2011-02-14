@@ -52,18 +52,24 @@ public:
 
 	void tick();
 
-	float calculateRegionalInhibition();
+	float getLastRegionalActivation() const {
+		return lastActivationAverage;
+	}
 
 private:
 	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
+	float calculateRegionalInhibition();
+
 	int getAssemblyID(int row, int col);
 
 private:
 	AssemblyLayer assemblies;
 	const int layerID; /** 0 is the input layer */
+
+	float lastActivationAverage;
 
 	ConnectionTemplate connectionPattern;
 };

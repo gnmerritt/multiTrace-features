@@ -83,9 +83,6 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLaye
 	AssemblyLayer *projecting = sendingLayer.first;
 	int projectingID = sendingLayer.second;
 
-	// initialize the random variable here
-	srand( time(NULL) );
-
 	// do all the connecting
 	for (unsigned int row = 0; row < projecting->size(); ++row) {
 		for (unsigned int col = 0; col < projecting->at(row).size(); ++col) {
@@ -168,15 +165,14 @@ void Layer<ConnectionTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
  */
 template<class ConnectionTemplate>
 float Layer<ConnectionTemplate>::calculateRegionalInhibition() {
-	float sum = 0;
-	int numAssemblies = 0;
+	double sum = 0;
+	int numAssemblies = assemblies.size()*assemblies.front().size();
 
 	AssemblyLayer::iterator row;
 	AssemblyVector::iterator col;
 
 	for (row = assemblies.begin(); row != assemblies.end(); ++row) {
 		for (col = row->begin(); col != row->end(); ++col) {
-			numAssemblies++;
 			sum += col->getOutput();
 		}
 	}
@@ -185,7 +181,9 @@ float Layer<ConnectionTemplate>::calculateRegionalInhibition() {
 		numAssemblies = 1;
 	}
 
-	return sum / numAssemblies;
+	lastActivationAverage = sum / numAssemblies;
+
+	return lastActivationAverage;
 }
 
 /*

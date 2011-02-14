@@ -50,7 +50,7 @@ public:
 	int getRow() const {
 		if (id < MINIMUM_FULL_ID)
 			return 0;
-		return (id % ROW_ID) - getCol();
+		return ((id % ROW_ID) - getCol())/1000;
 	}
 	int getCol() const {
 		if (id < MINIMUM_FULL_ID)
