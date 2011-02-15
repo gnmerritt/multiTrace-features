@@ -19,7 +19,8 @@ contains the unit tests that were used during development.
 
 Usage:
 
-none yet.
+Build is managed by Eclipse, will produce 'multiTrace vision' binary that 
+contains the unit tests
 
 References can be found here:
 http://www.mendeley.com/groups/840881/multitrace-object-recognition/papers/
