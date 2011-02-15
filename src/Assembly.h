@@ -25,7 +25,7 @@ static const int MINIMUM_FULL_ID = 1000000;
 static const int ROW_ID = 100000; // row is middle 3 digits nnn,___,nnn
 static const int COLUMN_ID = 100; // column is last three digits
 
-//#define DEBUG_ASSEMBLY_OUTPUT
+#define DEBUG_ASSEMBLY_OUTPUT
 
 template<class LearningTemplate>
 class Assembly {

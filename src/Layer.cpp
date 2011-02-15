@@ -46,7 +46,6 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::~Layer() {
-	delete &assemblies;
 }
 
 template<class ConnectionTemplate>

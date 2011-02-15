@@ -28,8 +28,9 @@
  *		ΔA = (A + I (1 - A)) (1 - A) V - (A^thetaL + A (1 - A)^thetaC) (1 - V)
  *
  *	Delta Fatigue/STCS equations similar, differ only by parameter:
- *		ΔS = sigmaG A (1 - S)^2 - sigmaD*S
- *		ΔF = thetaG A (1 - F)^2 - thetaD*F
+ *	NOTE: changed both (1-S) and (1-F) to linear terms (were squared) after (Forbell & Chown 2000)
+ *		ΔS = sigmaG A (1 - S) - sigmaD*S
+ *		ΔF = thetaG A (1 - F) - thetaD*F
  *
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt

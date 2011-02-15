@@ -3,6 +3,9 @@
  *
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt
+ *
+ *  Parameters modified as suggested in:
+ *  Chown E (2002) Reminiscence and arousal: a connectionist model.
  */
 
 #include "SonntagUpdate.h"
@@ -25,12 +28,12 @@ const float deltaLTCS = 0;
 
 /** used in ΔSTCS
  G=Growth, D=Decline */
-const float sigmaG = 4;
-const float sigmaD = 0.00015;
-const float STCS_GAIN = 0.8;
+const float sigmaG = 0.1;
+const float sigmaD = 0.0001;
+const float STCS_GAIN = 0.5;
 
 /** used in ΔFatigue */
-const float thetaG = 0.14;
+const float thetaG = 0.007;
 const float thetaD = 0.0001;
 
 //#define DEBUG_UPDATES
@@ -140,7 +143,7 @@ float SonntagUpdate::calculateDeltaSTCS() {
 	float A = currentState->activity;
 	float S = currentState->stcs;
 
-	float deltaSTCS = ((sigmaG * A) * pow((1 - S), 2)) - (sigmaD * S);
+	float deltaSTCS = ((sigmaG * A) * (1 - S)) - (sigmaD * S);
 
 #ifdef DEBUG_UPDATES
 	printf("deltaSTCS: %f\n", deltaSTCS);
@@ -151,7 +154,9 @@ float SonntagUpdate::calculateDeltaSTCS() {
 
 /*
  * Similar equation to STCS, see calculateDeltaSTCS & derivations
- * in Sonntag.h
+ * in SonntagUpdate.h
+ *
+ * Squared terms removed, @see SonntagUpdate.h
  *
  * @see calculateDeltaSTCS()
  */
@@ -159,7 +164,7 @@ float SonntagUpdate::calculateDeltaFatigue() {
 	float A = currentState->activity;
 	float F = currentState->fatigue;
 
-	float deltaFatigue = (thetaG * A) * pow((1 - F), 2) - (thetaD * F);
+	float deltaFatigue = ((thetaG * A) * (1 - F)) - (thetaD * F);
 
 #ifdef DEBUG_UPDATES
 	printf("deltaFatigue: %f\n", deltaFatigue);
