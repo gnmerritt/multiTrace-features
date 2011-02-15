@@ -73,7 +73,7 @@ bool singleInput() {
 	float assembly_last;
 	float assembly_max = 0;
 
-	for (i = 0; i < 500; ++i) {
+	for (i = 0; i < 1500; ++i) {
 		float out = a->getOutput();
 		a->tick(0);
 		assembly_last = out;
@@ -118,7 +118,7 @@ bool multipleInputs() {
 	float assembly_last;
 	float assembly_max = 0;
 
-	for (i = 0; i < 500; ++i) {
+	for (i = 0; i < 1500; ++i) {
 		float out = a->getOutput();
 
 		a->tick(0);
