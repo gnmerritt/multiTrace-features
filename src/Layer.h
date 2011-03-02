@@ -44,6 +44,8 @@ typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
 typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
 typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
+#define DEBUG_LAYER_OUTPUT
+
 template<class ConnectionTemplate> /** Should inherit from ConnectionPattern */
 class Layer {
 public:
@@ -54,6 +56,10 @@ public:
 
 	float getLastRegionalActivation() const {
 		return lastActivationAverage;
+	}
+
+	int getId() const {
+		return layerID;
 	}
 
 	AssemblyLayer_ID getAssemblyLayer();
@@ -70,8 +76,13 @@ private:
 	const int layerID; /** 1 is the input layer */
 
 	float lastActivationAverage;
+	int timestep;
 
 	ConnectionTemplate connectionPattern;
+
+#ifdef DEBUG_LAYER_OUTPUT
+	FILE *layer_tick_f;
+#endif
 };
 
 #endif /* LAYER_H_ */

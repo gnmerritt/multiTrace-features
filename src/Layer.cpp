@@ -1,4 +1,3 @@
-
 /*
  * Layer.cpp
  *
@@ -7,6 +6,11 @@
  */
 
 #include "Layer.h"
+
+#ifdef DEBUG_LAYER_OUTPUT
+const std::string layer_tick = "%d\t%f\n";
+const std::string layer_init = "Timestep\tAverageActivity\n";
+#endif
 
 /**
  * Builds a layer that has size rows*cols. This entails the following steps:
@@ -22,7 +26,8 @@
  */
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
-	layerID(_layerID), lastActivationAverage(0.0f), connectionPattern(ConnectionTemplate()) {
+	layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
+			connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
 	// TODO: make this threaded
 	SonntagUpdate *updateModel = new SonntagUpdate();
@@ -44,6 +49,17 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 	// and wire up our intra-Layer connections
 	AssemblyLayer_ID thisLayer = getAssemblyLayer();
 	connectLayerToLayer(thisLayer, thisLayer);
+
+#ifdef DEBUG_LAYER_OUTPUT
+	std::stringstream out;
+	out << "/tmp/layer_" << getId() << ".xls";
+
+	std::string filename = out.str();
+
+	layer_tick_f = fopen(filename.c_str(), "w");
+
+	fprintf(layer_tick_f, "%s", layer_init.c_str());
+#endif
 }
 
 template<class ConnectionTemplate>
@@ -74,6 +90,11 @@ float Layer<ConnectionTemplate>::tick() {
 		}
 	}
 
+	// print to our debug file
+#ifdef DEBUG_LAYER_OUTPUT
+	fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
+#endif
+
 	// update the average activation (used for Regional Inhibition)
 	int numAssemblies = assemblies.size() * assemblies.front().size();
 	if (numAssemblies == 0) {
@@ -81,6 +102,8 @@ float Layer<ConnectionTemplate>::tick() {
 	}
 
 	lastActivationAverage = currentActivation_sum / numAssemblies;
+
+	timestep++;
 
 	return lastActivationAverage;
 }
@@ -96,8 +119,8 @@ float Layer<ConnectionTemplate>::tick() {
  *  @param receiver Layer&ID we're connecting to (afferent)
  */
 template<class ConnectionTemplate>
-void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLayer,
-		AssemblyLayer_ID receivingLayer) {
+void Layer<ConnectionTemplate>::connectLayerToLayer(
+		AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer) {
 	AssemblyLayer *projecting = sendingLayer.first;
 	int projectingID = sendingLayer.second;
 
@@ -106,7 +129,8 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLaye
 		for (unsigned int col = 0; col < projecting->at(row).size(); ++col) {
 			AssemblyLocation location(row, col, projectingID);
 
-			LocalizedAssembly sendingAssembly(&(projecting->at(row)[col]), &location);
+			LocalizedAssembly sendingAssembly(&(projecting->at(row)[col]),
+					&location);
 
 			connectAssemblyToLayer(sendingAssembly, receivingLayer);
 		}
@@ -134,8 +158,8 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(AssemblyLayer_ID sendingLaye
  * @param receivingLayer the Layer we're connecting to
  */
 template<class ConnectionTemplate>
-void Layer<ConnectionTemplate>::connectAssemblyToLayer(LocalizedAssembly sender,
-		AssemblyLayer_ID receivingLayer) {
+void Layer<ConnectionTemplate>::connectAssemblyToLayer(
+		LocalizedAssembly sender, AssemblyLayer_ID receivingLayer) {
 	AssemblyLayer *receiving = receivingLayer.first;
 	int receivingID = receivingLayer.second;
 
