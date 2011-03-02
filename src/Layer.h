@@ -50,7 +50,7 @@ public:
 	Layer(int rows, int cols, int layerID);
 	virtual ~Layer();
 
-	void tick();
+	float tick();
 
 	float getLastRegionalActivation() const {
 		return lastActivationAverage;
@@ -62,8 +62,6 @@ private:
 	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
-
-	float calculateRegionalInhibition();
 
 	int getAssemblyID(int row, int col);
 

@@ -39,6 +39,10 @@ public:
 	void setIncomingConnections(ConnectionVector *in);
 	void setOutgoingConnections(ConnectionVector *out);
 
+	float tick(float regional_activation);
+
+	void initializeIncConnectionStrengths(); // danger: will destroy all learning
+
 	int getId() const {
 		return id;
 	}
@@ -76,10 +80,6 @@ public:
 	float getRegionalInhibition() const {
 		return state->regional_activation; // set from our Layer by tick()
 	}
-
-	void tick(float regional_activation);
-
-	void initializeIncConnectionStrengths(); // danger: will destroy all learning
 
 private:
 	void updateOutgoingConnections();

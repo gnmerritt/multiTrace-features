@@ -87,7 +87,7 @@ void Assembly<LearningTemplate>::initializeLearningRule() {
  * @see LearningRule.h
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::tick(float regional_activation) {
+float Assembly<LearningTemplate>::tick(float regional_activation) {
 	// update our internal state with layer data
 	state->regional_activation = regional_activation;
 
@@ -105,6 +105,9 @@ void Assembly<LearningTemplate>::tick(float regional_activation) {
 	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
 			getFatigue(), getRegionalInhibition());
 #endif
+
+	// return our activation to our Layer
+	return state->output;
 }
 
 /**

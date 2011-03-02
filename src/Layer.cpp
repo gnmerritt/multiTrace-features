@@ -1,3 +1,4 @@
+
 /*
  * Layer.cpp
  *
@@ -17,10 +18,11 @@
  *
  * @param rows number of rows in the Layer
  * @param cols number of columns in the layer
+ * @param _layerID the UID of this layer within the Cortex
  */
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
-	layerID(_layerID), connectionPattern(ConnectionTemplate()) {
+	layerID(_layerID), lastActivationAverage(0.0f), connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
 	// TODO: make this threaded
 	SonntagUpdate *updateModel = new SonntagUpdate();
@@ -46,6 +48,7 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::~Layer() {
+
 }
 
 template<class ConnectionTemplate>
@@ -58,17 +61,28 @@ AssemblyLayer_ID Layer<ConnectionTemplate>::getAssemblyLayer() {
  * all the Assemblies within this Layer.
  */
 template<class ConnectionTemplate>
-void Layer<ConnectionTemplate>::tick() {
+float Layer<ConnectionTemplate>::tick() {
 	AssemblyLayer::iterator row;
 	AssemblyVector::iterator col;
 
-	float averageActivation = calculateRegionalInhibition();
+	float currentActivation_sum = 0;
 
+	// tick all the Assemblies, and remember their output
 	for (row = assemblies.begin(); row != assemblies.end(); ++row) {
 		for (col = row->begin(); col != row->end(); ++col) {
-			col->tick(averageActivation);
+			currentActivation_sum += col->tick(lastActivationAverage);
 		}
 	}
+
+	// update the average activation (used for Regional Inhibition)
+	int numAssemblies = assemblies.size() * assemblies.front().size();
+	if (numAssemblies == 0) {
+		numAssemblies = 1;
+	}
+
+	lastActivationAverage = currentActivation_sum / numAssemblies;
+
+	return lastActivationAverage;
 }
 
 /** Iterate over the AssemblyLater and check connectivity between
@@ -159,35 +173,6 @@ void Layer<ConnectionTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
 
 	sending->addOutgoingConnection(c);
 	receiving->addIncomingConnection(c);
-}
-
-/**
- * Iterators over all the Assemblies in our Layer, and averages their
- * output. This serves as a measure of overall activity in the Layer.
- *
- * @returns average of Assembly->getOutput() over the entire Layer
- */
-template<class ConnectionTemplate>
-float Layer<ConnectionTemplate>::calculateRegionalInhibition() {
-	double sum = 0;
-	int numAssemblies = assemblies.size() * assemblies.front().size();
-
-	AssemblyLayer::iterator row;
-	AssemblyVector::iterator col;
-
-	for (row = assemblies.begin(); row != assemblies.end(); ++row) {
-		for (col = row->begin(); col != row->end(); ++col) {
-			sum += col->getOutput();
-		}
-	}
-
-	if (numAssemblies == 0) {
-		numAssemblies = 1;
-	}
-
-	lastActivationAverage = sum / numAssemblies;
-
-	return lastActivationAverage;
 }
 
 /*

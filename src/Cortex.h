@@ -12,10 +12,26 @@
 #ifndef CORTEX_H_
 #define CORTEX_H_
 
+#include <vector>
+
+#include "UNR.h"
+#include "Layer.h"
+
+typedef std::vector<Layer<UNR> > LayerVector;
+
 class Cortex {
 public:
 	Cortex();
 	virtual ~Cortex();
+
+	void buildLayers(); // not run automatically by the constructor
+
+	void tick(); // will tick all the layers
+
+private:
+	LayerVector layers;
+
+	float averageLayerActivation;
 };
 
 #endif /* CORTEX_H_ */
