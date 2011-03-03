@@ -14,12 +14,13 @@
 
 #include <vector>
 
-#include "UNR.h"
 #include "Layer.h"
 
-typedef std::vector<Layer<UNR> > LayerVector;
-
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Cortex {
+	typedef std::vector<Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate> > LayerVector;
+	// NOTE: you will need to declare iterators as 'typename LayerVector::iterator foo'
+
 public:
 	Cortex();
 	virtual ~Cortex();

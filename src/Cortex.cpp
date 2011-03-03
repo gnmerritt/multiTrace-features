@@ -7,12 +7,14 @@
 
 #include "Cortex.h"
 
-Cortex::Cortex() {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Cortex() {
 	// TODO Auto-generated constructor stub
 
 }
 
-Cortex::~Cortex() {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Cortex() {
 	// TODO Auto-generated destructor stub
 }
 
@@ -23,8 +25,9 @@ Cortex::~Cortex() {
  * specific Assembly output (for the GUI)
  *
  */
-void Cortex::tick() {
-	LayerVector::iterator layer;
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
+	typename LayerVector::iterator layer; // c++ is stupid. this won't compile w/out the 'typename' preface
 
 	float activation_sum = 0;
 
@@ -44,6 +47,7 @@ void Cortex::tick() {
  * Layers to make, how they're connected and their size.
  *
  */
-void Cortex::buildLayers() {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::buildLayers() {
 
 }

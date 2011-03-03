@@ -46,7 +46,7 @@ typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
 #define DEBUG_LAYER_OUTPUT
 
-template<class ConnectionTemplate> /** Should inherit from ConnectionPattern */
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Layer {
 public:
 	Layer(int rows, int cols, int layerID);
@@ -74,6 +74,8 @@ private:
 private:
 	AssemblyLayer assemblies;
 	const int layerID; /** 1 is the input layer */
+
+	int rows, cols;
 
 	float lastActivationAverage;
 	int timestep;

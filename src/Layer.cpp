@@ -24,13 +24,13 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
  * @param cols number of columns in the layer
  * @param _layerID the UID of this layer within the Cortex
  */
-template<class ConnectionTemplate>
-Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
-	layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows, int _cols, int _layerID) :
+	layerID(_layerID), rows(_rows), cols(_cols), lastActivationAverage(0.0f), timestep(0),
 			connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
 	// TODO: make this threaded
-	SonntagUpdate *updateModel = new SonntagUpdate();
+	UpdateTemplate *updateModel = new UpdateTemplate();
 
 	assemblies.reserve(rows);
 
@@ -62,16 +62,16 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 #endif
 }
 
-template<class ConnectionTemplate>
-Layer<ConnectionTemplate>::~Layer() {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Layer() {
 
 #ifdef DEBUG_LAYER_OUTPUT
 	fclose(layer_tick_f);
 #endif
 }
 
-template<class ConnectionTemplate>
-AssemblyLayer_ID Layer<ConnectionTemplate>::getAssemblyLayer() {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+AssemblyLayer_ID Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyLayer() {
 	return AssemblyLayer_ID(&assemblies, layerID);
 }
 
@@ -79,8 +79,8 @@ AssemblyLayer_ID Layer<ConnectionTemplate>::getAssemblyLayer() {
  * The main update method! Calculates regional inhibition, then ticks
  * all the Assemblies within this Layer.
  */
-template<class ConnectionTemplate>
-float Layer<ConnectionTemplate>::tick() {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+float Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
 	AssemblyLayer::iterator row;
 	AssemblyVector::iterator col;
 
@@ -121,8 +121,8 @@ float Layer<ConnectionTemplate>::tick() {
  *  @param sender Layer&ID we're projecting connections from (efferent)
  *  @param receiver Layer&ID we're connecting to (afferent)
  */
-template<class ConnectionTemplate>
-void Layer<ConnectionTemplate>::connectLayerToLayer(
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerToLayer(
 		AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer) {
 	AssemblyLayer *projecting = sendingLayer.first;
 	int projectingID = sendingLayer.second;
@@ -160,8 +160,8 @@ void Layer<ConnectionTemplate>::connectLayerToLayer(
  * @param sender The Assembly whose output we're building
  * @param receivingLayer the Layer we're connecting to
  */
-template<class ConnectionTemplate>
-void Layer<ConnectionTemplate>::connectAssemblyToLayer(
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssemblyToLayer(
 		LocalizedAssembly sender, AssemblyLayer_ID receivingLayer) {
 	AssemblyLayer *receiving = receivingLayer.first;
 	int receivingID = receivingLayer.second;
@@ -188,8 +188,8 @@ void Layer<ConnectionTemplate>::connectAssemblyToLayer(
  * @param receiving Add a Connection to this Assembly's input
  *
  */
-template<class ConnectionTemplate>
-void Layer<ConnectionTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
 		Assembly_t* receiving) {
 	// Don't connect an Assembly to itself
 	if (receiving == sending) {
@@ -211,8 +211,8 @@ void Layer<ConnectionTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
  * @param col Assembly's col in AssemblyLayer
  * @return the unique identification number of the Assembly at (col,row,layerID)
  */
-template<class ConnectionTemplate>
-int Layer<ConnectionTemplate>::getAssemblyID(int row, int col) {
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+int Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyID(int row, int col) {
 	int layer_field = layerID * 1000000;
 	int row_field = row * 1000;
 
