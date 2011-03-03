@@ -106,10 +106,6 @@ bool singleInputLayer10_10() {
 
 		layer.tick();
 
-		float avgOutput = layer.getLastRegionalActivation();
-
-		//printf("%d\t%f\n", i, avgOutput);
-
 		if (avgOutput > max) {
 			max = avgOutput;
 		}

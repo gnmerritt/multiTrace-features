@@ -65,6 +65,9 @@ Layer<ConnectionTemplate>::Layer(int rows, int cols, int _layerID) :
 template<class ConnectionTemplate>
 Layer<ConnectionTemplate>::~Layer() {
 
+#ifdef DEBUG_LAYER_OUTPUT
+	fclose(layer_tick_f);
+#endif
 }
 
 template<class ConnectionTemplate>

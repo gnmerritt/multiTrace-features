@@ -38,3 +38,12 @@ void Cortex::tick() {
 		averageLayerActivation = activation_sum / layers.size();
 	}
 }
+
+/**
+ * Constucts layers as specified by various parameters, including the number of
+ * Layers to make, how they're connected and their size.
+ *
+ */
+void Cortex::buildLayers() {
+
+}

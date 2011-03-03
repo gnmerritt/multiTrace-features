@@ -32,6 +32,9 @@ private:
 	LayerVector layers;
 
 	float averageLayerActivation;
+
+	float arousal;
+	float learningRate; // not sure this goes here?
 };
 
 #endif /* CORTEX_H_ */
