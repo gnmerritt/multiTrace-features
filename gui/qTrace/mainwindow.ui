@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>657</width>
-    <height>378</height>
+    <width>690</width>
+    <height>439</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -18,13 +18,13 @@
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>310</y>
+      <y>360</y>
       <width>114</width>
       <height>32</height>
      </rect>
     </property>
     <property name="text">
-     <string>Create</string>
+     <string>Create!</string>
     </property>
    </widget>
    <widget class="QLabel" name="label">
@@ -59,7 +59,7 @@
       <x>220</x>
       <y>0</y>
       <width>20</width>
-      <height>331</height>
+      <height>431</height>
      </rect>
     </property>
     <property name="orientation">
@@ -72,7 +72,7 @@
       <x>440</x>
       <y>0</y>
       <width>20</width>
-      <height>331</height>
+      <height>421</height>
      </rect>
     </property>
     <property name="orientation">
@@ -274,7 +274,7 @@
     <property name="geometry">
      <rect>
       <x>280</x>
-      <y>310</y>
+      <y>360</y>
       <width>114</width>
       <height>32</height>
      </rect>
@@ -287,7 +287,7 @@
     <property name="geometry">
      <rect>
       <x>500</x>
-      <y>310</y>
+      <y>360</y>
       <width>114</width>
       <height>32</height>
      </rect>
@@ -322,7 +322,7 @@
      <string>Update Model</string>
     </property>
    </widget>
-   <widget class="QCheckBox" name="checkBox">
+   <widget class="QCheckBox" name="inputLayerEnabled">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -344,6 +344,21 @@
       <height>31</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>Manual</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>No Input</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>From Image</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="connectionTemplate">
     <property name="geometry">
@@ -354,6 +369,21 @@
       <height>31</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>Uniformly Distributed Random (UNR)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>Distance-Based Random (DBR)</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>No Connections</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="learingRule">
     <property name="geometry">
@@ -364,6 +394,16 @@
       <height>31</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>Hebbian Learning</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>No Learning</string>
+     </property>
+    </item>
    </widget>
    <widget class="QComboBox" name="updateModel">
     <property name="geometry">
@@ -374,6 +414,83 @@
       <height>31</height>
      </rect>
     </property>
+    <item>
+     <property name="text">
+      <string>Sonntag Update</string>
+     </property>
+    </item>
+   </widget>
+   <widget class="QLineEdit" name="testName">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>260</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_13">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>240</y>
+      <width>81</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Test Name</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_14">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>300</y>
+      <width>91</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Log Location</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="saveLocationFileChooser">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>290</y>
+      <width>114</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Browse</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="saveLocation">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>330</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="localInhibitionEnabled">
+    <property name="geometry">
+     <rect>
+      <x>250</x>
+      <y>190</y>
+      <width>181</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Local Inhibition?</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -381,7 +498,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>657</width>
+     <width>690</width>
      <height>22</height>
     </rect>
    </property>
@@ -421,6 +538,22 @@
   <widget class="QStatusBar" name="statusBar"/>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <tabstops>
+  <tabstop>numberLayers</tabstop>
+  <tabstop>layerConnectedToggle</tabstop>
+  <tabstop>connectDown</tabstop>
+  <tabstop>connectUp</tabstop>
+  <tabstop>inputLayerEnabled</tabstop>
+  <tabstop>inputLayerType</tabstop>
+  <tabstop>connectionTemplate</tabstop>
+  <tabstop>layerRowSize</tabstop>
+  <tabstop>updateModel</tabstop>
+  <tabstop>layerColSize</tabstop>
+  <tabstop>testLayer</tabstop>
+  <tabstop>createButton</tabstop>
+  <tabstop>testAssembly</tabstop>
+  <tabstop>learingRule</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
