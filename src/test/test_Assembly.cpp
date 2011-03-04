@@ -15,12 +15,12 @@ static int assemblyCounter = 0;
  *
  * @return a pointer to the configured Assembly
  */
-Assembly_t* initializeAssembly() {
+Assembly<NoLearning>* initializeAssembly() {
 	SonntagUpdate *update = new SonntagUpdate();
 
 	assemblyCounter++;
 
-	Assembly_t *assembly = new Assembly_t(assemblyCounter, update);
+	Assembly<NoLearning> *assembly = new Assembly<NoLearning>(assemblyCounter, update);
 
 	return assembly;
 }
@@ -34,7 +34,7 @@ Assembly_t* initializeAssembly() {
  * @return true if activation stays at 0
  */
 bool noInput() {
-	Assembly_t *a = initializeAssembly();
+	Assembly<NoLearning> *a = initializeAssembly();
 	int i;
 
 	for (i = 0; i < 20; ++i) {
@@ -59,7 +59,7 @@ bool noInput() {
  * @return true if the Assembly becomes highly activated (fires) after this input
  */
 bool singleInput() {
-	Assembly_t *a = initializeAssembly();
+	Assembly<NoLearning> *a = initializeAssembly();
 	int i;
 
 	// awkward, I know...
@@ -102,7 +102,7 @@ bool singleInput() {
  * @return true if the Assembly fires twice (2nd time after the second input)
  */
 bool multipleInputs() {
-	Assembly_t *a = initializeAssembly();
+	Assembly<NoLearning> *a = initializeAssembly();
 	int i;
 
 	const int SECOND_INPUT = 250;
@@ -149,7 +149,7 @@ bool multipleInputs() {
  * @return true if the Assembly does not fully fire (some increase in Activity is okay)
  */
 bool testInhibition() {
-	Assembly_t *a = initializeAssembly();
+	Assembly<NoLearning> *a = initializeAssembly();
 	int i;
 
 	Connection *c = new Connection();

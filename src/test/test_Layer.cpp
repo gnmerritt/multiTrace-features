@@ -70,10 +70,12 @@ bool noInputLayer30_30() {
 bool singleInputLayer10_10() {
 	Layer<UNR, SonntagUpdate, NoLearning> layer(10, 10, 3);
 
-	AssemblyLayer *assemblies = layer.getAssemblyLayer().first;
-
-	AssemblyLayer::iterator row;
-	AssemblyVector::iterator col;
+	/** yes, it's gross to declare these outside of a Layer. Luckily this won't happen except
+	 * for debugging / unit testing
+	 */
+	Layer<UNR, SonntagUpdate, NoLearning>::AssemblyLayer *assemblies = layer.getAssemblyLayer().first;
+	Layer<UNR, SonntagUpdate, NoLearning>::AssemblyLayer::iterator row;
+	Layer<UNR, SonntagUpdate, NoLearning>::AssemblyVector::iterator col;
 
 	const int numNewConnections = 20;
 

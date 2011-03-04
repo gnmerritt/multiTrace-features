@@ -94,8 +94,9 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Layer() {
 }
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-AssemblyLayer_ID Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyLayer() {
-	return AssemblyLayer_ID(&assemblies, layerID);
+typename Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::AssemblyLayer_ID Layer<
+		ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyLayer() {
+	return typename Layer::AssemblyLayer_ID(&assemblies, layerID);
 }
 
 /**
@@ -163,8 +164,8 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerTo
 	}
 
 	// and now recalculate the incoming connection weights in the receivingLayer
-	AssemblyLayer::iterator row;
-	AssemblyVector::iterator col;
+	typename AssemblyLayer::iterator row;
+	typename AssemblyVector::iterator col;
 	AssemblyLayer *receiving = receivingLayer.first;
 
 	for (row = receiving->begin(); row != receiving->end(); ++row) {

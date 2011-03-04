@@ -29,25 +29,21 @@
 #include "NoLearning.h"
 #include "HebbianLearning.h"
 
-// convenient naming
-typedef Assembly<NoLearning> NonLearningAssembly;
-typedef Assembly<HebbianLearning> HebbianAssembly;
-
-// which Assembly are we currently using
-typedef NonLearningAssembly Assembly_t;
-
-// holds our Assemblies (of type Assembly_t)
-typedef std::vector<Assembly_t> AssemblyVector;
-typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
-
-// used for connecting AssemblyLayers of different Layers
-typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
-typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
-
 #define DEBUG_LAYER_OUTPUT
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Layer {
+public:
+	typedef Assembly<LearningTemplate> Assembly_t;
+
+	// holds our Assemblies (of type Assembly_t)
+	typedef std::vector<Assembly_t> AssemblyVector;
+	typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
+
+	// used for connecting AssemblyLayers of different Layers
+	typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
+	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
+
 	typedef std::vector<UpdateTemplate*> UpdateVector;
 
 public:
@@ -71,8 +67,10 @@ public:
 	AssemblyLayer_ID getAssemblyLayer();
 
 private:
-	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
-	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
+	void connectLayerToLayer(AssemblyLayer_ID sendingLayer,
+			AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToLayer(LocalizedAssembly sender,
+			AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
 	int getAssemblyID(int row, int col);

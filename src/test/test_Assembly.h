@@ -17,7 +17,7 @@
 
 #define DEBUG_ASSEMBLY_OUTPUT
 
-Assembly_t* initializeAssembly();
+Assembly<NoLearning>* initializeAssembly();
 
 // Assembly-level
 bool noInput();
