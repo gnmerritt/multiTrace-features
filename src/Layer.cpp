@@ -25,12 +25,17 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
  * @param _layerID the UID of this layer within the Cortex
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows, int _cols, int _layerID) :
-	layerID(_layerID), rows(_rows), cols(_cols), lastActivationAverage(0.0f), timestep(0),
-			connectionPattern(ConnectionTemplate()) {
+Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
+		int _cols, int _layerID) :
+	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f),
+			timestep(0), connectionPattern(ConnectionTemplate()),
+			ourUpdateModels(UpdateVector()) {
 	// initialize the update model
 	// TODO: make this threaded
 	UpdateTemplate *updateModel = new UpdateTemplate();
+
+	// save a reference to this update model, so we can delete them all
+	ourUpdateModels.push_back(updateModel);
 
 	assemblies.reserve(rows);
 
@@ -50,6 +55,14 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows, in
 	AssemblyLayer_ID thisLayer = getAssemblyLayer();
 	connectLayerToLayer(thisLayer, thisLayer);
 
+	/** create our assemblyOutputBlock, a float[row][col] with each Assembly's output
+	 for the GUI	*/
+	assemblyOutputBlock = new float*[rows];
+	assemblyOutputBlock[0] = new float[rows * cols];
+	for (unsigned int i = 1; 1 < rows; ++i) {
+		assemblyOutputBlock[i] = assemblyOutputBlock[i - 1] + rows;
+	}
+
 #ifdef DEBUG_LAYER_OUTPUT
 	std::stringstream out;
 	out << "/tmp/layer_" << getId() << ".xls";
@@ -64,6 +77,16 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows, in
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Layer() {
+
+	// deallocate assemblyOtputBlock
+	delete[] assemblyOutputBlock[0];
+	delete[] assemblyOutputBlock;
+
+	// delete any updateModels this Layer allocated
+	typename UpdateVector::iterator model;
+	for (model = ourUpdateModels.begin(); model != ourUpdateModels.end(); ++model) {
+		delete *model;
+	}
 
 #ifdef DEBUG_LAYER_OUTPUT
 	fclose(layer_tick_f);
@@ -81,15 +104,15 @@ AssemblyLayer_ID Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::ge
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 float Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
-	AssemblyLayer::iterator row;
-	AssemblyVector::iterator col;
-
 	float currentActivation_sum = 0;
 
 	// tick all the Assemblies, and remember their output
-	for (row = assemblies.begin(); row != assemblies.end(); ++row) {
-		for (col = row->begin(); col != row->end(); ++col) {
-			currentActivation_sum += col->tick(lastActivationAverage);
+	for (int row = 0; row < rows; ++row) {
+		for (int col = 0; col < cols; ++col) {
+			float thisAssembly = assemblies[row][col].tick(
+					lastActivationAverage);
+			assemblyOutputBlock[row][col] = thisAssembly;
+			currentActivation_sum += thisAssembly;
 		}
 	}
 
@@ -99,7 +122,7 @@ float Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
 #endif
 
 	// update the average activation (used for Regional Inhibition)
-	int numAssemblies = assemblies.size() * assemblies.front().size();
+	int numAssemblies = rows * cols;
 	if (numAssemblies == 0) {
 		numAssemblies = 1;
 	}
@@ -189,8 +212,8 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssembl
  *
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssemblyToAssembly(Assembly_t* sending,
-		Assembly_t* receiving) {
+void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssemblyToAssembly(
+		Assembly_t* sending, Assembly_t* receiving) {
 	// Don't connect an Assembly to itself
 	if (receiving == sending) {
 		return;
@@ -212,7 +235,8 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssembl
  * @return the unique identification number of the Assembly at (col,row,layerID)
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-int Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyID(int row, int col) {
+int Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyID(
+		int row, int col) {
 	int layer_field = layerID * 1000000;
 	int row_field = row * 1000;
 

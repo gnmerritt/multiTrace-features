@@ -48,6 +48,8 @@ typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Layer {
+	typedef std::vector<UpdateTemplate*> UpdateVector;
+
 public:
 	Layer(int rows, int cols, int layerID);
 	virtual ~Layer();
@@ -62,6 +64,10 @@ public:
 		return layerID;
 	}
 
+	float** getOutputBlock() const {
+		return assemblyOutputBlock;
+	}
+
 	AssemblyLayer_ID getAssemblyLayer();
 
 private:
@@ -71,16 +77,20 @@ private:
 
 	int getAssemblyID(int row, int col);
 
+public:
+	const int rows, cols;
+
 private:
 	AssemblyLayer assemblies;
 	const int layerID; /** 1 is the input layer */
 
-	int rows, cols;
-
 	float lastActivationAverage;
+	float** assemblyOutputBlock;
 	int timestep;
 
 	ConnectionTemplate connectionPattern;
+
+	UpdateVector ourUpdateModels;
 
 #ifdef DEBUG_LAYER_OUTPUT
 	FILE *layer_tick_f;
