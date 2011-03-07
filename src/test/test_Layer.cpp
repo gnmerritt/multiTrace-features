@@ -43,12 +43,9 @@ bool noInputLayer1_1() {
  */
 bool noInputLayer30_30() {
 	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (30, 30, 2); // 30x30, layerID=2
-	int i;
 
-	for (i = 0; i < 500; ++i) {
-		layer->tick();
-
-		float avgOutput = layer->getLastRegionalActivation();
+	for (int i = 0; i < 500; ++i) {
+		float avgOutput = layer->tick();
 
 		if (avgOutput > (float) 0.1f) {
 			return false;

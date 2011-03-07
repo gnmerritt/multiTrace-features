@@ -30,7 +30,7 @@ static const int COLUMN_ID = 100; // column is last three digits
 template<class LearningTemplate>
 class Assembly {
 public:
-	Assembly(int _id, UpdateModel *_model);
+	Assembly(int _id, UpdateModel::ptr _model);
 	virtual ~Assembly();
 
 	void addIncomingConnection(Connection *newInput);
@@ -91,7 +91,7 @@ private:
 	int timestep; /** how many times tick() has been called */
 
 	AssemblyState *state;
-	UpdateModel *updateModel;
+	UpdateModel::ptr updateModel;
 	LearningTemplate *learningRule;
 	ConnectionVector *input, *output;
 

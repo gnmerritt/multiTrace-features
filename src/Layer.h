@@ -44,8 +44,6 @@ public:
 	typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
 	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
-	typedef std::vector<UpdateTemplate*> UpdateVector;
-
 public:
 	Layer(int rows, int cols, int layerID);
 	virtual ~Layer();
@@ -87,8 +85,6 @@ private:
 	int timestep;
 
 	ConnectionTemplate connectionPattern;
-
-	UpdateVector ourUpdateModels;
 
 #ifdef DEBUG_LAYER_OUTPUT
 	FILE *layer_tick_f;

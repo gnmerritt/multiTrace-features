@@ -28,26 +28,23 @@ template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
 		int _cols, int _layerID) :
 	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f),
-			timestep(0), connectionPattern(ConnectionTemplate()),
-			ourUpdateModels(UpdateVector()) {
+			timestep(0), connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
 	// TODO: make this threaded
-	UpdateTemplate *updateModel = new UpdateTemplate();
-
-	// save a reference to this update model, so we can delete them all
-	ourUpdateModels.push_back(updateModel);
+	UpdateModel::ptr updateModel ( new UpdateTemplate() );
 
 	assemblies.reserve(rows);
 
 	// build a row by col sized AssemblyLayer (2d vector)
 	for (int curRow = 0; curRow < rows; ++curRow) {
 		assemblies.push_back(AssemblyVector());
+		assemblies.back().reserve(cols);
 
 		for (int curCol = 0; curCol < cols; ++curCol) {
 			int id = getAssemblyID(curRow, curCol);
 
-			Assembly_t *a = new Assembly_t(id, updateModel);
-			assemblies.back().push_back(*a);
+			Assembly_t a(id, updateModel);
+			assemblies.back().push_back(a);
 		}
 	}
 
@@ -59,7 +56,7 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
 	 for the GUI	*/
 	assemblyOutputBlock = new float*[rows];
 	assemblyOutputBlock[0] = new float[rows * cols];
-	for (unsigned int i = 1; 1 < rows; ++i) {
+	for (int i = 1; i < rows; ++i) {
 		assemblyOutputBlock[i] = assemblyOutputBlock[i - 1] + rows;
 	}
 
@@ -77,16 +74,9 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Layer() {
-
 	// deallocate assemblyOtputBlock
 	delete[] assemblyOutputBlock[0];
 	delete[] assemblyOutputBlock;
-
-	// delete any updateModels this Layer allocated
-	typename UpdateVector::iterator model;
-	for (model = ourUpdateModels.begin(); model != ourUpdateModels.end(); ++model) {
-		delete *model;
-	}
 
 #ifdef DEBUG_LAYER_OUTPUT
 	fclose(layer_tick_f);
@@ -110,8 +100,9 @@ float Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
 	// tick all the Assemblies, and remember their output
 	for (int row = 0; row < rows; ++row) {
 		for (int col = 0; col < cols; ++col) {
-			float thisAssembly = assemblies[row][col].tick(
-					lastActivationAverage);
+			float thisAssembly;
+
+			thisAssembly = assemblies[row][col].tick(lastActivationAverage);
 			assemblyOutputBlock[row][col] = thisAssembly;
 			currentActivation_sum += thisAssembly;
 		}

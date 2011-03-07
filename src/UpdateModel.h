@@ -19,7 +19,12 @@
 #include "AssemblyState.h"
 #include "Connection.h"
 
+#include <boost/shared_ptr.hpp>
+
 class UpdateModel {
+public:
+	typedef boost::shared_ptr<UpdateModel> ptr;
+
 public:
 	UpdateModel() {
 		pthread_mutex_init(&lock, NULL);

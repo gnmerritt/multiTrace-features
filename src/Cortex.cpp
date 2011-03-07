@@ -21,9 +21,6 @@ Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Cortex() {
 /**
  * Runs tick() on each Layer in layers.
  *
- * TODO: some mechanism for caching average output, cortex-wide activation and
- * specific Assembly output (for the GUI)
- *
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {

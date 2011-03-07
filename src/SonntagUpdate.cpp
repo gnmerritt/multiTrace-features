@@ -10,7 +10,7 @@
 
 #include "SonntagUpdate.h"
 
-#import <cmath>
+#include <cmath>
 
 /** used in ΔActivity */
 const float v = 1.5; /** normalization of sensitivity, calculateV() */

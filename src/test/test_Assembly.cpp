@@ -16,7 +16,7 @@ static int assemblyCounter = 0;
  * @return a pointer to the configured Assembly
  */
 Assembly<NoLearning>* initializeAssembly() {
-	SonntagUpdate *update = new SonntagUpdate();
+	UpdateModel::ptr update ( new SonntagUpdate() );
 
 	assemblyCounter++;
 

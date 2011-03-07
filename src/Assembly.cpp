@@ -16,7 +16,7 @@ const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregi
 #endif
 
 template<class LearningTemplate>
-Assembly<LearningTemplate>::Assembly(int _id, UpdateModel *_model) :
+Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
 	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model), learningRule(0) {
 
 	// set these as empty by default
