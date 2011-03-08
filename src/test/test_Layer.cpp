@@ -76,10 +76,12 @@ bool singleInputLayer10_10() {
 
 	const int numNewConnections = 20;
 
-	Connection *c[numNewConnections];
+	Connection::vector c;
+	c.reserve(numNewConnections);
 
 	for (int i = 0; i < numNewConnections; ++i) {
-		c[i] = new Connection();
+		Connection::ptr connec ( new Connection() );
+		c.push_back(connec);
 		c[i]->setActivity(99);
 	}
 
@@ -98,7 +100,7 @@ bool singleInputLayer10_10() {
 	for (int i = 0; i < 1000; ++i) {
 		if (i == 50) {
 			for (int i = 0; i < numNewConnections; ++i) {
-				c[i] = new Connection();
+				c[i] = Connection::ptr( new Connection() );
 				c[i]->setActivity(0);
 			}
 		}

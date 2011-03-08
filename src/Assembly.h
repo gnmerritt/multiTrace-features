@@ -33,11 +33,11 @@ public:
 	Assembly(int _id, UpdateModel::ptr _model);
 	virtual ~Assembly();
 
-	void addIncomingConnection(Connection *newInput);
-	void addOutgoingConnection(Connection *newOutput);
+	void addIncomingConnection(Connection::ptr newInput);
+	void addOutgoingConnection(Connection::ptr newOutput);
 
-	void setIncomingConnections(ConnectionVector *in);
-	void setOutgoingConnections(ConnectionVector *out);
+	void setIncomingConnections(Connection::vector in);
+	void setOutgoingConnections(Connection::vector out);
 
 	float tick(float regional_activation);
 
@@ -92,8 +92,8 @@ private:
 
 	AssemblyState *state;
 	UpdateModel::ptr updateModel;
-	LearningTemplate *learningRule;
-	ConnectionVector *input, *output;
+	Connection::vector input, output;
+	LearningRule::ptr learningRule;
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
 	FILE *tick_f;

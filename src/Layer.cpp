@@ -211,7 +211,7 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssembl
 		return;
 	}
 
-	Connection *c = new Connection();
+	Connection::ptr c ( new Connection() );
 
 	sending->addOutgoingConnection(c);
 	receiving->addIncomingConnection(c);

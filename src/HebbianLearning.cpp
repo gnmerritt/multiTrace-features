@@ -7,7 +7,7 @@
 
 #include "HebbianLearning.h"
 
-HebbianLearning::HebbianLearning(AssemblyState *state, ConnectionVector *input) :
+HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
 	LearningRule(state, input) {
 	// TODO Auto-generated constructor stub
 

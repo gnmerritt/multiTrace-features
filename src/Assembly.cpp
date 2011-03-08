@@ -12,17 +12,14 @@ const float INITIAL_TOTAL_LTCS = 0.4f;
 // used by debug printf's
 #ifdef DEBUG_ASSEMBLY_OUTPUT
 const std::string assembly_tick = "%d\t%f\t%f\t%f\t%f\t%f\n";
-const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
+const std::string assembly_init =
+		"Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
 #endif
 
 template<class LearningTemplate>
 Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
-	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model), learningRule(0) {
-
-	// set these as empty by default
-	input = new ConnectionVector();
-	output = new ConnectionVector();
-
+	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model),
+			input(Connection::vector()), output(Connection::vector()){
 	initializeLearningRule();
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
@@ -39,6 +36,8 @@ Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
 
 template<class LearningTemplate>
 Assembly<LearningTemplate>::~Assembly() {
+	delete state;
+
 #ifdef DEBUG_ASSEMBLY_OUTPUT
 	fclose(tick_f);
 #endif
@@ -52,8 +51,8 @@ Assembly<LearningTemplate>::~Assembly() {
  * @sideeffect reinitializes the initial connection strengths (undoes learning)
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::addIncomingConnection(Connection *newInput) {
-	input->push_back(newInput);
+void Assembly<LearningTemplate>::addIncomingConnection(Connection::ptr newInput) {
+	input.push_back(newInput);
 }
 
 /**
@@ -63,8 +62,9 @@ void Assembly<LearningTemplate>::addIncomingConnection(Connection *newInput) {
  * @param newOutput Connection added to our output vector
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::addOutgoingConnection(Connection *newOutput) {
-	output->push_back(newOutput);
+void Assembly<LearningTemplate>::addOutgoingConnection(
+		Connection::ptr newOutput) {
+	output.push_back(newOutput);
 }
 
 /**
@@ -72,9 +72,7 @@ void Assembly<LearningTemplate>::addOutgoingConnection(Connection *newOutput) {
  */
 template<class LearningTemplate>
 void Assembly<LearningTemplate>::initializeLearningRule() {
-	delete (learningRule);
-
-	learningRule = new LearningTemplate(state, input);
+	learningRule = LearningRule::ptr ( new LearningTemplate(state, &(input)) );
 }
 
 /**
@@ -92,7 +90,7 @@ float Assembly<LearningTemplate>::tick(float regional_activation) {
 	state->regional_activation = regional_activation;
 
 	// tick the internal state
-	updateModel->tick(state, input);
+	updateModel->tick(state, &input);
 
 	// adjust incoming connections
 	learningRule->tick();
@@ -102,8 +100,8 @@ float Assembly<LearningTemplate>::tick(float regional_activation) {
 
 	// log timestep activity to our debug file in /tmp
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
-			getFatigue(), getRegionalInhibition());
+	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(),
+			getLTCS(), getSTCS(), getFatigue(), getRegionalInhibition());
 #endif
 
 	// return our activation to our Layer
@@ -117,9 +115,7 @@ float Assembly<LearningTemplate>::tick(float regional_activation) {
  * @param in a pointer to a ConnectionVector which we will use as input
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::setIncomingConnections(ConnectionVector *in) {
-	delete (input);
-
+void Assembly<LearningTemplate>::setIncomingConnections(Connection::vector in) {
 	input = in;
 
 	initializeLearningRule();
@@ -134,8 +130,7 @@ void Assembly<LearningTemplate>::setIncomingConnections(ConnectionVector *in) {
  * @param out a pointer to a ConnectionVector which we will keep updated with our activity
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::setOutgoingConnections(ConnectionVector *out) {
-	delete (output);
+void Assembly<LearningTemplate>::setOutgoingConnections(Connection::vector out) {
 	output = out;
 }
 
@@ -145,9 +140,9 @@ void Assembly<LearningTemplate>::setOutgoingConnections(ConnectionVector *out) {
  */
 template<class LearningTemplate>
 void Assembly<LearningTemplate>::updateOutgoingConnections() {
-	ConnectionVector::iterator out;
+	Connection::vector::iterator out;
 
-	for (out = output->begin(); out != output->end(); ++out) {
+	for (out = output.begin(); out != output.end(); ++out) {
 		(*out)->setActivity(state->output);
 	}
 }
@@ -160,16 +155,16 @@ void Assembly<LearningTemplate>::updateOutgoingConnections() {
  */
 template<class LearningTemplate>
 void Assembly<LearningTemplate>::initializeIncConnectionStrengths() {
-	int numConnections = input->size();
+	int numConnections = input.size();
 
 	if (numConnections == 0) {
 		numConnections = 1;
 	}
 
-	ConnectionVector::iterator in;
+	Connection::vector::iterator in;
 	float perConnection = (1 - INITIAL_TOTAL_LTCS) / numConnections;
 
-	for (in = input->begin(); in != input->end(); ++in) {
+	for (in = input.begin(); in != input.end(); ++in) {
 		(*in)->setLTCS(perConnection);
 	}
 }

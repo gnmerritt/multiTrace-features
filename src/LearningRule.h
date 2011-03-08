@@ -10,12 +10,17 @@
 #ifndef LEARNINGRULE_H_
 #define LEARNINGRULE_H_
 
+#include <boost/shared_ptr.hpp>
+
 #include "AssemblyState.h"
 #include "Connection.h"
 
 class LearningRule {
 public:
-	LearningRule(AssemblyState *state, ConnectionVector *input) :
+	typedef boost::shared_ptr<LearningRule> ptr;
+
+public:
+	LearningRule(AssemblyState *state, Connection::vector *input) :
 		postSynapticState(state), incomingConnections(input) {
 	}
 	virtual ~LearningRule() {
@@ -25,7 +30,7 @@ public:
 
 protected:
 	AssemblyState *postSynapticState;
-	ConnectionVector *incomingConnections;
+	Connection::vector *incomingConnections;
 };
 
 #endif /* LEARNINGRULE_H_ */

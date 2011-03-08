@@ -19,11 +19,17 @@
 #include <vector>
 #include <pthread.h>
 
+#include <boost/shared_ptr.hpp>
+
 const float INITIAL_LTCS = 0;
 const float INITIAL_STCS = 0;
 const float INITIAL_ACTIVITY = 0;
 
 class Connection {
+public:
+	typedef boost::shared_ptr<Connection> ptr;
+	typedef std::vector<Connection::ptr> vector;
+
 public:
 	Connection();
 	virtual ~Connection();
@@ -43,7 +49,5 @@ public:
 
 	pthread_mutex_t lock;
 };
-
-typedef std::vector<Connection*> ConnectionVector;
 
 #endif /* CONNECTION_H_ */

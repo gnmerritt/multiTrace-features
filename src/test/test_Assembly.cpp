@@ -63,11 +63,11 @@ bool singleInput() {
 	int i;
 
 	// awkward, I know...
-	ConnectionVector input;
-	Connection *c = new Connection();
+	Connection::vector input;
+	Connection::ptr c (new Connection());
 	input.push_back(c);
 
-	a->setIncomingConnections(&input);
+	a->setIncomingConnections(input);
 	c->setActivity((float) 99);
 
 	float assembly_last;
@@ -108,11 +108,11 @@ bool multipleInputs() {
 	const int SECOND_INPUT = 250;
 
 	// awkward, I know...
-	ConnectionVector input;
-	Connection *c = new Connection();
+	Connection::vector input;
+	Connection::ptr c (new Connection());
 	input.push_back(c);
 
-	a->setIncomingConnections(&input);
+	a->setIncomingConnections(input);
 	c->setActivity((float) 99);
 
 	float assembly_last;
@@ -152,7 +152,7 @@ bool testInhibition() {
 	Assembly<NoLearning> *a = initializeAssembly();
 	int i;
 
-	Connection *c = new Connection();
+	Connection::ptr c ( new Connection() );
 
 	a->addIncomingConnection(c);
 
