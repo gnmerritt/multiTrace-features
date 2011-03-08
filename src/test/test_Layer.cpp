@@ -18,7 +18,7 @@ const static float LAYER_THRESHOLD_SILENT = 0.1f;
  * @returns True if a 1x1 Layer is constructed and remains silent
  */
 bool noInputLayer1_1() {
-	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (1, 1, 1); // 1x1, layerID=1
+	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (1, 1, 1, true); // 1x1, layerID=1
 	int i;
 
 	for (i = 0; i < 500; ++i) {
@@ -42,7 +42,7 @@ bool noInputLayer1_1() {
  * @returns True if a 30x30 layer can be created and ticked
  */
 bool noInputLayer30_30() {
-	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (30, 30, 2); // 30x30, layerID=2
+	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (30, 30, 2, true); // 30x30, layerID=2
 
 	for (int i = 0; i < 500; ++i) {
 		float avgOutput = layer->tick();
@@ -65,7 +65,7 @@ bool noInputLayer30_30() {
  * activity in the whole layer
  */
 bool singleInputLayer10_10() {
-	Layer<UNR, SonntagUpdate, NoLearning> layer(10, 10, 3);
+	Layer<UNR, SonntagUpdate, NoLearning> layer(10, 10, 3, true);
 
 	/** yes, it's gross to declare these outside of a Layer. Luckily this won't happen except
 	 * for debugging / unit testing

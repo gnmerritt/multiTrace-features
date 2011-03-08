@@ -26,7 +26,7 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
-		int _cols, int _layerID) :
+		int _cols, int _layerID, bool connectToSelf) :
 	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f),
 			timestep(0), connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
@@ -49,8 +49,10 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
 	}
 
 	// and wire up our intra-Layer connections
-	AssemblyLayer_ID thisLayer = getAssemblyLayer();
-	connectLayerToLayer(thisLayer, thisLayer);
+	if (connectToSelf) {
+		AssemblyLayer_ID thisLayer = getAssemblyLayer();
+		connectLayerToLayer(thisLayer, thisLayer);
+	}
 
 	/** create our assemblyOutputBlock, a float[row][col] with each Assembly's output
 	 for the GUI	*/
@@ -124,6 +126,17 @@ float Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
 	timestep++;
 
 	return lastActivationAverage;
+}
+
+/**
+ * Simple public method to connect this Layer to another given it's AssemblyLayer_ID
+ *
+ * @param targetLayer receiveir Layer & ID we're connecting to
+ * @see connectLayerToLayer()
+ */
+template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
+void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectToLayer(AssemblyLayer_ID target) {
+	connectLayerToLayer(getAssemblyLayer(), target);
 }
 
 /** Iterate over the AssemblyLater and check connectivity between

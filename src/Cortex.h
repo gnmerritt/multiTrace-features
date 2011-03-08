@@ -13,6 +13,7 @@
 #define CORTEX_H_
 
 #include <vector>
+#include <iostream>
 
 #include "Layer.h"
 
@@ -21,21 +22,33 @@ class Cortex {
 	typedef std::vector<Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate> > LayerVector;
 	// NOTE: you will need to declare iterators as 'typename LayerVector::iterator foo'
 
+	enum LayerType {
+		DEFAULT_LAYER, INPUT_LAYER,
+	};
+
 public:
-	Cortex();
+	Cortex(int _numStdLayers, int rowsPerLayer, int colsPerLayer, int connectTo, int connectFrom,
+			std::string _testName, std::string _logLocation);
 	virtual ~Cortex();
 
-	void buildLayers(); // not run automatically by the constructor
+	void addLayer(int layerType, int rows, int cols);
+	void connectLayerRange(int layerID, int connectFrom, int connectTo);
+	void connectLayerToLayer(int fromID, int toID);
 
 	void tick(); // will tick all the layers
 
 private:
 	LayerVector layers;
+	int numberOfStdLayers;
+
+	bool** connectedLayer;
 
 	float averageLayerActivation;
 
 	float arousal;
 	float learningRate; // not sure this goes here?
+
+	std::string testName, logLocation;
 };
 
 #endif /* CORTEX_H_ */

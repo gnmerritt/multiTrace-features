@@ -45,10 +45,12 @@ public:
 	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
 public:
-	Layer(int rows, int cols, int layerID);
+	Layer(int rows, int cols, int layerID, bool connectToSelf);
 	virtual ~Layer();
 
 	float tick();
+
+	void connectToLayer(AssemblyLayer_ID receivingLayer);
 
 	float getLastRegionalActivation() const {
 		return lastActivationAverage;
@@ -56,6 +58,10 @@ public:
 
 	int getId() const {
 		return layerID;
+	}
+
+	int getSize() const {
+		return rows*cols;
 	}
 
 	float** getOutputBlock() const {
