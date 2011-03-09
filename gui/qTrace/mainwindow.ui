@@ -144,7 +144,7 @@
      <string>to</string>
     </property>
    </widget>
-   <widget class="QSpinBox" name="connectDown">
+   <widget class="QSpinBox" name="connectFrom">
     <property name="geometry">
      <rect>
       <x>50</x>
@@ -160,7 +160,7 @@
      <number>0</number>
     </property>
    </widget>
-   <widget class="QSpinBox" name="connectUp">
+   <widget class="QSpinBox" name="connectTo">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -271,6 +271,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="testLayer">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>280</x>
@@ -284,6 +287,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="testAssembly">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>500</x>
@@ -323,6 +329,9 @@
     </property>
    </widget>
    <widget class="QCheckBox" name="inputLayerEnabled">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -336,6 +345,9 @@
     </property>
    </widget>
    <widget class="QComboBox" name="inputLayerType">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -385,7 +397,7 @@
      </property>
     </item>
    </widget>
-   <widget class="QComboBox" name="learingRule">
+   <widget class="QComboBox" name="learningRule">
     <property name="geometry">
      <rect>
       <x>460</x>
@@ -396,12 +408,12 @@
     </property>
     <item>
      <property name="text">
-      <string>Hebbian Learning</string>
+      <string>No Learning</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>No Learning</string>
+      <string>Hebbian Learning</string>
      </property>
     </item>
    </widget>
@@ -421,6 +433,9 @@
     </item>
    </widget>
    <widget class="QLineEdit" name="testName">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -457,6 +472,9 @@
     </property>
    </widget>
    <widget class="QPushButton" name="saveLocationFileChooser">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>110</x>
@@ -470,6 +488,9 @@
     </property>
    </widget>
    <widget class="QLineEdit" name="saveLocation">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -480,6 +501,9 @@
     </property>
    </widget>
    <widget class="QCheckBox" name="localInhibitionEnabled">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>250</x>
@@ -499,7 +523,7 @@
      <x>0</x>
      <y>0</y>
      <width>690</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -541,8 +565,8 @@
  <tabstops>
   <tabstop>numberLayers</tabstop>
   <tabstop>layerConnectedToggle</tabstop>
-  <tabstop>connectDown</tabstop>
-  <tabstop>connectUp</tabstop>
+  <tabstop>connectFrom</tabstop>
+  <tabstop>connectTo</tabstop>
   <tabstop>inputLayerEnabled</tabstop>
   <tabstop>inputLayerType</tabstop>
   <tabstop>connectionTemplate</tabstop>
@@ -552,7 +576,7 @@
   <tabstop>testLayer</tabstop>
   <tabstop>createButton</tabstop>
   <tabstop>testAssembly</tabstop>
-  <tabstop>learingRule</tabstop>
+  <tabstop>learningRule</tabstop>
  </tabstops>
  <resources/>
  <connections/>

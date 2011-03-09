@@ -21,3 +21,5 @@ FORMS    += mainwindow.ui \
     cortexviewer.ui
 
 OTHER_FILES +=
+
+INCLUDEPATH = ../../src

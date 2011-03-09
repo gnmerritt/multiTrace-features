@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "multiTrace.h"
+
 namespace Ui {
     class MainWindow;
 }
@@ -15,8 +17,29 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void createCortexFromParameters();
+
 private:
     Ui::MainWindow *ui;
+
+// variables we're collecting to build a Cortex
+    int layerRowSize, layerColSize;
+    int numberOfLayers;
+    int connectTo, connectFrom;
+    bool interLayerConnectionsEnabled;
+// index variables for the three selection boxes
+    int connectionTemplate_i, learningRule_i, updateModel_i;
+
+private slots:
+    void on_updateModel_currentIndexChanged(int index);
+    void on_learningRule_currentIndexChanged(int index);
+    void on_connectionTemplate_currentIndexChanged(int index);
+    void on_layerConnectedToggle_toggled(bool checked);
+    void on_connectTo_valueChanged(int );
+    void on_connectFrom_valueChanged(int );
+    void on_numberLayers_valueChanged(int );
+    void on_layerRowSize_valueChanged(int );
+    void on_createButton_clicked();
 };
 
 #endif // MAINWINDOW_H
