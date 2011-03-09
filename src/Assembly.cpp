@@ -28,9 +28,9 @@ Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
 
 	std::string filename = out.str();
 
-	tick_f = fopen(filename.c_str(), "w");
+        tick_f = this->fopen(filename.c_str(), "w");
 
-	fprintf(tick_f, "%s", assembly_init.c_str());
+        this->fprintf(tick_f, "%s", assembly_init.c_str());
 #endif
 }
 
@@ -39,7 +39,7 @@ Assembly<LearningTemplate>::~Assembly() {
 	delete state;
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-	fclose(tick_f);
+        this->fclose(tick_f);
 #endif
 }
 

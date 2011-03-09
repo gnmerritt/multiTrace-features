@@ -68,9 +68,9 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
 
 	std::string filename = out.str();
 
-	layer_tick_f = fopen(filename.c_str(), "w");
+        layer_tick_f = this->fopen(filename.c_str(), "w");
 
-	fprintf(layer_tick_f, "%s", layer_init.c_str());
+        this->fprintf(layer_tick_f, "%s", layer_init.c_str());
 #endif
 }
 
@@ -81,7 +81,7 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Layer() {
 	delete[] assemblyOutputBlock;
 
 #ifdef DEBUG_LAYER_OUTPUT
-	fclose(layer_tick_f);
+        this->fclose(layer_tick_f);
 #endif
 }
 
