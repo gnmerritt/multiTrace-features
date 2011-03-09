@@ -22,4 +22,5 @@ FORMS    += mainwindow.ui \
 
 OTHER_FILES +=
 
-INCLUDEPATH = ../../src
+INCLUDEPATH += ../../src \
+    /Users/nathan/Library/boost

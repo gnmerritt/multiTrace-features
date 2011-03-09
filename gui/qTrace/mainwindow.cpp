@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "cortexviewer.h"
 
 #include <stdio.h>
 
@@ -22,13 +23,15 @@ MainWindow::~MainWindow()
   * @return shared pointer to the instantiated Cortex object
   */
 void MainWindow::createCortexFromParameters() {
-
 }
 
 void MainWindow::on_createButton_clicked()
 {
     createCortexFromParameters();
     // TODO: spawn cortexviewer window with pointer to current Cortex
+
+    CortexViewer *cv = new CortexViewer();
+    cv->show();
 }
 
 void MainWindow::on_layerRowSize_valueChanged(int _layerRowSize)
