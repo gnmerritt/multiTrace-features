@@ -17,7 +17,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void createCortexFromParameters();
+    Cortex<UNR, SonntagUpdate, NoLearning>::ptr createCortexFromParameters();
 
 private:
     Ui::MainWindow *ui;
@@ -27,10 +27,13 @@ private:
     int numberOfLayers;
     int connectTo, connectFrom;
     bool interLayerConnectionsEnabled;
+    QString testName, saveDirectory;
 // index variables for the three selection boxes
     int connectionTemplate_i, learningRule_i, updateModel_i;
 
 private slots:
+    void on_saveLocation_textEdited(QString );
+    void on_testName_textEdited(QString );
     void on_updateModel_currentIndexChanged(int index);
     void on_learningRule_currentIndexChanged(int index);
     void on_connectionTemplate_currentIndexChanged(int index);

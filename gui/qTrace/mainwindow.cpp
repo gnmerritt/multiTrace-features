@@ -6,7 +6,18 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    layerRowSize(0),
+    layerColSize(0),
+    numberOfLayers(0),
+    connectTo(0),
+    connectFrom(0),
+    interLayerConnectionsEnabled(true),
+    testName(""),
+    saveDirectory(""),
+    connectionTemplate_i(0),
+    learningRule_i(0),
+    updateModel_i(0)
 {
     ui->setupUi(this);
 }
@@ -22,15 +33,18 @@ MainWindow::~MainWindow()
   *
   * @return shared pointer to the instantiated Cortex object
   */
-void MainWindow::createCortexFromParameters() {
+Cortex<UNR, SonntagUpdate, NoLearning>::ptr MainWindow::createCortexFromParameters() {
+    // TODO: figure out the templating
+    Cortex<UNR, SonntagUpdate, NoLearning>::ptr newCortex
+            ( new Cortex<UNR, SonntagUpdate, NoLearning>(numberOfLayers, layerRowSize,  layerColSize, connectTo, connectFrom, testName.toStdString(), saveDirectory.toStdString() ) );
+
+    return  newCortex;
 }
 
 void MainWindow::on_createButton_clicked()
 {
-    createCortexFromParameters();
-    // TODO: spawn cortexviewer window with pointer to current Cortex
-
     CortexViewer *cv = new CortexViewer();
+    cv->setCortex(createCortexFromParameters());
     cv->show();
 }
 
@@ -72,4 +86,14 @@ void MainWindow::on_learningRule_currentIndexChanged(int index)
 void MainWindow::on_updateModel_currentIndexChanged(int index)
 {
     updateModel_i = index;
+}
+
+void MainWindow::on_testName_textEdited(QString newString)
+{
+    testName = newString;
+}
+
+void MainWindow::on_saveLocation_textEdited(QString newString)
+{
+    saveDirectory = newString;
 }

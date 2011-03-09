@@ -12,3 +12,12 @@ CortexViewer::~CortexViewer()
 {
     delete ui;
 }
+
+void CortexViewer::setCortex(Cortex<UNR, SonntagUpdate, NoLearning>::ptr newCortex) {
+    thisCortex = newCortex;
+}
+
+void CortexViewer::on_tickButton_clicked()
+{
+    thisCortex->tick();
+}

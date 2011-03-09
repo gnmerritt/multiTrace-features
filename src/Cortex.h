@@ -21,11 +21,13 @@
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Cortex {
+public:
 	typedef std::vector<Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate> > LayerVector;
 	// NOTE: you will need to declare iterators as 'typename LayerVector::iterator foo'
 
 	typedef boost::shared_ptr<Cortex> ptr;
 
+private:
 	enum LayerType {
 		DEFAULT_LAYER, INPUT_LAYER,
 	};
