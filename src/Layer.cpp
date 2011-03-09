@@ -25,13 +25,13 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
  * @param _layerID the UID of this layer within the Cortex
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
-		int _cols, int _layerID, bool connectToSelf) :
-	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f),
-			timestep(0), connectionPattern(ConnectionTemplate()) {
+Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows, int _cols,
+		int _layerID, bool connectToSelf) :
+	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
+			connectionPattern(ConnectionTemplate()) {
 	// initialize the update model
 	// TODO: make this threaded
-	UpdateModel::ptr updateModel ( new UpdateTemplate() );
+	UpdateModel::ptr updateModel(new UpdateTemplate());
 
 	assemblies.reserve(rows);
 
@@ -68,9 +68,9 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Layer(int _rows,
 
 	std::string filename = out.str();
 
-        layer_tick_f = this->fopen(filename.c_str(), "w");
+	layer_tick_f = fopen(filename.c_str(), "w");
 
-        this->fprintf(layer_tick_f, "%s", layer_init.c_str());
+	fprintf(layer_tick_f, "%s", layer_init.c_str());
 #endif
 }
 
@@ -81,7 +81,7 @@ Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Layer() {
 	delete[] assemblyOutputBlock;
 
 #ifdef DEBUG_LAYER_OUTPUT
-        this->fclose(layer_tick_f);
+	fclose(layer_tick_f);
 #endif
 }
 
@@ -135,7 +135,8 @@ float Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
  * @see connectLayerToLayer()
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectToLayer(AssemblyLayer_ID target) {
+void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectToLayer(
+		AssemblyLayer_ID target) {
 	connectLayerToLayer(getAssemblyLayer(), target);
 }
 
@@ -160,8 +161,7 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerTo
 		for (unsigned int col = 0; col < projecting->at(row).size(); ++col) {
 			AssemblyLocation location(row, col, projectingID);
 
-			LocalizedAssembly sendingAssembly(&(projecting->at(row)[col]),
-					&location);
+			LocalizedAssembly sendingAssembly(&(projecting->at(row)[col]), &location);
 
 			connectAssemblyToLayer(sendingAssembly, receivingLayer);
 		}
@@ -224,7 +224,7 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssembl
 		return;
 	}
 
-	Connection::ptr c ( new Connection() );
+	Connection::ptr c(new Connection());
 
 	sending->addOutgoingConnection(c);
 	receiving->addIncomingConnection(c);
@@ -240,8 +240,7 @@ void Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectAssembl
  * @return the unique identification number of the Assembly at (col,row,layerID)
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-int Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyID(
-		int row, int col) {
+int Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::getAssemblyID(int row, int col) {
 	int layer_field = layerID * 1000000;
 	int row_field = row * 1000;
 

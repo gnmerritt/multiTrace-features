@@ -12,14 +12,13 @@ const float INITIAL_TOTAL_LTCS = 0.4f;
 // used by debug printf's
 #ifdef DEBUG_ASSEMBLY_OUTPUT
 const std::string assembly_tick = "%d\t%f\t%f\t%f\t%f\t%f\n";
-const std::string assembly_init =
-		"Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
+const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
 #endif
 
 template<class LearningTemplate>
 Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
-	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model),
-			input(Connection::vector()), output(Connection::vector()){
+	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model), input(
+			Connection::vector()), output(Connection::vector()) {
 	initializeLearningRule();
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
@@ -28,9 +27,9 @@ Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
 
 	std::string filename = out.str();
 
-        tick_f = this->fopen(filename.c_str(), "w");
+	tick_f = fopen(filename.c_str(), "w");
 
-        this->fprintf(tick_f, "%s", assembly_init.c_str());
+	fprintf(tick_f, "%s", assembly_init.c_str());
 #endif
 }
 
@@ -39,7 +38,7 @@ Assembly<LearningTemplate>::~Assembly() {
 	delete state;
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-        this->fclose(tick_f);
+	fclose(tick_f);
 #endif
 }
 
@@ -62,8 +61,7 @@ void Assembly<LearningTemplate>::addIncomingConnection(Connection::ptr newInput)
  * @param newOutput Connection added to our output vector
  */
 template<class LearningTemplate>
-void Assembly<LearningTemplate>::addOutgoingConnection(
-		Connection::ptr newOutput) {
+void Assembly<LearningTemplate>::addOutgoingConnection(Connection::ptr newOutput) {
 	output.push_back(newOutput);
 }
 
@@ -72,7 +70,7 @@ void Assembly<LearningTemplate>::addOutgoingConnection(
  */
 template<class LearningTemplate>
 void Assembly<LearningTemplate>::initializeLearningRule() {
-	learningRule = LearningRule::ptr ( new LearningTemplate(state, &(input)) );
+	learningRule = LearningRule::ptr(new LearningTemplate(state, &(input)));
 }
 
 /**
@@ -100,8 +98,8 @@ float Assembly<LearningTemplate>::tick(float regional_activation) {
 
 	// log timestep activity to our debug file in /tmp
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(),
-			getLTCS(), getSTCS(), getFatigue(), getRegionalInhibition());
+	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
+			getFatigue(), getRegionalInhibition());
 #endif
 
 	// return our activation to our Layer
