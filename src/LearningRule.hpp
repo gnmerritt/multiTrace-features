@@ -12,8 +12,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "AssemblyState.h"
-#include "Connection.h"
+#include "AssemblyState.hpp"
+#include "Connection.hpp"
 
 class LearningRule {
 public:

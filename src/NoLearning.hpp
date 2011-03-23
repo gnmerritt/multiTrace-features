@@ -16,7 +16,7 @@
 #ifndef NOLEARNING_H_
 #define NOLEARNING_H_
 
-#include "LearningRule.h"
+#include "LearningRule.hpp"
 
 class NoLearning: public LearningRule {
 public:

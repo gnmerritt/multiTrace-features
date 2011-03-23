@@ -13,7 +13,7 @@
 #ifndef HEBBIANLEARNING_H_
 #define HEBBIANLEARNING_H_
 
-#include "LearningRule.h"
+#include "LearningRule.hpp"
 
 class HebbianLearning: public LearningRule {
 public:

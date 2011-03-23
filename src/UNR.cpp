@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "UNR.h"
+#include "UNR.hpp"
 
 const float PERCENT_CONNECTED = 0.85;
 const int MAX_CONNECTION_Z = 1;

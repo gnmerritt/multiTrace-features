@@ -15,7 +15,7 @@
 
 #include <queue>
 
-#include "Layer.h"
+#include "Layer.hpp"
 
 template<class ConnectionTemplate, class Observation>
 class InputLayer: public Layer<ConnectionTemplate> {

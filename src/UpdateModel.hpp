@@ -16,8 +16,8 @@
 
 #include <pthread.h>
 
-#include "AssemblyState.h"
-#include "Connection.h"
+#include "AssemblyState.hpp"
+#include "Connection.hpp"
 
 #include <boost/shared_ptr.hpp>
 

@@ -8,7 +8,7 @@
 #ifndef TEST_LAYER_H_
 #define TEST_LAYER_H_
 
-#include "AssemblyIncludes.h"
+#include "AssemblyIncludes.hpp"
 
 // Layer-level
 bool noInputLayer1_1();

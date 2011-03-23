@@ -17,7 +17,7 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "Layer.h"
+#include "Layer.hpp"
 
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Cortex {
@@ -33,8 +33,7 @@ private:
 	};
 
 public:
-	Cortex(int _numStdLayers, int rowsPerLayer, int colsPerLayer, int connectTo, int connectFrom,
-			std::string _testName, std::string _logLocation);
+        Cortex(int _numStdLayers, int rowsPerLayer, int colsPerLayer, int connectTo, int connectFrom);
 	virtual ~Cortex();
 
 	void addLayer(int layerType, int rows, int cols);

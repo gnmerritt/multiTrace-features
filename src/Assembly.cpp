@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "Assembly.h"
+#include "Assembly.hpp"
 
 const float INITIAL_TOTAL_LTCS = 0.4f;
 

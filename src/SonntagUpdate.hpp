@@ -39,7 +39,7 @@
 #ifndef SONNTAGUPDATE_H_
 #define SONNTAGUPDATE_H_
 
-#include "UpdateModel.h"
+#include "UpdateModel.hpp"
 
 class SonntagUpdate: public UpdateModel {
 public:

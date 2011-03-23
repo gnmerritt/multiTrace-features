@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "Connection.h"
+#include "Connection.hpp"
 
 Connection::Connection() :
 	ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), activity(INITIAL_ACTIVITY) {

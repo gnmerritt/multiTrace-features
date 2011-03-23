@@ -12,7 +12,7 @@
 #ifndef UNR_H_
 #define UNR_H_
 
-#include "ConnectionPattern.h"
+#include "ConnectionPattern.hpp"
 
 #include <time.h>
 #include <iostream>

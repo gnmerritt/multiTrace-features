@@ -20,14 +20,14 @@
 #include <vector>
 #include <utility>
 
-#include "Assembly.h"
+#include "Assembly.hpp"
 #include "Assembly.cpp" // for template class functions
-#include "UNR.h"
-#include "SonntagUpdate.h"
+#include "UNR.hpp"
+#include "SonntagUpdate.hpp"
 
 // types of LearningRules
-#include "NoLearning.h"
-#include "HebbianLearning.h"
+#include "NoLearning.hpp"
+#include "HebbianLearning.hpp"
 
 #define DEBUG_LAYER_OUTPUT
 

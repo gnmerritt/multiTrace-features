@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "Layer.h"
+#include "Layer.hpp"
 
 #ifdef DEBUG_LAYER_OUTPUT
 const std::string layer_tick = "%d\t%f\n";

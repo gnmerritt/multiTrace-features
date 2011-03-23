@@ -14,7 +14,7 @@
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt
  *
- *  @see Assembly.h
+ *  @see Assembly.hpp
  */
 
 #ifndef ASSEMBLYSTATE_H_

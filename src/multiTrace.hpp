@@ -9,16 +9,16 @@
 #ifndef MULTI_TRACE_H
 #define MULTI_TRACE_H
 
-#include "Cortex.h"
+#include "Cortex.hpp"
 
 // connection models
-#include "UNR.h"
+#include "UNR.hpp"
 
 // update models
-#include "SonntagUpdate.h"
+#include "SonntagUpdate.hpp"
 
 // learning rules
-#include "NoLearning.h"
-#include "HebbianLearning.h"
+#include "NoLearning.hpp"
+#include "HebbianLearning.hpp"
 
 #endif

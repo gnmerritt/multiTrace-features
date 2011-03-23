@@ -8,7 +8,7 @@
  *  Chown E (2002) Reminiscence and arousal: a connectionist model.
  */
 
-#include "SonntagUpdate.h"
+#include "SonntagUpdate.hpp"
 
 #include <cmath>
 

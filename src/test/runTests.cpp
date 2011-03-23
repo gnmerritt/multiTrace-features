@@ -5,8 +5,8 @@
  *      Author: Nathan Merritt
  */
 
-#include "test_Assembly.h"
-#include "test_Layer.h"
+#include "test_Assembly.hpp"
+#include "test_Layer.hpp"
 
 /** Runs the unit tests, reporting results to stdout!
  *

@@ -16,10 +16,10 @@
 #include <cstring>
 #include <sstream>
 
-#include "AssemblyState.h"
-#include "LearningRule.h"
-#include "UpdateModel.h"
-#include "Connection.h"
+#include "AssemblyState.hpp"
+#include "LearningRule.hpp"
+#include "UpdateModel.hpp"
+#include "Connection.hpp"
 
 static const int MINIMUM_FULL_ID = 1000000;
 static const int ROW_ID = 100000; // row is middle 3 digits nnn,___,nnn

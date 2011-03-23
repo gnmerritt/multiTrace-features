@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "HebbianLearning.h"
+#include "HebbianLearning.hpp"
 
 HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
 	LearningRule(state, input) {

@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "Cortex.h"
+#include "Cortex.hpp"
 
 /**
  * @brief Cortex constructor
@@ -22,9 +22,8 @@
  */
 template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Cortex(int _numStdLayers,
-		int rowsPerLayer, int colsPerLayer, int connectFrom, int connectTo, std::string _testName,
-		std::string _logLocation) :
-	numberOfStdLayers(0), testName(_testName), logLocation(_logLocation) {
+		int rowsPerLayer, int colsPerLayer, int connectFrom, int connectTo) :
+	numberOfStdLayers(0), testName(""), logLocation("") {
 
 	layers.reserve(_numStdLayers);
 

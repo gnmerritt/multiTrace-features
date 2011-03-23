@@ -13,7 +13,7 @@
 #ifndef TEST_ASSEMBLY_H_
 #define TEST_ASSEMBLY_H_
 
-#include "AssemblyIncludes.h"
+#include "AssemblyIncludes.hpp"
 
 #define DEBUG_ASSEMBLY_OUTPUT
 

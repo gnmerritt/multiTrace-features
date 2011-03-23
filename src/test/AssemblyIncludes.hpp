@@ -13,13 +13,13 @@
 #include <stdio.h>
 #include <iostream>
 
-#include "../Assembly.h"
-#include "../SonntagUpdate.h"
-#include "../NoLearning.h"
+#include "../Assembly.hpp"
+#include "../SonntagUpdate.hpp"
+#include "../NoLearning.hpp"
 
-#include "../Layer.h"
+#include "../Layer.hpp"
 #include "../Layer.cpp" // for template class includes
-#include "../UNR.h"
+#include "../UNR.hpp"
 
 //#define DEBUG_OUTPUT
 

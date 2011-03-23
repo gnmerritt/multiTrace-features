@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "test_Layer.h"
+#include "test_Layer.hpp"
 
 const static float LAYER_THRESHOLD_ACTIVE = 0.7f;
 const static float LAYER_THRESHOLD_SILENT = 0.1f;

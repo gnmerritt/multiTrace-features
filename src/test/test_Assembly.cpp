@@ -5,7 +5,7 @@
  *      Author: Nathan Merritt
  */
 
-#include "test_Assembly.h"
+#include "test_Assembly.hpp"
 
 const float FIRING_THRESH = 0.7f; /** the level at which an Assembly is considered fully active */
 
