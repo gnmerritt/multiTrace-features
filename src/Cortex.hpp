@@ -14,6 +14,8 @@
 
 #include <vector>
 #include <iostream>
+#include <set>
+#include <utility>
 
 #include <boost/shared_ptr.hpp>
 
@@ -24,9 +26,10 @@
 class Cortex {
 public:
 	typedef std::vector<Layer> LayerVector;
-	// NOTE: you will need to declare iterators as 'typename LayerVector::iterator foo'
-
 	typedef boost::shared_ptr<Cortex> ptr;
+
+        typedef std::pair<int, int> LayerConnection;
+        typedef std::set<LayerConnection> ConnectionMap;
 
 	enum LayerType {
 		DEFAULT_LAYER, INPUT_LAYER,
@@ -53,6 +56,7 @@ public:
 
 private:
 	LayerVector layers;
+        ConnectionMap connectedLayers;
 	int numberOfStdLayers;
 
 	float averageLayerActivation;

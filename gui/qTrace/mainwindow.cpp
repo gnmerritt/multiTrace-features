@@ -37,7 +37,9 @@ Cortex::ptr MainWindow::createCortexFromParameters() {
     Cortex::ptr newCortex ( new Cortex() );
 
     for (unsigned int layer = 0; layer < numberOfLayers; ++layer) {
-        newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i, Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
+        int newLayer = newCortex->addLayer(connectionTemplate_i, updateModel_i,
+                                           learningRule_i, Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
+        newCortex->connectLayerRange(newLayer, connectFrom, connectTo);
     }
 
     newCortex->setTestName(testName.toStdString());

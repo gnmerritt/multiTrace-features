@@ -13,7 +13,8 @@
  * Doesn't do much work, all the fun stuff is done via addLayer and connectLayerRange
  */
 Cortex::Cortex() :
-	numberOfStdLayers(0), testName(""), logLocation("") {
+        layers(LayerVector()), connectedLayers(ConnectionMap()), numberOfStdLayers(0),
+        testName(""), logLocation("") {
 }
 
 Cortex::~Cortex() {
@@ -59,8 +60,8 @@ void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
 	int bottom = layerID + connectFrom;
 	int top = layerID + connectTo;
 
-	for (int target = bottom; target <= top; ++target) {
-		if (target >= 0)
+	for (int target = bottom; target <= top; ++target) {               
+                if (target >= 0)
 			connectLayerToLayer(layerID, target);
 	}
 }
@@ -79,11 +80,15 @@ void Cortex::connectLayerToLayer(int fromID, int toID) {
 		return;
 
 	// don't double up on connections (although both directions are allowed)
-	// TODO: re-implement this
+        LayerConnection newConnection(fromID, toID);
+        if (connectedLayers.find(newConnection) != connectedLayers.end()) {
+            return;
+        }
 
 	Layer::AssemblyLayer_ID target = layers[toID].getAssemblyLayer();
 
 	layers[fromID].connectToLayer(target);
+        connectedLayers.insert(newConnection);
 }
 
 /**
