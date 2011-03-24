@@ -43,6 +43,14 @@ public:
 
 	void tick(); // will tick all the layers
 
+        void setTestName(std::string name) {
+            testName = name;
+        }
+
+        void setLogLocation(std::string location) {
+            logLocation = location;
+        }
+
 private:
 	LayerVector layers;
 	int numberOfStdLayers;

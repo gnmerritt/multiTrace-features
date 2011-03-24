@@ -1,8 +1,8 @@
+#include <stdio.h>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "cortexviewer.h"
-
-#include <stdio.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -33,10 +33,15 @@ MainWindow::~MainWindow()
   *
   * @return shared pointer to the instantiated Cortex object
   */
-Cortex<UNR, SonntagUpdate, NoLearning>::ptr MainWindow::createCortexFromParameters() {
-    // TODO: figure out the templating
-    Cortex<UNR, SonntagUpdate, NoLearning>::ptr newCortex
-            ( new Cortex<UNR, SonntagUpdate, NoLearning>(numberOfLayers, layerRowSize,  layerColSize, connectTo, connectFrom, testName.toStdString(), saveDirectory.toStdString() ) );
+Cortex::ptr MainWindow::createCortexFromParameters() {
+    Cortex::ptr newCortex ( new Cortex() );
+
+    for (unsigned int layer = 0; layer < numberOfLayers; ++layer) {
+        newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i, Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
+    }
+
+    newCortex->setTestName(testName.toStdString());
+    newCortex->setLogLocation(saveDirectory.toStdString());
 
     return  newCortex;
 }

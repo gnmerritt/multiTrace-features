@@ -3,7 +3,7 @@
 
 #include <QWidget>
 
-#include "multiTrace.h"
+#include "multiTrace.hpp"
 
 namespace Ui {
     class CortexViewer;
@@ -17,10 +17,10 @@ public:
     explicit CortexViewer(QWidget *parent = 0);
     ~CortexViewer();
 
-    void setCortex(Cortex<UNR, SonntagUpdate, NoLearning>::ptr);
+    void setCortex(Cortex::ptr);
 
 private:
-    Cortex<UNR, SonntagUpdate, NoLearning>::ptr thisCortex;
+    Cortex::ptr thisCortex;
 
 private:
     Ui::CortexViewer *ui;

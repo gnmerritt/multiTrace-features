@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-#include "multiTrace.h"
+#include "multiTrace.hpp"
 
 namespace Ui {
     class MainWindow;
@@ -17,7 +17,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    Cortex<UNR, SonntagUpdate, NoLearning>::ptr createCortexFromParameters();
+    Cortex::ptr createCortexFromParameters();
 
 private:
     Ui::MainWindow *ui;

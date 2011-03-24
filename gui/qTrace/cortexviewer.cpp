@@ -13,7 +13,7 @@ CortexViewer::~CortexViewer()
     delete ui;
 }
 
-void CortexViewer::setCortex(Cortex<UNR, SonntagUpdate, NoLearning>::ptr newCortex) {
+void CortexViewer::setCortex(Cortex::ptr newCortex) {
     thisCortex = newCortex;
 }
 

@@ -11,17 +11,9 @@
 
 #include "Cortex.hpp"
 
-// connection models
-#include "ConnectionPattern.hpp"
-#include "UNR.hpp"
+#include "ConnectionPatterns.hpp"
+#include "UpdateModels.hpp"
+#include "LearningRules.hpp"
 
-// update models
-#include "UpdateModel.hpp"
-#include "SonntagUpdate.hpp"
-
-// learning rules
-#include "LearningRule.hpp"
-#include "NoLearning.hpp"
-#include "HebbianLearning.hpp"
 
 #endif
