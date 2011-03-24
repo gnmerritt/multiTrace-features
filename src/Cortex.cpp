@@ -9,51 +9,16 @@
 
 /**
  * @brief Cortex constructor
- * Constructor for the Cortex. Builds and wires layers up according to parameters, after
- * a Cortex object has been constructed it is ready to run, via tick()
  *
- * @param _numStdLayers how many Layers will be created (more can be added later)
- * @param _rowsPerLayer number of rows in each Layer (homogenous for now)
- * @param _colsPerLayer number of columns in each Layer (homogenous for now)
- * @param connectTo how far "below" each layer sends connections, e.g. -1 indicates a connection to the layer immediately below
- * @param connectFrom how far "above" each layer sends connections, e.g. +2 indicates connections to the next two layers
- * @param _testName optional name for this test run
- * @param _logLocation optional, absolute path to place log files in
+ * Doesn't do much work, all the fun stuff is done via addLayer and connectLayerRange
  */
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::Cortex(int _numStdLayers,
-		int rowsPerLayer, int colsPerLayer, int connectFrom, int connectTo) :
+Cortex::Cortex() :
 	numberOfStdLayers(0), testName(""), logLocation("") {
-
-	layers.reserve(_numStdLayers);
-
-	// create all the layers
-	for (int i = 0; i < numberOfStdLayers; i++) {
-		addLayer(Cortex::DEFAULT_LAYER, rowsPerLayer, colsPerLayer);
-	}
-
-	// mark all Layers as "not connected"
-	connectedLayer = new bool*[_numStdLayers];
-	connectedLayer[0] = new bool[_numStdLayers * _numStdLayers];
-	for (int i = 1; i < _numStdLayers; ++i) {
-		connectedLayer[i] = connectedLayer[i - 1] + _numStdLayers;
-	}
-
-	// connect each Layer to other layers (after they're created)
-	for (int layerID = 0; layerID < layers.size(); ++layerID) {
-		connectLayerRange(layerID, connectFrom, connectTo);
-	}
-
-	// TODO: testName, logLocation don't do anything yet
 }
 
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Cortex() {
-	delete[] connectedLayer[0];
-	delete[] connectedLayer;
-
-	// all memory management handled by lower level objects, /shouldn't/ have any dynamically
-	// other bits of allocated memory at this level
+Cortex::~Cortex() {
+	// all memory management handled by lower level objects, /shouldn't/ have any bits of
+	// dynamically allocated memory at this level
 
 	// TODO: valgrind and figure out if this is true or not
 }
@@ -61,23 +26,25 @@ Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::~Cortex() {
 /**
  * Adds a new Layer to our LayerVector
  *
+ * @param connectionPattern sets the Layer's connectivity, from Cortex::ConnectionPatterns
+ * @param updateModel the Layer's update model, @see Cortex::UpdateModels
+ * @param learningRule how the Layer learns, @see Cortex::LearningRules
  * @param layerType for now, DEFAULT or INPUT
  * @param rows number of rows in the new Layer
  * @param cols number of columns in the new Layer
  */
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::addLayer(int layerType,
+int Cortex::addLayer(int connectionPattern, int updateModel, int learningRule, int layerType,
 		int rows, int cols) {
-
 	if (layerType == Cortex::DEFAULT_LAYER) {
-		Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate> newLayer(rows, cols,
-				numberOfStdLayers, false);
+		Layer newLayer(connectionPattern, updateModel, learningRule, rows, cols, numberOfStdLayers, false);
 		numberOfStdLayers++;
 
 		layers.push_back(newLayer);
 	}
 
 	// TODO: INPUT LAYER(s)!
+
+	return numberOfStdLayers - 1;
 }
 
 /**
@@ -88,9 +55,7 @@ void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::addLayer(int 
  * @param connectTo upper bound of connection range
  * @see connectLayerRange()
  */
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerRange(int layerID,
-		int connectFrom, int connectTo) {
+void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
 	int bottom = layerID + connectFrom;
 	int top = layerID + connectTo;
 
@@ -108,22 +73,17 @@ void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerR
  * @param fromID Layer that connections originate from
  * @param toID Layer connections "synapse on"
  */
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerToLayer(int fromID,
-		int toID) {
+void Cortex::connectLayerToLayer(int fromID, int toID) {
 	// sanity checks
 	if (fromID < 0 || toID < 0 || fromID > layers.size() || toID > layers.size())
 		return;
 
 	// don't double up on connections (although both directions are allowed)
-	if (connectedLayer[fromID][toID])
-		return;
+	// TODO: re-implement this
 
-	typename Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate>::AssemblyLayer_ID target =
-			layers[toID].getAssemblyLayer();
+	Layer::AssemblyLayer_ID target = layers[toID].getAssemblyLayer();
 
 	layers[fromID].connectToLayer(target);
-	connectedLayer[fromID][toID] = true;
 }
 
 /**
@@ -131,10 +91,8 @@ void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::connectLayerT
  * as a weighted sum of each Layer's activation multiplied by it's number of Assemblies.
  *
  */
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
-void Cortex<ConnectionTemplate, UpdateTemplate, LearningTemplate>::tick() {
-	// c++ is stupid. this won't compile w/out the 'typename' preface
-	typename LayerVector::iterator layer;
+void Cortex::tick() {
+	LayerVector::iterator layer;
 
 	float activation_sum = 0;
 	float assembly_sum = 0;

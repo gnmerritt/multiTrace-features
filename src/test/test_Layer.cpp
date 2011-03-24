@@ -18,7 +18,8 @@ const static float LAYER_THRESHOLD_SILENT = 0.1f;
  * @returns True if a 1x1 Layer is constructed and remains silent
  */
 bool noInputLayer1_1() {
-	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (1, 1, 1, true); // 1x1, layerID=1
+	Layer::ptr layer(new Layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
+			LearningRules::NO_LEARNING, 1, 1, 1, true)); // 1x1, layerID=1
 	int i;
 
 	for (i = 0; i < 500; ++i) {
@@ -42,7 +43,8 @@ bool noInputLayer1_1() {
  * @returns True if a 30x30 layer can be created and ticked
  */
 bool noInputLayer30_30() {
-	Layer<UNR, SonntagUpdate, NoLearning> *layer = new Layer<UNR, SonntagUpdate, NoLearning> (30, 30, 2, true); // 30x30, layerID=2
+	Layer::ptr layer(new Layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
+			LearningRules::NO_LEARNING, 30, 30, 2, true)); // 30x30, layerID=2
 
 	for (int i = 0; i < 500; ++i) {
 		float avgOutput = layer->tick();
@@ -65,14 +67,12 @@ bool noInputLayer30_30() {
  * activity in the whole layer
  */
 bool singleInputLayer10_10() {
-	Layer<UNR, SonntagUpdate, NoLearning> layer(10, 10, 3, true);
+	Layer layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
+			LearningRules::NO_LEARNING, 10, 10, 3, true);
 
-	/** yes, it's gross to declare these outside of a Layer. Luckily this won't happen except
-	 * for debugging / unit testing
-	 */
-	Layer<UNR, SonntagUpdate, NoLearning>::AssemblyLayer *assemblies = layer.getAssemblyLayer().first;
-	Layer<UNR, SonntagUpdate, NoLearning>::AssemblyLayer::iterator row;
-	Layer<UNR, SonntagUpdate, NoLearning>::AssemblyVector::iterator col;
+	Layer::AssemblyLayer *assemblies = layer.getAssemblyLayer().first;
+	Layer::AssemblyLayer::iterator row;
+	Layer::AssemblyVector::iterator col;
 
 	const int numNewConnections = 20;
 
@@ -80,7 +80,7 @@ bool singleInputLayer10_10() {
 	c.reserve(numNewConnections);
 
 	for (int i = 0; i < numNewConnections; ++i) {
-		Connection::ptr connec ( new Connection() );
+		Connection::ptr connec(new Connection());
 		c.push_back(connec);
 		c[i]->setActivity(99);
 	}
@@ -100,7 +100,7 @@ bool singleInputLayer10_10() {
 	for (int i = 0; i < 1000; ++i) {
 		if (i == 50) {
 			for (int i = 0; i < numNewConnections; ++i) {
-				c[i] = Connection::ptr( new Connection() );
+				c[i] = Connection::ptr(new Connection());
 				c[i]->setActivity(0);
 			}
 		}

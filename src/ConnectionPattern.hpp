@@ -14,18 +14,6 @@
 #ifndef CONNECTIONPATTERN_H_
 #define CONNECTIONPATTERN_H_
 
-class AssemblyLocation;
-
-class ConnectionPattern {
-public:
-	ConnectionPattern() {
-	}
-	virtual ~ConnectionPattern() {
-	}
-
-	virtual bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) = 0;
-};
-
 /**
  * Describes an Assembly in 3-space (Row,Col,Layer)
  */
@@ -40,6 +28,18 @@ public:
 
 public:
 	int row, column, layer;
+};
+
+class ConnectionPattern {
+public:
+	ConnectionPattern() {
+	}
+	virtual ~ConnectionPattern() {
+	}
+
+	bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) {
+		return false;
+	}
 };
 
 #endif /* CONNECTIONPATTERN_H_ */

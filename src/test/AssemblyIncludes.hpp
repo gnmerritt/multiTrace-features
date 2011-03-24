@@ -14,12 +14,11 @@
 #include <iostream>
 
 #include "../Assembly.hpp"
-#include "../SonntagUpdate.hpp"
-#include "../NoLearning.hpp"
+#include "../UpdateModels.hpp"
+#include "../LearningRules.hpp"
 
 #include "../Layer.hpp"
-#include "../Layer.cpp" // for template class includes
-#include "../UNR.hpp"
+#include "../ConnectionPatterns.hpp"
 
 //#define DEBUG_OUTPUT
 

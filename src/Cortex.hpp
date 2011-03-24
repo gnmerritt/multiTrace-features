@@ -17,26 +17,27 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "ConnectionPatterns.hpp"
+
 #include "Layer.hpp"
 
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Cortex {
 public:
-	typedef std::vector<Layer<ConnectionTemplate, UpdateTemplate, LearningTemplate> > LayerVector;
+	typedef std::vector<Layer> LayerVector;
 	// NOTE: you will need to declare iterators as 'typename LayerVector::iterator foo'
 
 	typedef boost::shared_ptr<Cortex> ptr;
 
-private:
 	enum LayerType {
 		DEFAULT_LAYER, INPUT_LAYER,
 	};
 
 public:
-        Cortex(int _numStdLayers, int rowsPerLayer, int colsPerLayer, int connectTo, int connectFrom);
+	Cortex();
 	virtual ~Cortex();
 
-	void addLayer(int layerType, int rows, int cols);
+	int addLayer(int connectionPattern, int updateModel, int learningRule, int layerType, int rows,
+			int cols);
 	void connectLayerRange(int layerID, int connectFrom, int connectTo);
 	void connectLayerToLayer(int fromID, int toID);
 
@@ -45,8 +46,6 @@ public:
 private:
 	LayerVector layers;
 	int numberOfStdLayers;
-
-	bool** connectedLayer;
 
 	float averageLayerActivation;
 

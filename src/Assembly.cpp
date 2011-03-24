@@ -15,9 +15,8 @@ const std::string assembly_tick = "%d\t%f\t%f\t%f\t%f\t%f\n";
 const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregional_activation\n";
 #endif
 
-template<class LearningTemplate>
-Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
-	id(_id), timestep(0), state(new AssemblyState()), updateModel(_model), input(
+Assembly::Assembly(int _id, UpdateModel::ptr _model, int _learningRule) :
+	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()), updateModel(_model), input(
 			Connection::vector()), output(Connection::vector()) {
 	initializeLearningRule();
 
@@ -33,8 +32,7 @@ Assembly<LearningTemplate>::Assembly(int _id, UpdateModel::ptr _model) :
 #endif
 }
 
-template<class LearningTemplate>
-Assembly<LearningTemplate>::~Assembly() {
+Assembly::~Assembly() {
 	delete state;
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
@@ -49,8 +47,7 @@ Assembly<LearningTemplate>::~Assembly() {
  * @param newInput Connection added to our input vector
  * @sideeffect reinitializes the initial connection strengths (undoes learning)
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::addIncomingConnection(Connection::ptr newInput) {
+void Assembly::addIncomingConnection(Connection::ptr newInput) {
 	input.push_back(newInput);
 }
 
@@ -60,17 +57,15 @@ void Assembly<LearningTemplate>::addIncomingConnection(Connection::ptr newInput)
  * @see connectAssemblyToAssembly()
  * @param newOutput Connection added to our output vector
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::addOutgoingConnection(Connection::ptr newOutput) {
+void Assembly::addOutgoingConnection(Connection::ptr newOutput) {
 	output.push_back(newOutput);
 }
 
 /**
  * Run the learning rule constructor
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::initializeLearningRule() {
-	learningRule = LearningRule::ptr(new LearningTemplate(state, &(input)));
+void Assembly::initializeLearningRule() {
+	learningRule = LearningRule::ptr(LearningRules::instanceOf(ruleId, state, &(input)));
 }
 
 /**
@@ -82,8 +77,7 @@ void Assembly<LearningTemplate>::initializeLearningRule() {
  * @see UpdateModel.h
  * @see LearningRule.h
  */
-template<class LearningTemplate>
-float Assembly<LearningTemplate>::tick(float regional_activation) {
+float Assembly::tick(float regional_activation) {
 	// update our internal state with layer data
 	state->regional_activation = regional_activation;
 
@@ -112,8 +106,7 @@ float Assembly<LearningTemplate>::tick(float regional_activation) {
  *
  * @param in a pointer to a ConnectionVector which we will use as input
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::setIncomingConnections(Connection::vector in) {
+void Assembly::setIncomingConnections(Connection::vector in) {
 	input = in;
 
 	initializeLearningRule();
@@ -127,8 +120,7 @@ void Assembly<LearningTemplate>::setIncomingConnections(Connection::vector in) {
  *
  * @param out a pointer to a ConnectionVector which we will keep updated with our activity
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::setOutgoingConnections(Connection::vector out) {
+void Assembly::setOutgoingConnections(Connection::vector out) {
 	output = out;
 }
 
@@ -136,8 +128,7 @@ void Assembly<LearningTemplate>::setOutgoingConnections(Connection::vector out) 
  * Sets the activation level of each outgoing connection to our output,
  * so that we communicate with connected assemblies.
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::updateOutgoingConnections() {
+void Assembly::updateOutgoingConnections() {
 	Connection::vector::iterator out;
 
 	for (out = output.begin(); out != output.end(); ++out) {
@@ -151,8 +142,7 @@ void Assembly<LearningTemplate>::updateOutgoingConnections() {
  *
  * @see updateOutgoingConnections()
  */
-template<class LearningTemplate>
-void Assembly<LearningTemplate>::initializeIncConnectionStrengths() {
+void Assembly::initializeIncConnectionStrengths() {
 	int numConnections = input.size();
 
 	if (numConnections == 0) {

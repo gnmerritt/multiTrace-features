@@ -17,7 +17,7 @@
 #include <sstream>
 
 #include "AssemblyState.hpp"
-#include "LearningRule.hpp"
+#include "LearningRules.hpp"
 #include "UpdateModel.hpp"
 #include "Connection.hpp"
 
@@ -27,10 +27,9 @@ static const int COLUMN_ID = 100; // column is last three digits
 
 #define DEBUG_ASSEMBLY_OUTPUT
 
-template<class LearningTemplate>
 class Assembly {
 public:
-	Assembly(int _id, UpdateModel::ptr _model);
+	Assembly(int _id, UpdateModel::ptr _model, int _learningRule);
 	virtual ~Assembly();
 
 	void addIncomingConnection(Connection::ptr newInput);
@@ -87,6 +86,7 @@ private:
 
 private:
 	int id; /** unique in a network, contains row,col,layerId @see getAssemblyID */
+	int ruleId;
 
 	int timestep; /** how many times tick() has been called */
 

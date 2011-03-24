@@ -20,21 +20,20 @@
 #include <vector>
 #include <utility>
 
-#include "Assembly.hpp"
-#include "Assembly.cpp" // for template class functions
-#include "UNR.hpp"
-#include "SonntagUpdate.hpp"
+#include <boost/shared_ptr.hpp>
 
-// types of LearningRules
-#include "NoLearning.hpp"
-#include "HebbianLearning.hpp"
+#include "ConnectionPatterns.hpp"
+#include "UpdateModels.hpp"
+
+#include "Assembly.hpp"
 
 #define DEBUG_LAYER_OUTPUT
 
-template<class ConnectionTemplate, class UpdateTemplate, class LearningTemplate>
 class Layer {
 public:
-	typedef Assembly<LearningTemplate> Assembly_t;
+	typedef boost::shared_ptr<Layer> ptr;
+
+	typedef Assembly Assembly_t; // possibly useful in the future?
 
 	// holds our Assemblies (of type Assembly_t)
 	typedef std::vector<Assembly_t> AssemblyVector;
@@ -45,7 +44,8 @@ public:
 	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
 public:
-	Layer(int rows, int cols, int layerID, bool connectToSelf);
+	Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
+			int _layerID, bool connectToSelf);
 	virtual ~Layer();
 
 	float tick();
@@ -61,7 +61,7 @@ public:
 	}
 
 	int getSize() const {
-		return rows*cols;
+		return rows * cols;
 	}
 
 	float** getOutputBlock() const {
@@ -71,26 +71,24 @@ public:
 	AssemblyLayer_ID getAssemblyLayer();
 
 private:
-	void connectLayerToLayer(AssemblyLayer_ID sendingLayer,
-			AssemblyLayer_ID receivingLayer);
-	void connectAssemblyToLayer(LocalizedAssembly sender,
-			AssemblyLayer_ID receivingLayer);
+	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
 	int getAssemblyID(int row, int col);
 
 public:
-	const int rows, cols;
+	int rows, cols;
 
 private:
 	AssemblyLayer assemblies;
-	const int layerID; /** 1 is the input layer */
+	int layerID; /** 1 is the input layer */
 
 	float lastActivationAverage;
 	float** assemblyOutputBlock;
 	int timestep;
 
-	ConnectionTemplate connectionPattern;
+	ConnectionPattern connectionPattern;
 
 #ifdef DEBUG_LAYER_OUTPUT
 	FILE *layer_tick_f;
