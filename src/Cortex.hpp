@@ -25,7 +25,6 @@
 
 class Cortex {
 public:
-	typedef std::vector<Layer> LayerVector;
 	typedef boost::shared_ptr<Cortex> ptr;
 
         typedef std::pair<int, int> LayerConnection;
@@ -46,6 +45,10 @@ public:
 
 	void tick(); // will tick all the layers
 
+        Layer::vector* getLayers() {
+            return &layers;
+        }
+
         void setTestName(std::string name) {
             testName = name;
         }
@@ -55,7 +58,7 @@ public:
         }
 
 private:
-	LayerVector layers;
+        Layer::vector layers;
         ConnectionMap connectedLayers;
 	int numberOfStdLayers;
 

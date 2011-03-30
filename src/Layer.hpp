@@ -32,6 +32,7 @@
 class Layer {
 public:
 	typedef boost::shared_ptr<Layer> ptr;
+        typedef std::vector<Layer> vector;
 
 	typedef Assembly Assembly_t; // possibly useful in the future?
 
@@ -71,9 +72,9 @@ public:
 	AssemblyLayer_ID getAssemblyLayer();
 
 private:
-	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
-	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
-	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
+        void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
+        void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
+        void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
 	int getAssemblyID(int row, int col);
 

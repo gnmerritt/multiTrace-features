@@ -13,7 +13,7 @@
  * Doesn't do much work, all the fun stuff is done via addLayer and connectLayerRange
  */
 Cortex::Cortex() :
-        layers(LayerVector()), connectedLayers(ConnectionMap()), numberOfStdLayers(0),
+        layers(Layer::vector()), connectedLayers(ConnectionMap()), numberOfStdLayers(0),
         testName(""), logLocation("") {
 }
 
@@ -25,7 +25,7 @@ Cortex::~Cortex() {
 }
 
 /**
- * Adds a new Layer to our LayerVector
+ * Adds a new Layer to our Layer::vector
  *
  * @param connectionPattern sets the Layer's connectivity, from Cortex::ConnectionPatterns
  * @param updateModel the Layer's update model, @see Cortex::UpdateModels
@@ -76,7 +76,7 @@ void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
  */
 void Cortex::connectLayerToLayer(int fromID, int toID) {
 	// sanity checks
-	if (fromID < 0 || toID < 0 || fromID > layers.size() || toID > layers.size())
+        if (fromID < 0 || toID < 0 || fromID >= layers.size() || toID >= layers.size())
 		return;
 
 	// don't double up on connections (although both directions are allowed)
@@ -97,7 +97,7 @@ void Cortex::connectLayerToLayer(int fromID, int toID) {
  *
  */
 void Cortex::tick() {
-	LayerVector::iterator layer;
+        Layer::vector::iterator layer;
 
 	float activation_sum = 0;
 	float assembly_sum = 0;

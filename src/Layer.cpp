@@ -79,8 +79,8 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 
 Layer::~Layer() {
 	// deallocate assemblyOtputBlock
-	delete[] assemblyOutputBlock[0];
-	delete[] assemblyOutputBlock;
+        //delete[] assemblyOutputBlock[0];
+        //delete[] assemblyOutputBlock;
 
 #ifdef DEBUG_LAYER_OUTPUT
 	fclose(layer_tick_f);
@@ -88,7 +88,7 @@ Layer::~Layer() {
 }
 
 Layer::AssemblyLayer_ID Layer::getAssemblyLayer() {
-	return Layer::AssemblyLayer_ID(&assemblies, layerID);
+        return AssemblyLayer_ID(&assemblies, layerID);
 }
 
 /**
@@ -111,7 +111,8 @@ float Layer::tick() {
 
 	// print to our debug file
 #ifdef DEBUG_LAYER_OUTPUT
-	fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
+        //fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
+        printf(layer_tick.c_str(), timestep, lastActivationAverage);
 #endif
 
 	// update the average activation (used for Regional Inhibition)

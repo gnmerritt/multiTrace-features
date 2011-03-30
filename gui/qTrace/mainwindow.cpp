@@ -36,10 +36,18 @@ MainWindow::~MainWindow()
 Cortex::ptr MainWindow::createCortexFromParameters() {
     Cortex::ptr newCortex ( new Cortex() );
 
+    // add all the Layers
     for (unsigned int layer = 0; layer < numberOfLayers; ++layer) {
-        int newLayer = newCortex->addLayer(connectionTemplate_i, updateModel_i,
-                                           learningRule_i, Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
-        newCortex->connectLayerRange(newLayer, connectFrom, connectTo);
+        newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i,
+                            Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
+    }
+
+    // and then connect them
+    Layer::vector *layers = newCortex->getLayers();
+    Layer::vector::iterator eachLayer;
+
+    for (eachLayer = layers->begin(); eachLayer != layers->end(); ++eachLayer) {
+        newCortex->connectLayerRange(eachLayer->getId(), connectFrom, connectTo);
     }
 
     newCortex->setTestName(testName.toStdString());
