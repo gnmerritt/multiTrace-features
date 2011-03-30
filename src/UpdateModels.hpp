@@ -25,7 +25,7 @@ public:
 		case (SONNTAG_UPDATE):
 			return new SonntagUpdate();
 		default:
-			break;
+                        return NULL;
 		}
 	}
 
