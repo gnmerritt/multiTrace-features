@@ -39,15 +39,18 @@ public:
 
 	float getOutput();
 
+	float getLTCS();
 	void setLTCS(float _ltcs);
 	void setSTCS(float _stcs);
 	void setActivity(float _activity);
 
-public:
+private:
 	float ltcs, stcs; /** connection strengths, see Sonntag (1991, pg94) */
 
 	float activity; /** activity of the presynaptic Assembly */
 	float last_activity; /** activity(t-1), for derivatives */
+
+	std::vector<float> changes;
 
 	pthread_mutex_t lock;
 };

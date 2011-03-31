@@ -6,10 +6,13 @@
  *  @see HebbianLearning.hpp
  */
 
+#include <algorithm>
+#include <math.h>
+
 #include "HebbianLearning.hpp"
 
 /** default parameterization, @see setParameters */
-static const float DEFAULT_PARAMETERS[] = { 0.01f, // learning strength
+static const float DEFAULT_PARAMETERS[] = { 0.001f, // learning strength
 		0.0f, // receiving learning (start)
 		0.0f, // receiving learning (stop)
 		0.0f, // sending contrib threshold
@@ -108,7 +111,7 @@ void HebbianLearning::tallyContributions() {
 	double totalInput = 0;
 	Connection::vector::iterator c;
 	for (c = incomingConnections->begin(); c != incomingConnections->end(); ++c) {
-		totalInput += (*c)->activity; // double dereferenced b/c Connection::vector is of pointers
+		totalInput += (*c)->getOutput(); // double dereferenced b/c Connection::vector is of pointers
 	}
 
 	// pass 2: for each input, scale contribution by receivingCurve() and sendingCurve(),
@@ -116,23 +119,52 @@ void HebbianLearning::tallyContributions() {
 	float receivingWeight = receivingCurve(postSynapticState->activity);
 	for (unsigned int i = 0; i < incomingConnections->size(); ++i) {
 		Connection::ptr input = incomingConnections->at(i);
-		const float percentContribution = input->activity / totalInput;
+		const float percentContribution = input->getOutput() / totalInput;
 		const float weightedContribution = percentContribution * sendingCurve(percentContribution)
 				* receivingWeight;
-		ConnectionContribution thisInput(i, weightedContribution);
-		storedContributions.push_front(thisInput);
+
+		storedContributions[i] += weightedContribution;
 	}
 }
 
 /**
+ * @brief Change incoming connection strengths (learn) based on our SynapseHistory
+ *
  * Applies changes in connection strengths that have been already calculated. This
  * method determines the changes in the strength of each connection based on that
  * connection's recent activity.
  *
+ * The change in connection strength is directly related to Assembly fatigue and
+ * parameters[LEARNING_STRENGTH], and dependent on the contributionCurve function.
+ *
  * @see tallyContributions()
  */
 void HebbianLearning::applyLearningToConnections() {
+	// sort each Connection by its total contribution
+	ContributionVector contributions;
+	contributions.reserve(storedContributions.size());
 
+	SynapseHistory::iterator stimulation;
+	for (stimulation = storedContributions.begin(); stimulation != storedContributions.end(); ++stimulation) {
+		ConnectionContribution c;
+		c.index = stimulation->first;
+		c.contribution = stimulation->second;
+		contributions.push_back(c);
+	}
+
+	sort(contributions.begin(), contributions.end());
+
+	// now, decide what happens to each Connection, using contributionCurve
+	for (unsigned int i = 0; i < contributions.size(); ++i) {
+		Connection::ptr thisConnection = incomingConnections->at(contributions[i].index);
+		const float connectionRank = i / contributions.size();
+		const float thisLTCS = thisConnection->getLTCS();
+		const float connectionChange = contributionCurve(connectionRank, thisLTCS);
+
+		const float scaledConnectionChange = connectionChange * parameters[LEARNING_STRENGTH]
+				* postSynapticState->fatigue;
+		thisConnection->setLTCS(thisLTCS + scaledConnectionChange);
+	}
 }
 
 /**
@@ -162,6 +194,24 @@ float HebbianLearning::receivingCurve(float receivingActivity) {
  */
 float HebbianLearning::sendingCurve(float sendingContribution) {
 	return 1.0f;
+}
+
+/**
+ *	@brief Changes connection strength using x^3 on [-1,1]
+ *
+ *	@todo Implement actual RRH here
+ *
+ * @param contributionRank a float on [-1,1] indicating where in the sorted array each
+ * 	Connection lies
+ */
+float HebbianLearning::contributionCurve(float contributionRank, float currentStrength) {
+	// shouldn't ever happen, but protect anywa
+	if (contributionRank < -1)
+		contributionRank = -1;
+	else if (contributionRank > 1)
+		contributionRank = 1;
+
+	return pow(contributionRank, 3);
 }
 
 /**

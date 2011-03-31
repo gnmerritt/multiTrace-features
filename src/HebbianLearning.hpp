@@ -35,8 +35,8 @@
 #ifndef HEBBIANLEARNING_H_
 #define HEBBIANLEARNING_H_
 
-#include <utility>
-#include <list>
+#include <map>
+#include <vector>
 
 #include "LearningRule.hpp"
 
@@ -53,11 +53,21 @@ public:
 	void setParameter(int index, float value);
 
 private:
-	typedef std::pair<int, float> ConnectionContribution; //  input->at(index), contribution
-	typedef std::list<ConnectionContribution> SynapseHistory;
+	struct ConnectionContribution {
+		int index;
+		float contribution;
+
+		// sort based on contribution
+		friend bool operator<(const ConnectionContribution &a, const ConnectionContribution &b) {
+			return a.contribution < b.contribution;
+		}
+	};
+	typedef std::vector<ConnectionContribution> ContributionVector;
+	typedef std::map<int, float> SynapseHistory; // index of Connection, and it's weighted contribution
 
 	float receivingCurve(float receivingActivity); // function of receiving activity
 	float sendingCurve(float sendingContribution); // function of sending's % contribution
+	float contributionCurve(float contributionRank, float currentStrength); // function of how much any Connection contributed compared to its peers
 
 	// functions to tally future learning at each tick, apply it
 	void tallyContributions();

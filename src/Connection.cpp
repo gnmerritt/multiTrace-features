@@ -18,14 +18,23 @@ Connection::~Connection() {
 
 float Connection::getOutput() {
 	pthread_mutex_lock(&lock);
-	float output = (ltcs + stcs) * activity;
+	const float output = (ltcs + stcs) * activity;
 	pthread_mutex_unlock(&lock);
 
 	return output;
 }
 
+float Connection::getLTCS() {
+	pthread_mutex_lock(&lock);
+	const float _ltcs = ltcs;
+	pthread_mutex_unlock(&lock);
+	return _ltcs;
+}
+
 void Connection::setLTCS(float _ltcs) {
 	pthread_mutex_lock(&lock);
+	const float delta = ltcs - _ltcs;
+	changes.push_back(delta);
 	ltcs = _ltcs;
 	pthread_mutex_unlock(&lock);
 }
