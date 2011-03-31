@@ -3,19 +3,23 @@
  *
  *  Created on: Feb 2, 2011
  *  @author Nathan Merritt
+ *  @see HebbianLearning.hpp
  */
 
 #include "HebbianLearning.hpp"
 
-/** default parameterization, @see setParameters*/
-const float DEFAULT_PARAMETERS = { 0.01f, // learning strength
+/** default parameterization, @see setParameters */
+static const float DEFAULT_PARAMETERS[] = { 0.01f, // learning strength
 		0.0f, // receiving learning (start)
 		0.0f, // receiving learning (stop)
 		0.0f, // sending contrib threshold
 		};
 
+/**
+ * Calls super constructor, and sets default parameters.
+ */
 HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
-	LearningRule(state, input) {
+	LearningRule(state, input), storedLearning(false) {
 	setParameters(DEFAULT_PARAMETERS);
 
 }
@@ -30,8 +34,75 @@ HebbianLearning::~HebbianLearning() {
  * @see LearningRule.h
  */
 void HebbianLearning::tick() {
+	const float last_activity = postSynapticState->output;
+	const float activity = postSynapticState->activity;
+	const float activity_derivative = activity - last_activity;
 
-	// TODO: think about this
+	// we are nearing full activation, record input connection contributions
+	if (activity > parameters[REC_LEARNING_START] && activity < parameters[REC_LEARNING_STOP]
+			&& activity_derivative >= 0) {
+		tallyContributions();
+	}
+
+	/** crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
+		this should get run when the Assembly has fired fully */
+	else if (activity > parameters[REC_LEARNING_STOP] && last_activity
+			<= parameters[REC_LEARNING_STOP]) {
+		storedLearning = true;
+	}
+
+	// Assembly failed to fire, delete any learning we may have stored
+	else if (activity < parameters[REC_LEARNING_STOP] && activity_derivative < 0 && storedLearning) {
+		storedLearning = false;
+		applyLearningToConnections();
+	}
+
+	// no default case on purpose
+}
+
+/**
+ *	Main method for determining changes in input connection strengths (ie, learning).
+ *  First, calculates the %contribution of each connection, then weights it by
+ *  receivingCurve() and sendingCurve(). These weighted values are then stored, and
+ *  if this Assembly becomes fully active than the incoming connection strengths
+ *  of any Assemblies that helped it fire are strengthened.
+ *
+ * @see receivingCurve()
+ * @see sendingCurve()
+ * @see applyLearningToConnections()
+ */
+void HebbianLearning::tallyContributions() {
+
+}
+
+/**
+ * Applies changes in connection strengths that have been already calculated. This
+ * method determines the changes in the strength of each connection based on that
+ * connection's recent activity.
+ *
+ * @see tallyContributions()
+ */
+void HebbianLearning::applyLearningToConnections() {
+
+}
+
+/**
+ * Implements phase-dependent learning
+ *
+ * @return learning coefficient for this point in the firing cycle
+ */
+float HebbianLearning::receivingCurve() {
+	return 1.0f;
+}
+
+/**
+ * Implements contribution-dependent learning, probably much more important
+ * than @see receivingCurve
+ *
+ * @return how important this sending connection is
+ */
+float HebbianLearning::sendingCurve(float sendingContribution) {
+	return 1.0f;
 }
 
 /**
@@ -47,7 +118,8 @@ void HebbianLearning::setParameters(const float newParams[]) {
 
 /**
  * Sets a specific parameter to the desired value. Use HebbianLearning::PARAMETER_COUNT
- * to access the parameter you want to change.
+ * to access the parameter you want to change. Fails silently if you specify an
+ * index that's out of range.
  *
  * @param index position in parameters to update
  * @param value new value to be set

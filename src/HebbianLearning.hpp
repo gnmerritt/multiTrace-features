@@ -47,6 +47,14 @@ public:
 	void setParameters(const float newParams[]);
 	void setParameter(int index, float value);
 
+private:
+	float receivingCurve(); // function of receiving activity
+	float sendingCurve(float sendingContribution); // function of sending's % contribution
+
+	// functions to tally future learning at each tick, apply it
+	void tallyContributions();
+	void applyLearningToConnections();
+
 public:
 	enum parameters {
 		LEARNING_STRENGTH,
@@ -59,6 +67,7 @@ public:
 private:
 	float parameters[PARAMETER_COUNT]; // for easy optimization via PSO
 
+	bool storedLearning;
 };
 
 #endif /* HEBBIANLEARNING_H_ */

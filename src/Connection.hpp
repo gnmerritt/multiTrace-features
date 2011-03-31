@@ -46,6 +46,8 @@ public:
 
 	/** activity of the presynaptic Assembly */
 	float activity;
+	/** activity(t-1), for derivatives */
+	float last_activity;
 
 	pthread_mutex_t lock;
 };

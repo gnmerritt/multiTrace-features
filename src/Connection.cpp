@@ -8,7 +8,7 @@
 #include "Connection.hpp"
 
 Connection::Connection() :
-	ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), activity(INITIAL_ACTIVITY) {
+	ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), activity(INITIAL_ACTIVITY), last_activity(INITIAL_ACTIVITY) {
 	pthread_mutex_init(&lock, NULL);
 }
 
@@ -38,6 +38,7 @@ void Connection::setSTCS(float _stcs) {
 
 void Connection::setActivity(float _activity) {
 	pthread_mutex_lock(&lock);
+	last_activity = activity;
 	activity = _activity;
 	pthread_mutex_unlock(&lock);
 }
