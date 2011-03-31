@@ -32,8 +32,8 @@
  *		ΔS = sigmaG A (1 - S) - sigmaD*S
  *		ΔF = thetaG A (1 - F) - thetaD*F
  *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 2, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef SONNTAGUPDATE_H_

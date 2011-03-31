@@ -1,8 +1,8 @@
 /*
  * test_Assembly.cpp
  *
- *  Created on: Feb 3, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 3, 2011
+ *      @author Nathan Merritt
  */
 
 #include "test_Assembly.hpp"

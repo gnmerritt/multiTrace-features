@@ -1,8 +1,8 @@
 /*
  * test_Layer.cpp
  *
- *  Created on: Feb 10, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 10, 2011
+ *      @author Nathan Merritt
  */
 
 #include "test_Layer.hpp"

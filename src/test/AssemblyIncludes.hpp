@@ -3,8 +3,8 @@
  *
  *	Convenience file to makes #includes in test files easier
  *
- *  Created on: Feb 3, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 3, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef ASSEMBLYINCLUDES_H_

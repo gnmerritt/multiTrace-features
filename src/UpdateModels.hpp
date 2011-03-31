@@ -3,8 +3,8 @@
  *
  *	@brief Static factory for UpdateModel derived classes
  *
- *  Created on: Mar 24, 2011
- *      Author: Nathan Merritt
+ *  @date Mar 24, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef UPDATEMODELS_HPP_

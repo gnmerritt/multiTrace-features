@@ -1,7 +1,7 @@
 /**
  * HebbianLearning.cpp
  *
- *  Created on: Feb 2, 2011
+ *  @date Feb 2, 2011
  *  @author Nathan Merritt
  *  @see HebbianLearning.hpp
  */
@@ -24,7 +24,7 @@ static const float DEFAULT_PARAMETERS[] = { 0.01f, // learning strength
 HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
 	LearningRule(state, input), storedLearning(false) {
 	setParameters(DEFAULT_PARAMETERS);
-
+	resetStoredLearning();
 }
 
 HebbianLearning::~HebbianLearning() {
@@ -41,23 +41,29 @@ void HebbianLearning::tick() {
 	const float activity = postSynapticState->activity;
 	const float activity_derivative = activity - last_activity;
 
-	/** we are nearing full activation, record input connection contributions */
-	if (activity > parameters[REC_LEARNING_START] && activity < parameters[REC_LEARNING_STOP]
+	/** Assembly is being activated, record input connection contributions */
+	if (activity > parameters[REC_LEARNING_LOWER] && activity < parameters[REC_LEARNING_UPPER]
 			&& activity_derivative >= 0) {
 		tallyContributions();
 	}
 
 	/** crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
 		this should get run when the Assembly has fired fully */
-	else if (activity > parameters[REC_LEARNING_STOP] && last_activity
-			<= parameters[REC_LEARNING_STOP]) {
+	else if (activity > parameters[REC_LEARNING_UPPER] && last_activity
+			<= parameters[REC_LEARNING_UPPER]) {
 		storedLearning = true;
 	}
 
-	/** Assembly failed to fire, delete any learning we may have stored */
-	else if (activity < parameters[REC_LEARNING_STOP] && activity_derivative < 0 && storedLearning) {
+	/** Assembly fired, and now activity has dropped off. Apply stored learning. */
+	else if (activity < parameters[REC_LEARNING_LOWER] && storedLearning) {
 		storedLearning = false;
 		applyLearningToConnections();
+		resetStoredLearning();
+	}
+
+	/** Assembly failed to fire, delete any learning we've stored so far */
+	else if (activity < parameters[REC_LEARNING_UPPER] && activity_derivative < 0 && !storedLearning) {
+		resetStoredLearning();
 	}
 
 	// no default case on purpose
@@ -86,6 +92,13 @@ void HebbianLearning::tallyContributions() {
  * @see tallyContributions()
  */
 void HebbianLearning::applyLearningToConnections() {
+
+}
+
+/**
+ * Resets any learning that has been stored.
+ */
+void HebbianLearning::resetStoredLearning() {
 
 }
 

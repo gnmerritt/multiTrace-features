@@ -3,7 +3,7 @@
  *
  *	@brief Abstract class for updating input connection strength of a given Assembly
  *
- *  Created on: Feb 2, 2011
+ *  @date Feb 2, 2011
  *  @author Nathan Merritt
  */
 

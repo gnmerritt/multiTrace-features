@@ -1,8 +1,8 @@
 /**
  * Assembly.cpp
  *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 2, 2011
+ *      @author Nathan Merritt
  */
 
 #include "Assembly.hpp"

@@ -1,7 +1,7 @@
 /**
  * ConnectionPattern.hpp
  *
- *  Created on: Feb 2, 2011
+ *  @date Feb 2, 2011
  *  @author Nathan Merritt
  *  @see AssemblyLocation
  */

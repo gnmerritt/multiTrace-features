@@ -48,18 +48,21 @@ public:
 	void setParameter(int index, float value);
 
 private:
+	//typedef
+
 	float receivingCurve(); // function of receiving activity
 	float sendingCurve(float sendingContribution); // function of sending's % contribution
 
 	// functions to tally future learning at each tick, apply it
 	void tallyContributions();
 	void applyLearningToConnections();
+	void resetStoredLearning();
 
 public:
 	enum parameters {
 		LEARNING_STRENGTH,
-		REC_LEARNING_START,
-		REC_LEARNING_STOP,
+		REC_LEARNING_LOWER,
+		REC_LEARNING_UPPER,
 		SEND_CONTRIB_THRESHOLD,
 		PARAMETER_COUNT,
 	};

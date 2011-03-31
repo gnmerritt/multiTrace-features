@@ -6,8 +6,8 @@
  *	Static factory for different types of LearningRules. Slightly different from the
  *	other two because it returns a pointer instead of an object.
  *
- *  Created on: Mar 24, 2011
- *      Author: Nathan Merritt
+ *  @date Mar 24, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef LEARNINGRULES_HPP_

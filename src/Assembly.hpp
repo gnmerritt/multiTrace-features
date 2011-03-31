@@ -1,8 +1,8 @@
 /**
  * Assembly.hpp
  *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 2, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef ASSEMBLY_H_

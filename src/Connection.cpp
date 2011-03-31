@@ -1,7 +1,7 @@
 /**
  * Connection.cpp
  *
- *  Created on: Feb 9, 2011
+ *  @date Feb 9, 2011
  *  @author Nathan Merritt
  */
 

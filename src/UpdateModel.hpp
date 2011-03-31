@@ -9,8 +9,8 @@
  *	Since there will be only one instance of this class defined per-layer
  *	(for now) the tick() method has to be thread-safe.
  *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 2, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef UPDATEMODEL_H_

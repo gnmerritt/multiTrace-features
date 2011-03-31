@@ -1,8 +1,8 @@
 /**
  *	Connection.hpp
  *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 2, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef CONNECTION_H_

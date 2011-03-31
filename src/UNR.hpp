@@ -7,8 +7,8 @@
  *	a fixed percentage of Assemblies that are within one Layer of
  *	each other.
  *
- *  Created on: Feb 8, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 8, 2011
+ *      @author Nathan Merritt
  */
 
 #ifndef UNR_H_

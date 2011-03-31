@@ -1,8 +1,8 @@
 /**
  * NoLearning.h
  *
- *  Created on: Feb 8, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 8, 2011
+ *      @author Nathan Merritt
  *
  *  @see LearningRule.hpp
  *  @see HebbianLearning.hpp

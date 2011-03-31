@@ -1,8 +1,8 @@
 /*
  * Cortex.cpp
  *
- *  Created on: Feb 15, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 15, 2011
+ *      @author Nathan Merritt
  */
 
 #include "Cortex.hpp"

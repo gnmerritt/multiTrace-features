@@ -1,8 +1,8 @@
 /*
  * UNR.cpp
  *
- *  Created on: Feb 8, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 8, 2011
+ *      @author Nathan Merritt
  */
 
 #include "UNR.hpp"

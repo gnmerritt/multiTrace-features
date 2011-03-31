@@ -5,8 +5,6 @@
  *	Abstract class defining the interface that external software must
  *  use to provide input to an Assembly network (usually a Layer).
  *
- *
- *
  *	@see Layer.hpp
  *  @date Feb 15, 2011
  *  @author Nathan Merritt

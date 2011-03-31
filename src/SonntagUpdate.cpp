@@ -1,8 +1,8 @@
 /*
  * SonntagUpdate.cpp
  *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @date Feb 2, 2011
+ *      @author Nathan Merritt
  *
  *  Parameters modified as suggested in:
  *  Chown E (2002) Reminiscence and arousal: a connectionist model.
