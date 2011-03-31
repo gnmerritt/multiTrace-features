@@ -155,5 +155,7 @@ void Assembly::initializeIncConnectionStrengths() {
 	for (in = input.begin(); in != input.end(); ++in) {
 		(*in)->setLTCS(perConnection);
 	}
+
+	learningRule->dropLearning();
 }
 

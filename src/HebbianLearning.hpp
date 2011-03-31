@@ -47,6 +47,8 @@ public:
 
 	void tick();
 
+	void dropLearning();
+
 	void setParameters(const float newParams[]);
 	void setParameter(int index, float value);
 

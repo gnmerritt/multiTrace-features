@@ -28,6 +28,8 @@ public:
 
 	virtual void tick() = 0;
 
+	virtual void dropLearning() = 0;  // called if the Assembly adds/deletes connections
+
 protected:
 	AssemblyState *postSynapticState;
 	Connection::vector *incomingConnections;

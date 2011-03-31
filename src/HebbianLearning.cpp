@@ -84,6 +84,15 @@ void HebbianLearning::tick() {
 }
 
 /**
+ * @brief
+ * Resets any stored learning, used only when the Assembly adds or deletes Connection s
+ *
+ */
+void HebbianLearning::dropLearning() {
+	resetStoredLearning(); // nothing else that needs to happen yet
+}
+
+/**
  *	Main method for determining changes in input connection strengths (ie, learning).
  *  First, calculates the %contribution of each connection, then weights it by
  *  receivingCurve() and sendingCurve(). These weighted values are then stored, and

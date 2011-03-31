@@ -31,6 +31,9 @@ public:
 
 	void tick() {
 	}
+
+	void dropLearning() {
+	}
 };
 
 #endif /* NOLEARNING_H_ */
