@@ -1,8 +1,34 @@
-Welcome!
+/**@mainpage multiTRACE with Features
 
-For instructions on how to use this code, please refer to src/README
+@author Nathan Merritt
+@date January, 2011
 
-For more information on the multiTRACE object recognition project, please visit http://gnmerritt.net/cs280/
+Overview:
 
-This source is provided under the FreeBSD license, please see LICENSE file for details 
+The aim of this project is to develop a multiple layer cell-assembly network
+that is capable of general pattern recognition. Initial testing will begin
+with highly controlled, static input patterns. Once the network has been
+configured and is capable of producing the results Sonntag (1991) obtained
+in his dissertation, the networks input layer will be reworked to process
+the results of a SIFT/SURF feature detection algorithm. The key points from
+the vision algorithm will be fed into the network, and hopefully allow it
+to recognize objects in a cognitively inspired manner.
 
+This directory contains the implementation of the multiTRACE network. test/
+contains the unit tests that were used during development.
+
+Usage:
+
+Build is managed by Eclipse, will produce 'multiTrace vision' binary that
+contains the unit tests
+
+For more information on the multiTRACE object recognition project,
+please visit http://gnmerritt.net/cs280/
+
+References can be found here:
+http://www.mendeley.com/groups/840881/multitrace-object-recognition/papers/
+
+This source is provided under the FreeBSD license, please see LICENSE
+file for details
+
+*/
