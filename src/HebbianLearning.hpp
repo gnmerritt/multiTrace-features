@@ -35,6 +35,9 @@
 #ifndef HEBBIANLEARNING_H_
 #define HEBBIANLEARNING_H_
 
+#include <utility>
+#include <list>
+
 #include "LearningRule.hpp"
 
 class HebbianLearning: public LearningRule {
@@ -48,9 +51,10 @@ public:
 	void setParameter(int index, float value);
 
 private:
-	//typedef
+	typedef std::pair<int, float> ConnectionContribution; //  input->at(index), contribution
+	typedef std::list<ConnectionContribution> SynapseHistory;
 
-	float receivingCurve(); // function of receiving activity
+	float receivingCurve(float receivingActivity); // function of receiving activity
 	float sendingCurve(float sendingContribution); // function of sending's % contribution
 
 	// functions to tally future learning at each tick, apply it
@@ -69,8 +73,9 @@ public:
 
 private:
 	float parameters[PARAMETER_COUNT]; // for easy optimization via PSO
+	SynapseHistory storedContributions;
+	bool hasStoredLearning;
 
-	bool storedLearning;
 };
 
 #endif /* HEBBIANLEARNING_H_ */

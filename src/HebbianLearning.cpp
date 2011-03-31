@@ -22,47 +22,61 @@ static const float DEFAULT_PARAMETERS[] = { 0.01f, // learning strength
  * @param input Pointer to the input Connections we use for calculations
  */
 HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
-	LearningRule(state, input), storedLearning(false) {
+	LearningRule(state, input), storedContributions(SynapseHistory()), hasStoredLearning(false) {
 	setParameters(DEFAULT_PARAMETERS);
 	resetStoredLearning();
 }
 
 HebbianLearning::~HebbianLearning() {
-	// @todo Auto-generated destructor stub
+	resetStoredLearning();
 }
 
 /**
- * Main method for handling Hebbian update of input connections to an Assembly
+ * 	@brief
+ * 	Main method for handling Hebbian update of input connections to an Assembly
  *
- * @see LearningRule.hpp
+ *	There are four important states for learning:
+ *		- Activity is above the lower learning threshold, but not yet full.
+ *		   In this state we take note of what other Assemblies activating us
+ *		- Activity becomes fully active (1 tick). Remember this, so that we
+ *		   can learn (later) based on which inputs caused us to fire.
+ *		- After being fully active, activity has calmed down. Apply learning.
+ *		- Activity lower than in the last tick, and we haven't reached full
+ *		  activation yet. The earlier inputs did not cause us to fire, so
+ *		  forget about them.
+ *
+ *	Other states (fully active, weakly active...) aren't important to this model of
+ *	learning, so they aren't treated here.
+ *
+ *	@see LearningRule.hpp
  */
 void HebbianLearning::tick() {
 	const float last_activity = postSynapticState->output;
 	const float activity = postSynapticState->activity;
 	const float activity_derivative = activity - last_activity;
 
-	/** Assembly is being activated, record input connection contributions */
+	// Assembly is being activated, record input connection contributions
 	if (activity > parameters[REC_LEARNING_LOWER] && activity < parameters[REC_LEARNING_UPPER]
 			&& activity_derivative >= 0) {
 		tallyContributions();
 	}
 
-	/** crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
-		this should get run when the Assembly has fired fully */
+	// crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
+	// this should get run when the Assembly has fired fully
 	else if (activity > parameters[REC_LEARNING_UPPER] && last_activity
 			<= parameters[REC_LEARNING_UPPER]) {
-		storedLearning = true;
+		hasStoredLearning = true;
 	}
 
-	/** Assembly fired, and now activity has dropped off. Apply stored learning. */
-	else if (activity < parameters[REC_LEARNING_LOWER] && storedLearning) {
-		storedLearning = false;
+	// Assembly fired, and now activity has dropped off. Apply stored learning.
+	else if (activity < parameters[REC_LEARNING_LOWER] && hasStoredLearning) {
 		applyLearningToConnections();
 		resetStoredLearning();
 	}
 
-	/** Assembly failed to fire, delete any learning we've stored so far */
-	else if (activity < parameters[REC_LEARNING_UPPER] && activity_derivative < 0 && !storedLearning) {
+	// Assembly failed to fire, delete any learning we've stored so far
+	else if (activity < parameters[REC_LEARNING_UPPER] && activity_derivative < 0
+			&& !hasStoredLearning) {
 		resetStoredLearning();
 	}
 
@@ -81,7 +95,24 @@ void HebbianLearning::tick() {
  * @see applyLearningToConnections()
  */
 void HebbianLearning::tallyContributions() {
+	// pass 1: determine total activation among all inputs
+	double totalInput = 0;
+	Connection::vector::iterator c;
+	for (c = incomingConnections->begin(); c != incomingConnections->end(); ++c) {
+		totalInput += (*c)->activity; // double dereferenced b/c Connection::vector is of pointers
+	}
 
+	// pass 2: for each input, scale contribution by receivingCurve() and sendingCurve(),
+	// and add it to storedContributions
+	float receivingWeight = receivingCurve(postSynapticState->activity);
+	for (unsigned int i = 0; i < incomingConnections->size(); ++i) {
+		Connection::ptr input = incomingConnections->at(i);
+		const float percentContribution = input->activity / totalInput;
+		const float weightedContribution = percentContribution * sendingCurve(percentContribution)
+				* receivingWeight;
+		ConnectionContribution thisInput(i, weightedContribution);
+		storedContributions.push_front(thisInput);
+	}
 }
 
 /**
@@ -99,15 +130,17 @@ void HebbianLearning::applyLearningToConnections() {
  * Resets any learning that has been stored.
  */
 void HebbianLearning::resetStoredLearning() {
-
+	hasStoredLearning = false;
+	storedContributions.clear();
 }
 
 /**
  * Implements phase-dependent learning
  *
+ * @param receivingActivity Current activity of the Assembly receiving input
  * @return learning coefficient for this point in the firing cycle
  */
-float HebbianLearning::receivingCurve() {
+float HebbianLearning::receivingCurve(float receivingActivity) {
 	return 1.0f;
 }
 
@@ -115,6 +148,7 @@ float HebbianLearning::receivingCurve() {
  * Implements contribution-dependent learning, probably much more important
  * than @see receivingCurve
  *
+ * @param sendingContribution activity(thisConnection) / SUM (All connections activity)
  * @return how important this sending connection is, a function of its contribution
  */
 float HebbianLearning::sendingCurve(float sendingContribution) {

@@ -27,8 +27,11 @@ public:
 	};
 
 	/**
+	 * @brief
 	 * Builds and returns an object of an unknown type that inherits
 	 * from LearningRule. Used for dynamic type control.
+	 *
+	 * This pointer is wrapped in a boost::shared_ptr once it's returned
 	 *
 	 * @param id ID of LearningRule derived class
 	 * @param state AssemblyState pointer to be passed to returned object
