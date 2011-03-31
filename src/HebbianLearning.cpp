@@ -17,6 +17,9 @@ static const float DEFAULT_PARAMETERS[] = { 0.01f, // learning strength
 
 /**
  * Calls super constructor, and sets default parameters.
+ *
+ * @param state Pointer to the AssemblyState we read from
+ * @param input Pointer to the input Connections we use for calculations
  */
 HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
 	LearningRule(state, input), storedLearning(false) {
@@ -25,7 +28,7 @@ HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input
 }
 
 HebbianLearning::~HebbianLearning() {
-	// TODO Auto-generated destructor stub
+	// @todo Auto-generated destructor stub
 }
 
 /**
@@ -99,7 +102,7 @@ float HebbianLearning::receivingCurve() {
  * Implements contribution-dependent learning, probably much more important
  * than @see receivingCurve
  *
- * @return how important this sending connection is
+ * @return how important this sending connection is, a function of its contribution
  */
 float HebbianLearning::sendingCurve(float sendingContribution) {
 	return 1.0f;

@@ -26,6 +26,16 @@ public:
 		NO_LEARNING, HEBBIAN_LEARNING,
 	};
 
+	/**
+	 * Builds and returns an object of an unknown type that inherits
+	 * from LearningRule. Used for dynamic type control.
+	 *
+	 * @param id ID of LearningRule derived class
+	 * @param state AssemblyState pointer to be passed to returned object
+	 * @param input Connection::vector pointer to be passed to returned object
+	 * @see LearningRules::classes
+	 * @return LearningRule derived object of the requested tyoe
+	 */
 	static LearningRule* instanceOf(int id, AssemblyState *state, Connection::vector *input) {
 		switch (id) {
 		case (NO_LEARNING):

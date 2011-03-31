@@ -22,12 +22,20 @@ public:
 		SONNTAG_UPDATE,
 	};
 
+	/**
+	 * Builds and returns an object of an unknown type that inherits
+	 * from UpdateModel. Used for dynamic type control.
+	 *
+	 * @param id ID of UpdateModel derived class
+	 * @see UpdateModels::classes
+	 * @return UpdateModel derived object of the requested tyoe
+	 */
 	static UpdateModel* instanceOf(int id) {
 		switch (id) {
 		case (SONNTAG_UPDATE):
 			return new SonntagUpdate();
 		default:
-                        return NULL;
+			return NULL;
 		}
 	}
 
