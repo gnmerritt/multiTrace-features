@@ -1,13 +1,15 @@
-/*
+/**
  * InputLayer.h
  *
+ *	@brief
  *	Abstract class defining the interface that external software must
- *  use to provide input to an Assembly network.
+ *  use to provide input to an Assembly network (usually a Layer).
  *
- *	@see Layer.h
  *
- *  Created on: Feb 15, 2011
- *      Author: Nathan Merritt
+ *
+ *	@see Layer.hpp
+ *  @date Feb 15, 2011
+ *  @author Nathan Merritt
  */
 
 #ifndef INPUTLAYER_H_
@@ -16,9 +18,10 @@
 #include <queue>
 
 #include "Layer.hpp"
+#include "ConnectionPattern.hpp"
 
-template<class ConnectionTemplate, class Observation>
-class InputLayer: public Layer<ConnectionTemplate> {
+template<class Observation>
+class InputLayer: public Layer {
 public:
 	InputLayer() {
 	}
@@ -32,9 +35,10 @@ private:
 	std::queue<Observation> currentInputs;
 	int inputsPerTick;
 
-	// how strongly this observation drives its target Assembly
+	/** @brief how strongly this observation drives its target Assembly */
 	virtual float observationMagnitude(Observation o) = 0;
-	virtual Assembly_t mapObservationToTarget(Observation o) = 0;
+	/** @brief returns an AssemblyLocation that this Obsevation stimulates */
+	virtual AssemblyLocation mapObservationToTarget(Observation o) = 0;
 };
 
 #endif /* INPUTLAYER_H_ */
