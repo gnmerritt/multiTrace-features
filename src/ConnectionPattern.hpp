@@ -1,21 +1,16 @@
 /**
- * ConnectionPattern.h
- *
- * Base class that other connection patterns inherit from. Provides a method
- * that determines whether or not two Assemblies are connected based on pointers
- * to their state and their AssemblyLocation in space
+ * ConnectionPattern.hpp
  *
  *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
-
- * @see AssemblyLocation
+ *  @author Nathan Merritt
+ *  @see AssemblyLocation
  */
 
 #ifndef CONNECTIONPATTERN_H_
 #define CONNECTIONPATTERN_H_
 
 /**
- * Describes an Assembly in 3-space (Row,Col,Layer)
+ * @brief Describes an Assembly in 3-space (Row,Col,Layer)
  */
 class AssemblyLocation {
 public:
@@ -30,6 +25,12 @@ public:
 	int row, column, layer;
 };
 
+/** @brief Control structure for connecting two Layer s
+ *
+ * Base class that other connection patterns inherit from. Provides a method
+ * that determines whether or not two Assemblies are connected based on pointers
+ * to their state and their AssemblyLocation in space
+ */
 class ConnectionPattern {
 public:
 	ConnectionPattern() {
@@ -37,6 +38,14 @@ public:
 	virtual ~ConnectionPattern() {
 	}
 
+	/**
+	 * Determines whether two Assembly s should be connected, given their AssemblyLocation
+	 * inside this Cortex. Not all derived classes will use this data, but it is provided
+	 * by default.
+	 *
+	 * @param sender Sending Assembly row, col, layer
+	 * @param receiver receiving Assembly row ,col, layer
+	 */
 	bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) {
 		return false;
 	}

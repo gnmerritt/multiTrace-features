@@ -1,5 +1,7 @@
-/*
+/**
  * LearningRules.hpp
+ *
+ *	@brief Static factory for LearningRule derived classes
  *
  *	Static factory for different types of LearningRules. Slightly different from the
  *	other two because it returns a pointer instead of an object.

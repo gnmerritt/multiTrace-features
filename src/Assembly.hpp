@@ -1,9 +1,5 @@
 /**
- * Assembly.h
- *
- *	The unit of basic computation in a multiTrace network. Each assembly
- *	models a well-defined neurological Cell Assembly, and can sustain
- * 	its own activity.
+ * Assembly.hpp
  *
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt
@@ -25,8 +21,15 @@ static const int MINIMUM_FULL_ID = 1000000;
 static const int ROW_ID = 100000; // row is middle 3 digits nnn,___,nnn
 static const int COLUMN_ID = 100; // column is last three digits
 
-#define DEBUG_ASSEMBLY_OUTPUT
+//#define DEBUG_ASSEMBLY_OUTPUT
 
+/**
+ * 	@brief Models a connected, well-learned network of neurons capable of self-sustaining activity
+ *
+ *	The unit of basic computation in a multiTrace network. Each assembly
+ *	models a well-defined neurological Cell Assembly, and can sustain
+ * 	its own activity.
+ */
 class Assembly {
 public:
 	Assembly(int _id, UpdateModel::ptr _model, int _learningRule);
@@ -53,7 +56,7 @@ public:
 	int getRow() const {
 		if (id < MINIMUM_FULL_ID)
 			return 0;
-		return ((id % ROW_ID) - getCol())/1000;
+		return ((id % ROW_ID) - getCol()) / 1000;
 	}
 	int getCol() const {
 		if (id < MINIMUM_FULL_ID)

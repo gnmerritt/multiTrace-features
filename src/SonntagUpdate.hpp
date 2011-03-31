@@ -1,7 +1,7 @@
 /**
  * SonntagUpdate.h
  *
- *	Updates the Assembly state according to the equations derived in
+ *	@brief Updates the AssemblyState according to the equations derived in (Sonntag 1991)
  *
  *	"Sonntag M (1991) Learning sequences in an associative network:
  *	A step towards cognitive structure." (pgs 77, 94)

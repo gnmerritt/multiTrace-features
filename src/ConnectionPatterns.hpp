@@ -1,5 +1,7 @@
-/*
+/**
  * ConnectionPatterns.h
+ *
+ *	@brief Static factory for ConnectionPattern derived classes
  *
  *  Created on: Mar 24, 2011
  *      Author: Nathan Merritt

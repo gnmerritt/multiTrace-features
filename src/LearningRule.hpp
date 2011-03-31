@@ -1,10 +1,10 @@
 /**
- * LearningRule.h
+ * LearningRule.hpp
  *
- *	Abstract class for updating connection strength of a given Assembly.
+ *	@brief Abstract class for updating input connection strength of a given Assembly
  *
  *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @author Nathan Merritt
  */
 
 #ifndef LEARNINGRULE_H_

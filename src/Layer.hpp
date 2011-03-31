@@ -1,17 +1,8 @@
 /**
- * Layer.h
+ * Layer.hpp
  *
- *	A Layer manages a 2d array of Assemblies. It constructs them, sets up
- *	their connections (both with each other and with assemblies in different
- *	layers), and calls tick() on each of them as the model runs.
- *
- *	The Layer is also the level where regional inhibition, clarity and arousal
- *	are managed. Clarity measures the level of specificity of response, indicating
- *	a well-learned stimuli. Regional inhibition serves to keep Assembly activity
- *	in check, while arousal serves to non-discriminatingly increase activity.
- *
- *  Created on: Feb 2, 2011
- *      Author: Nathan Merritt
+ *  @created Feb 2, 2011
+ *  @author Nathan Merritt
  */
 
 #ifndef LAYER_H_
@@ -29,10 +20,22 @@
 
 #define DEBUG_LAYER_OUTPUT
 
+/**
+ * 	@brief Assembly container, with both lateral and regional inhibition
+ *
+ *	A Layer manages a 2d array of Assemblies. It constructs them, sets up
+ *	their connections (both with each other and with assemblies in different
+ *	layers), and calls tick() on each of them as the model runs.
+ *
+ *	The Layer is also the level where regional inhibition, clarity and arousal
+ *	are managed. Clarity measures the level of specificity of response, indicating
+ *	a well-learned stimuli. Regional inhibition serves to keep Assembly activity
+ *	in check, while arousal serves to non-discriminatingly increase activity.
+ */
 class Layer {
 public:
 	typedef boost::shared_ptr<Layer> ptr;
-        typedef std::vector<Layer> vector;
+	typedef std::vector<Layer> vector;
 
 	typedef Assembly Assembly_t; // possibly useful in the future?
 
@@ -72,9 +75,9 @@ public:
 	AssemblyLayer_ID getAssemblyLayer();
 
 private:
-        void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
-        void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
-        void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
+	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
 	int getAssemblyID(int row, int col);
 

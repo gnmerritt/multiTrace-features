@@ -1,6 +1,8 @@
 /**
  * UpdateModel.h
  *
+ *	@brief Equations that update the AssemblyState (variables of an Assembly)
+ *
  *	Abstract class responsible for updating the state variables of an
  *	assembly.
  *

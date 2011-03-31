@@ -1,13 +1,5 @@
 /**
- * Connection.h
- *
- *	Model of an inter-Assembly connection. Has long-term and short-term
- *	weights, and the activity of the pre-synaptic Assembly. Changes to the
- *	connection weights are managed by a LearningRule, and handled by the
- *	pre-synaptic Assembly.
- *
- *	Two assemblies have a pointer to each Connection, so all methods must be
- *	thread-safe.
+ *	Connection.hpp
  *
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt
@@ -25,6 +17,17 @@ const float INITIAL_LTCS = 0;
 const float INITIAL_STCS = 0;
 const float INITIAL_ACTIVITY = 0;
 
+/**
+ * 	@brief Stores a sending Assembly's recent output, and both Assembly pointers
+ *
+ *	Model of an inter-Assembly connection. Has long-term and short-term
+ *	weights, and the activity of the pre-synaptic Assembly. Changes to the
+ *	connection weights are managed by a LearningRule, and handled by the
+ *	pre-synaptic Assembly.
+ *
+ *	Two assemblies have a pointer to each Connection, so all methods must be
+ *	thread-safe.
+ */
 class Connection {
 public:
 	typedef boost::shared_ptr<Connection> ptr;
@@ -41,13 +44,10 @@ public:
 	void setActivity(float _activity);
 
 public:
-	/** connection strengths, see Sonntag (1991, pg94) */
-	float ltcs, stcs;
+	float ltcs, stcs; /** connection strengths, see Sonntag (1991, pg94) */
 
-	/** activity of the presynaptic Assembly */
-	float activity;
-	/** activity(t-1), for derivatives */
-	float last_activity;
+	float activity; /** activity of the presynaptic Assembly */
+	float last_activity; /** activity(t-1), for derivatives */
 
 	pthread_mutex_t lock;
 };

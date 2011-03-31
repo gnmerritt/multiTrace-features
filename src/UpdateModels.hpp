@@ -1,5 +1,7 @@
-/*
+/**
  * UpdateModels.hpp
+ *
+ *	@brief Static factory for UpdateModel derived classes
  *
  *  Created on: Mar 24, 2011
  *      Author: Nathan Merritt

@@ -1,16 +1,6 @@
 /**
  * AssemblyState.h
  *
- *	Contains the state variables for an Assembly.
- *
- *	  activity -> current activation of the Assembly
- *	  output -> output of the Assembly (A(t-1))
- *	  fatige -> grows with increasing activation
- *
- *	  Measures of the Assembly's ability to self-activate:
- *	  ltcs -> long term connection strength (locked at 0)
- *	  stcs -> short term connection strength
- *
  *  Created on: Feb 2, 2011
  *      Author: Nathan Merritt
  *
@@ -22,6 +12,17 @@
 
 const float INITIAL_INTRA_LTCS = 0.5;
 
+/**
+ * @brief Contains the state variables for an Assembly.
+ *
+ *  activity -> current activation of the Assembly
+ *  output -> output of the Assembly (A(t-1))
+ *  fatige -> grows with increasing activation
+ *
+ *  Measures of the Assembly's ability to self-activate:
+ *  ltcs -> long term connection strength (locked at 0)
+ *  stcs -> short term connection strength
+ */
 class AssemblyState {
 public:
 	AssemblyState() :

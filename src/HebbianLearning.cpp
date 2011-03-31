@@ -31,14 +31,14 @@ HebbianLearning::~HebbianLearning() {
 /**
  * Main method for handling Hebbian update of input connections to an Assembly
  *
- * @see LearningRule.h
+ * @see LearningRule.hpp
  */
 void HebbianLearning::tick() {
 	const float last_activity = postSynapticState->output;
 	const float activity = postSynapticState->activity;
 	const float activity_derivative = activity - last_activity;
 
-	// we are nearing full activation, record input connection contributions
+	/** we are nearing full activation, record input connection contributions */
 	if (activity > parameters[REC_LEARNING_START] && activity < parameters[REC_LEARNING_STOP]
 			&& activity_derivative >= 0) {
 		tallyContributions();
@@ -51,7 +51,7 @@ void HebbianLearning::tick() {
 		storedLearning = true;
 	}
 
-	// Assembly failed to fire, delete any learning we may have stored
+	/** Assembly failed to fire, delete any learning we may have stored */
 	else if (activity < parameters[REC_LEARNING_STOP] && activity_derivative < 0 && storedLearning) {
 		storedLearning = false;
 		applyLearningToConnections();

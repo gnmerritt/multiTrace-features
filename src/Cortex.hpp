@@ -1,5 +1,7 @@
-/*
+/**
  * Cortex.h
+ *
+ *	@brief Layer container, implements global inhibition, manages wiring
  *
  * Manages a group of connection Layers, coordinating their construction,
  * wiring and interacting with a GUI to characterize their activity.

@@ -1,5 +1,5 @@
 /**
- * HebbianLearning.h
+ * HebbianLearning.hpp
  *
  *  @brief implements a threshold-based fire together, wire together learning scheme
  *

@@ -1,6 +1,8 @@
 /**
  * UNR.h
  *
+ *	@brief Connects a certain percentage of Assemblies, ignoring distance
+ *
  *	A simple UNiform Random Connection pattern, which connects
  *	a fixed percentage of Assemblies that are within one Layer of
  *	each other.

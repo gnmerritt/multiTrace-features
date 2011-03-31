@@ -23,8 +23,8 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
  * @param _connectionPattern which pattern to use in this Layer
  * @param _updateModel passed down to each Assembly, controls state variable updating
  * @param _learningRule passed down to each Assembly, controls how the Assembly learns
- * @param rows number of rows in the Layer
- * @param cols number of columns in the layer
+ * @param _rows number of rows in the Layer
+ * @param _cols number of columns in the layer
  * @param _layerID the UID of this layer within the Cortex
  * @param connectToSelf whether or not this Layer projects onto itself
  */
@@ -131,7 +131,7 @@ float Layer::tick() {
 /**
  * Simple public method to connect this Layer to another given it's AssemblyLayer_ID
  *
- * @param targetLayer receiveir Layer & ID we're connecting to
+ * @param target receiver Layer & ID we're connecting to
  * @see connectLayerToLayer()
  */
 void Layer::connectToLayer(AssemblyLayer_ID target) {
