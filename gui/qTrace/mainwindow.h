@@ -32,6 +32,7 @@ private:
     int connectionTemplate_i, learningRule_i, updateModel_i;
 
 private slots:
+    void on_layerColSize_valueChanged(int );
     void on_saveLocation_textEdited(QString );
     void on_testName_textEdited(QString );
     void on_updateModel_currentIndexChanged(int index);

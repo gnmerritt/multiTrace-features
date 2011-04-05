@@ -20,6 +20,9 @@ public:
     void setCortex(Cortex::ptr);
 
 private:
+    void update();
+
+private:
     Cortex::ptr thisCortex;
 
 private:

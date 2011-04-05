@@ -18,10 +18,10 @@ Cortex::Cortex() :
 }
 
 Cortex::~Cortex() {
-	// all memory management handled by lower level objects, /shouldn't/ have any bits of
-	// dynamically allocated memory at this level
+        // all memory management handled by lower level objects, /shouldn't/ have any bits of
+        // dynamically allocated memory at this level
 
-	// TODO: valgrind and figure out if this is true or not
+        // TODO: valgrind and figure out if this is true or not
 }
 
 /**
@@ -35,17 +35,17 @@ Cortex::~Cortex() {
  * @param cols number of columns in the new Layer
  */
 int Cortex::addLayer(int connectionPattern, int updateModel, int learningRule, int layerType,
-		int rows, int cols) {
-	if (layerType == Cortex::DEFAULT_LAYER) {
-		Layer newLayer(connectionPattern, updateModel, learningRule, rows, cols, numberOfStdLayers, false);
-		numberOfStdLayers++;
+                int rows, int cols) {
+        if (layerType == Cortex::DEFAULT_LAYER) {
+            Layer::ptr newLayer (new Layer(connectionPattern, updateModel, learningRule, rows, cols, numberOfStdLayers, false));
+            numberOfStdLayers++;
 
-		layers.push_back(newLayer);
-	}
+            layers.push_back(newLayer);
+        }
 
-	// TODO: INPUT LAYER(s)!
+        // TODO: INPUT LAYER(s)!
 
-	return numberOfStdLayers - 1;
+        return numberOfStdLayers - 1;
 }
 
 /**
@@ -57,13 +57,13 @@ int Cortex::addLayer(int connectionPattern, int updateModel, int learningRule, i
  * @see connectLayerRange()
  */
 void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
-	int bottom = layerID + connectFrom;
-	int top = layerID + connectTo;
+        int bottom = layerID + connectFrom;
+        int top = layerID + connectTo;
 
-	for (int target = bottom; target <= top; ++target) {               
+        for (int target = bottom; target <= top; ++target) {
                 if (target >= 0)
-			connectLayerToLayer(layerID, target);
-	}
+                        connectLayerToLayer(layerID, target);
+        }
 }
 
 /**
@@ -75,19 +75,19 @@ void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
  * @param toID Layer connections "synapse on"
  */
 void Cortex::connectLayerToLayer(int fromID, int toID) {
-	// sanity checks
+        // sanity checks
         if (fromID < 0 || toID < 0 || fromID >= layers.size() || toID >= layers.size())
-		return;
+                return;
 
-	// don't double up on connections (although both directions are allowed)
+        // don't double up on connections (although both directions are allowed)
         LayerConnection newConnection(fromID, toID);
         if (connectedLayers.find(newConnection) != connectedLayers.end()) {
             return;
         }
 
-	Layer::AssemblyLayer_ID target = layers[toID].getAssemblyLayer();
+        Layer::AssemblyLayer_ID target = layers[toID]->getAssemblyLayer();
 
-	layers[fromID].connectToLayer(target);
+        layers[fromID]->connectToLayer(target);
         connectedLayers.insert(newConnection);
 }
 
@@ -97,20 +97,21 @@ void Cortex::connectLayerToLayer(int fromID, int toID) {
  *
  */
 void Cortex::tick() {
-        Layer::vector::iterator layer;
+        Layer::vector::iterator layerPtr;
 
-	float activation_sum = 0;
-	float assembly_sum = 0;
+        float activation_sum = 0;
+        float assembly_sum = 0;
 
-	for (layer = layers.begin(); layer != layers.end(); ++layer) {
-		activation_sum += layer->tick();
-		assembly_sum += layer->getSize();
-	}
+        for (layerPtr = layers.begin(); layerPtr != layers.end(); ++layerPtr) {
+            Layer::ptr layer = *layerPtr;
+            activation_sum += layer->tick();
+            assembly_sum += layer->getSize();
+        }
 
-	if (layers.empty()) {
-		averageLayerActivation = 0;
-	} else {
-		averageLayerActivation = activation_sum / layers.size();
-	}
+        if (layers.empty()) {
+                averageLayerActivation = 0;
+        } else {
+                averageLayerActivation = activation_sum / layers.size();
+        }
 }
 

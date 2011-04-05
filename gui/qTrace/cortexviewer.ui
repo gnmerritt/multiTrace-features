@@ -75,7 +75,7 @@
     <enum>QTabWidget::North</enum>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>2</number>
    </property>
    <property name="usesScrollButtons">
     <bool>true</bool>
@@ -98,6 +98,14 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="tab">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <attribute name="title">
+     <string>Page</string>
+    </attribute>
+   </widget>
    <widget class="QWidget" name="visualTab">
     <attribute name="title">
      <string>Visualizations</string>
@@ -106,7 +114,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>-10</y>
+       <y>-20</y>
        <width>721</width>
        <height>471</height>
       </rect>
@@ -126,8 +134,8 @@
       <widget class="QLabel" name="label_2">
        <property name="geometry">
         <rect>
-         <x>170</x>
-         <y>260</y>
+         <x>50</x>
+         <y>20</y>
          <width>291</width>
          <height>51</height>
         </rect>
@@ -149,9 +157,33 @@
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
+      <widget class="QLabel" name="layerImg">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>140</y>
+         <width>62</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>
+  </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>70</x>
+     <y>120</y>
+     <width>160</width>
+     <height>80</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout"/>
   </widget>
  </widget>
  <resources/>

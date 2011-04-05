@@ -168,6 +168,7 @@ void HebbianLearning::applyLearningToConnections() {
 }
 
 /**
+ * @brief
  * Resets any learning that has been stored.
  */
 void HebbianLearning::resetStoredLearning() {
@@ -176,6 +177,7 @@ void HebbianLearning::resetStoredLearning() {
 }
 
 /**
+ * @brief
  * Implements phase-dependent learning
  *
  * @param receivingActivity Current activity of the Assembly receiving input
@@ -186,6 +188,7 @@ float HebbianLearning::receivingCurve(float receivingActivity) {
 }
 
 /**
+ * @brief
  * Implements contribution-dependent learning, probably much more important
  * than @see receivingCurve
  *
@@ -205,7 +208,7 @@ float HebbianLearning::sendingCurve(float sendingContribution) {
  * 	Connection lies
  */
 float HebbianLearning::contributionCurve(float contributionRank, float currentStrength) {
-	// shouldn't ever happen, but protect anywa
+	// shouldn't ever happen, but protect anyway
 	if (contributionRank < -1)
 		contributionRank = -1;
 	else if (contributionRank > 1)

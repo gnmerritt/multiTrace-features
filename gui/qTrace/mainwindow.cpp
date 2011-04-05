@@ -7,12 +7,12 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    layerRowSize(0),
-    layerColSize(0),
-    numberOfLayers(0),
+    layerRowSize(1),
+    layerColSize(1),
+    numberOfLayers(1),
     connectTo(0),
     connectFrom(0),
-    interLayerConnectionsEnabled(true),
+    interLayerConnectionsEnabled(false),
     testName(""),
     saveDirectory(""),
     connectionTemplate_i(0),
@@ -47,7 +47,8 @@ Cortex::ptr MainWindow::createCortexFromParameters() {
     Layer::vector::iterator eachLayer;
 
     for (eachLayer = layers->begin(); eachLayer != layers->end(); ++eachLayer) {
-        newCortex->connectLayerRange(eachLayer->getId(), connectFrom, connectTo);
+        Layer::ptr thisLayer = *eachLayer;
+        newCortex->connectLayerRange(thisLayer->getId(), connectFrom, connectTo);
     }
 
     newCortex->setTestName(testName.toStdString());
@@ -111,4 +112,9 @@ void MainWindow::on_testName_textEdited(QString newString)
 void MainWindow::on_saveLocation_textEdited(QString newString)
 {
     saveDirectory = newString;
+}
+
+void MainWindow::on_layerColSize_valueChanged(int _layerColSize)
+{
+    layerColSize = _layerColSize;
 }
