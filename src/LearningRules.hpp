@@ -39,7 +39,7 @@ public:
 	 * @see LearningRules::classes
 	 * @return LearningRule derived object of the requested tyoe
 	 */
-	static LearningRule* instanceOf(int id, AssemblyState *state, Connection::vector *input) {
+	static LearningRule* instanceOf(int id, AssemblyState::ptr state, Connection::vector *input) {
 		switch (id) {
 		case (NO_LEARNING):
 			return new NoLearning(state, input);

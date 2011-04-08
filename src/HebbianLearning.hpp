@@ -42,7 +42,7 @@
 
 class HebbianLearning: public LearningRule {
 public:
-	HebbianLearning(AssemblyState *state, Connection::vector *input);
+	HebbianLearning(AssemblyState::ptr state, Connection::vector *input);
 	virtual ~HebbianLearning();
 
 	void tick();

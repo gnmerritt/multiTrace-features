@@ -35,7 +35,7 @@ public:
 		pthread_mutex_destroy(&lock);
 	}
 
-	virtual void tick(AssemblyState *state, Connection::vector *input) = 0;
+	virtual void tick(AssemblyState::ptr state, Connection::vector *input) = 0;
 
 protected:
 	AssemblyState *currentState;

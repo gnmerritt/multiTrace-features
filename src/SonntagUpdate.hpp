@@ -47,7 +47,7 @@ public:
 	virtual ~SonntagUpdate() {
 	}
 
-	void tick(AssemblyState *state, Connection::vector *input);
+	void tick(AssemblyState::ptr state, Connection::vector *input);
 
 private:
 	float calculateInput();

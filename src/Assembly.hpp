@@ -93,7 +93,7 @@ private:
 
 	int timestep; /** how many times tick() has been called */
 
-	AssemblyState *state;
+	AssemblyState::ptr state;
 	UpdateModel::ptr updateModel;
 	Connection::vector input, output;
 	LearningRule::ptr learningRule;

@@ -37,17 +37,23 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 	UpdateModel::ptr updateModel(UpdateModels::instanceOf(_updateModel));
 
 	assemblies.reserve(rows);
+	assemblyOutputBlock.reserve(rows);
 
 	// build a row by col sized AssemblyLayer (2d vector)
 	for (int curRow = 0; curRow < rows; ++curRow) {
 		assemblies.push_back(AssemblyVector());
 		assemblies.back().reserve(cols);
 
+		assemblyOutputBlock.push_back(FloatVec());
+		assemblyOutputBlock.back().reserve(cols);
+
 		for (int curCol = 0; curCol < cols; ++curCol) {
 			int id = getAssemblyID(curRow, curCol);
 
 			Assembly_t a(id, updateModel, _learningRule);
 			assemblies.back().push_back(a);
+
+			assemblyOutputBlock.back().push_back(0.0f);
 		}
 	}
 
@@ -55,14 +61,6 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 	if (connectToSelf) {
 		AssemblyLayer_ID thisLayer = getAssemblyLayer();
 		connectLayerToLayer(thisLayer, thisLayer);
-	}
-
-	/** create our assemblyOutputBlock, a float[row][col] with each Assembly's output
-	 for the GUI	*/
-	assemblyOutputBlock = new float*[rows];
-	assemblyOutputBlock[0] = new float[rows * cols];
-	for (int i = 1; i < rows; ++i) {
-		assemblyOutputBlock[i] = assemblyOutputBlock[i - 1] + rows;
 	}
 
 #ifdef DEBUG_LAYER_OUTPUT
@@ -78,17 +76,13 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 }
 
 Layer::~Layer() {
-	// deallocate assemblyOtputBlock
-        //delete[] assemblyOutputBlock[0];
-        //delete[] assemblyOutputBlock;
-
 #ifdef DEBUG_LAYER_OUTPUT
 	fclose(layer_tick_f);
 #endif
 }
 
 Layer::AssemblyLayer_ID Layer::getAssemblyLayer() {
-        return AssemblyLayer_ID(&assemblies, layerID);
+	return AssemblyLayer_ID(&assemblies, layerID);
 }
 
 /**
@@ -111,8 +105,8 @@ float Layer::tick() {
 
 	// print to our debug file
 #ifdef DEBUG_LAYER_OUTPUT
-        //fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
-        printf(layer_tick.c_str(), timestep, lastActivationAverage);
+	//fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
+	printf(layer_tick.c_str(), timestep, lastActivationAverage);
 #endif
 
 	// update the average activation (used for Regional Inhibition)

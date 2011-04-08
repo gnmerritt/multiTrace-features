@@ -24,7 +24,7 @@ static const float DEFAULT_PARAMETERS[] = { 0.001f, // learning strength
  * @param state Pointer to the AssemblyState we read from
  * @param input Pointer to the input Connections we use for calculations
  */
-HebbianLearning::HebbianLearning(AssemblyState *state, Connection::vector *input) :
+HebbianLearning::HebbianLearning(AssemblyState::ptr state, Connection::vector *input) :
 	LearningRule(state, input), storedContributions(SynapseHistory()), hasStoredLearning(false) {
 	setParameters(DEFAULT_PARAMETERS);
 	resetStoredLearning();

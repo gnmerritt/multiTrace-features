@@ -10,6 +10,8 @@
 #ifndef ASSEMBLYSTATE_H_
 #define ASSEMBLYSTATE_H_
 
+#include <boost/shared_ptr.hpp>
+
 const float INITIAL_INTRA_LTCS = 0.5;
 
 /**
@@ -24,6 +26,9 @@ const float INITIAL_INTRA_LTCS = 0.5;
  *  stcs -> short term connection strength
  */
 class AssemblyState {
+public:
+	typedef boost::shared_ptr<AssemblyState> ptr;
+
 public:
 	AssemblyState() :
 		activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0) {

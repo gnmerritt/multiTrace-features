@@ -23,7 +23,7 @@
  */
 class NoLearning: public LearningRule {
 public:
-	NoLearning(AssemblyState *state, Connection::vector *input) :
+	NoLearning(AssemblyState::ptr state, Connection::vector *input) :
 		LearningRule(state, input) {
 	}
 	virtual ~NoLearning() {

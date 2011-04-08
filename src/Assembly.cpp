@@ -33,8 +33,6 @@ Assembly::Assembly(int _id, UpdateModel::ptr _model, int _learningRule) :
 }
 
 Assembly::~Assembly() {
-	delete state;
-
 #ifdef DEBUG_ASSEMBLY_OUTPUT
 	fclose(tick_f);
 #endif

@@ -52,7 +52,7 @@ SonntagUpdate::SonntagUpdate() {
  * @param inState pointer to the Assembly's state we're updating
  * @param input pointer to the Assembly's vector of input connections
  */
-void SonntagUpdate::tick(AssemblyState *inState, Connection::vector *input) {
+void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) {
 	pthread_mutex_lock(&lock);
 
 	// store parameters locally for helper methods

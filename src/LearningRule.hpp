@@ -20,7 +20,7 @@ public:
 	typedef boost::shared_ptr<LearningRule> ptr;
 
 public:
-	LearningRule(AssemblyState *state, Connection::vector *input) :
+	LearningRule(AssemblyState::ptr state, Connection::vector *input) :
 		postSynapticState(state), incomingConnections(input) {
 	}
 	virtual ~LearningRule() {
@@ -31,7 +31,7 @@ public:
 	virtual void dropLearning() = 0;  // called if the Assembly adds/deletes connections
 
 protected:
-	AssemblyState *postSynapticState;
+	AssemblyState::ptr postSynapticState;
 	Connection::vector *incomingConnections;
 };
 

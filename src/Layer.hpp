@@ -18,7 +18,7 @@
 
 #include "Assembly.hpp"
 
-#define DEBUG_LAYER_OUTPUT
+//#define DEBUG_LAYER_OUTPUT
 
 /**
  * 	@brief Assembly container, with both lateral and regional inhibition
@@ -34,68 +34,74 @@
  */
 class Layer {
 public:
-        typedef boost::shared_ptr<Layer> ptr;
-        typedef std::vector<Layer::ptr> vector;
+	typedef boost::shared_ptr<Layer> ptr;
+	typedef std::vector<Layer::ptr> vector;
 
-        typedef Assembly Assembly_t; // possibly useful in the future?
+	typedef Assembly Assembly_t; // possibly useful in the future?
 
-        // holds our Assemblies (of type Assembly_t)
-        typedef std::vector<Assembly_t> AssemblyVector;
-        typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
+	// holds our Assemblies (of type Assembly_t)
+	typedef std::vector<Assembly_t> AssemblyVector;
+	typedef std::vector<AssemblyVector> AssemblyLayer; // 2d!
 
-        // used for connecting AssemblyLayers of different Layers
-        typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
-        typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
+	// used for connecting AssemblyLayers of different Layers
+	typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
+	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
-public:
-        Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
-                        int _layerID, bool connectToSelf);
-        virtual ~Layer();
-
-        float tick();
-
-        void connectToLayer(AssemblyLayer_ID receivingLayer);
-
-        float getLastRegionalActivation() const {
-                return lastActivationAverage;
-        }
-
-        int getId() const {
-                return layerID;
-        }
-
-        int getSize() const {
-                return rows * cols;
-        }
-
-        float** getOutputBlock() const {
-                return assemblyOutputBlock;
-        }
-
-        AssemblyLayer_ID getAssemblyLayer();
-
-private:
-        void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
-        void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
-        void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
-
-        int getAssemblyID(int row, int col);
+	// our output block, for easy visualization by a GUI
+	typedef std::vector<float> FloatVec;
+	typedef std::vector<FloatVec> LayerOutput;
 
 public:
-        int rows, cols;
+	Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
+			int _layerID, bool connectToSelf);
+	virtual ~Layer();
+
+	float tick();
+
+	void connectToLayer(AssemblyLayer_ID receivingLayer);
+
+	float getLastRegionalActivation() const {
+		return lastActivationAverage;
+	}
+
+	int getId() const {
+		return layerID;
+	}
+
+	int getSize() const {
+		return rows * cols;
+	}
+
+	LayerOutput* getOutputBlock() {
+		return &(assemblyOutputBlock);
+	}
+
+	void printOutputBlock();
+
+	AssemblyLayer_ID getAssemblyLayer();
 
 private:
-        AssemblyLayer assemblies;
-        int layerID; /** 1 is the input layer */
+	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
+	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
-        float lastActivationAverage;
-        float** assemblyOutputBlock;
-        int timestep;
+	int getAssemblyID(int row, int col);
 
-        ConnectionPattern connectionPattern;
+public:
+	int rows, cols;
+
+private:
+	AssemblyLayer assemblies;
+	int layerID;
+
+	float lastActivationAverage;
+	LayerOutput assemblyOutputBlock;
+	int timestep;
+
+	ConnectionPattern connectionPattern;
 
 #ifdef DEBUG_LAYER_OUTPUT
-        FILE *layer_tick_f;
+	FILE *layer_tick_f;
 #endif
 };
 
