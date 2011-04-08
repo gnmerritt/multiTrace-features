@@ -21,25 +21,21 @@ void CortexViewer::update()
     QImage img (LAYER_IMG_WIDTH, LAYER_IMG_HEIGHT, QImage::Format_RGB32);
 
     Layer::vector *layers = thisCortex->getLayers();
-    Layer top = layers->front();
+    Layer::ptr top = layers->front();
 
     // pixels per Assembly, how big each Assembly's output is drawn
-    int ppa_cols = top.cols / LAYER_IMG_WIDTH;
-    int ppa_rows = top.rows / LAYER_IMG_HEIGHT;
+    int ppa_cols = LAYER_IMG_WIDTH / top->cols;
+    int ppa_rows = LAYER_IMG_HEIGHT / top->rows;
 
-    printf("layer rows/cols %d/%d\n", top.rows, top.cols);
-
-    float** layerOutput = top.getOutputBlock();
+    Layer::LayerOutput* layerOutput = top->getOutputBlock();
 
     for (int col = 0; col < LAYER_IMG_WIDTH; ++col) {
-        int assemblyCol = col * ppa_cols;
+        int assemblyCol = col / ppa_cols;
 
         for (int row = 0; row < LAYER_IMG_HEIGHT; ++row) {
-            int assemblyRow = row * ppa_rows;
+            int assemblyRow = row / ppa_rows;
 
-            //printf("AssemblyRow/Col %d/%d\n", assemblyRow, assemblyCol);
-
-            float assemblyOutput = 0.0f; //layerOutput[assemblyRow][assemblyCol];
+            float assemblyOutput = layerOutput->at(assemblyRow).at(assemblyCol);
 
             QColor c;
             c.setRgbF(assemblyOutput, assemblyOutput, assemblyOutput);
@@ -47,9 +43,9 @@ void CortexViewer::update()
             img.setPixel(col, row, c.rgb());
         }
     }
-
     QPixmap pix;
     pix.convertFromImage(img);
+    ui->layerImg->setFixedSize(LAYER_IMG_WIDTH, LAYER_IMG_HEIGHT);
     ui->layerImg->setPixmap(pix);
     ui->layerImg->repaint();
 }

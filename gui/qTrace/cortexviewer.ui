@@ -160,10 +160,10 @@
       <widget class="QLabel" name="layerImg">
        <property name="geometry">
         <rect>
-         <x>130</x>
-         <y>140</y>
-         <width>62</width>
-         <height>16</height>
+         <x>70</x>
+         <y>130</y>
+         <width>311</width>
+         <height>231</height>
         </rect>
        </property>
        <property name="text">

@@ -10,6 +10,7 @@
 #define MULTI_TRACE_H
 
 #include "Cortex.hpp"
+#include "Layer.hpp"
 
 #include "ConnectionPatterns.hpp"
 #include "UpdateModels.hpp"
