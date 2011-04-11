@@ -1,12 +1,15 @@
 #include "cortexviewer.h"
 #include "ui_cortexviewer.h"
 
-const int LAYER_IMG_WIDTH = 200;
-const int LAYER_IMG_HEIGHT = 200;
+const int LAYER_IMG_WIDTH = 300;
+const int LAYER_IMG_HEIGHT = 300;
 
 CortexViewer::CortexViewer(QWidget *parent) :
 	QWidget(parent),
-	ui(new Ui::CortexViewer)
+	ui(new Ui::CortexViewer),
+	inputLayer(0),
+	inputRow(0),
+	inputCol(0)
 {
 	ui->setupUi(this);
 }
