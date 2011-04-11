@@ -64,6 +64,10 @@ public:
 		return lastActivationAverage;
 	}
 
+	Assembly_t getAssembly(int row, int col) {
+		return assemblies[row][col];
+	}
+
 	int getId() const {
 		return layerID;
 	}

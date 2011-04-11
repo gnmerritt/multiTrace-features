@@ -42,7 +42,6 @@ const float thetaD = 0.0001;
  * Constructor. Nothing really happens here, but see implicitly called UpdateModel()
  */
 SonntagUpdate::SonntagUpdate() {
-
 }
 
 /**
@@ -56,7 +55,7 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
 	pthread_mutex_lock(&lock);
 
 	// store parameters locally for helper methods
-	currentState = new AssemblyState(*inState);
+	currentState = inState;
 	currentInput = input;
 
 	// now add the delta functions to the inState, updating the Assembly
@@ -64,6 +63,7 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
 	inState->activity += calculateDeltaActivity();
 	inState->stcs += (calculateDeltaSTCS() * STCS_GAIN);
 	inState->fatigue += calculateDeltaFatigue();
+	inState->manual_input = -1.0f;
 
 	pthread_mutex_unlock(&lock);
 }
@@ -80,17 +80,17 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
 float SonntagUpdate::calculateInput() {
 	Connection::vector::iterator input;
 	float netPosInput = 0;
-	float netNegInput = currentState->regional_activation;
+	const float netNegInput = currentState->regional_activation;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
 		float signal = (*input)->getOutput();
 		netPosInput += signal;
 	}
 
-	float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
-	float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
+	const float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
+	const float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
 
-	float totalNetInput = posInput * (1 - negInput) * (1 - external_dampening);
+	const float totalNetInput = posInput * (1 - negInput) * (1 - external_dampening);
 
 #ifdef DEBUG_UPDATES
 	printf("totalNetInput: %f\n", totalNetInput);
@@ -105,13 +105,19 @@ float SonntagUpdate::calculateInput() {
  * @see SonntagUpdate.h
  */
 float SonntagUpdate::calculateDeltaActivity() {
-	float A = currentState->activity;
-	float I = calculateInput();
-	float V = calculateV();
+	const float A = currentState->activity;
+	// allow for manual input (CSV, GUI, etc)
+	float I;
+	if (currentState->manual_input > 0) {
+		I = currentState->manual_input;
+	} else {
+		I = calculateInput();
+	}
+	const float V = calculateV();
 
 	// equation 4.6, pg79
-	float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow(
-			(1 - A), thetaC)) * (1 - V);
+	float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow((1 - A), thetaC))
+			* (1 - V);
 
 #ifdef DEBUG_UPDATES
 	printf("current A: %f\n", A);

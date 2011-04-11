@@ -29,8 +29,8 @@ class Cortex {
 public:
 	typedef boost::shared_ptr<Cortex> ptr;
 
-        typedef std::pair<int, int> LayerConnection;
-        typedef std::set<LayerConnection> ConnectionMap;
+	typedef std::pair<int, int> LayerConnection;
+	typedef std::set<LayerConnection> ConnectionMap;
 
 	enum LayerType {
 		DEFAULT_LAYER, INPUT_LAYER,
@@ -47,21 +47,23 @@ public:
 
 	void tick(); // will tick all the layers
 
-        Layer::vector* getLayers() {
-            return &layers;
-        }
+	void triggerAssembly(int layerID, int row, int col, float inputStrength);
 
-        void setTestName(std::string name) {
-            testName = name;
-        }
+	Layer::vector* getLayers() {
+		return &layers;
+	}
 
-        void setLogLocation(std::string location) {
-            logLocation = location;
-        }
+	void setTestName(std::string name) {
+		testName = name;
+	}
+
+	void setLogLocation(std::string location) {
+		logLocation = location;
+	}
 
 private:
-        Layer::vector layers;
-        ConnectionMap connectedLayers;
+	Layer::vector layers;
+	ConnectionMap connectedLayers;
 	int numberOfStdLayers;
 
 	float averageLayerActivation;

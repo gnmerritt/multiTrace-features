@@ -6,30 +6,38 @@
 #include "multiTrace.hpp"
 
 namespace Ui {
-    class CortexViewer;
+	class CortexViewer;
 }
 
 class CortexViewer : public QWidget
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit CortexViewer(QWidget *parent = 0);
-    ~CortexViewer();
+	explicit CortexViewer(QWidget *parent = 0);
+	~CortexViewer();
 
-    void setCortex(Cortex::ptr);
-
-private:
-    void update();
+	void setCortex(Cortex::ptr);
 
 private:
-    Cortex::ptr thisCortex;
+	void update();
 
 private:
-    Ui::CortexViewer *ui;
+	Cortex::ptr thisCortex;
+
+	int inputRow, inputCol, inputLayer;
+	float inputStrength;
+
+private:
+	Ui::CortexViewer *ui;
 
 private slots:
-    void on_tickButton_clicked();
+	void on_inputStrength_valueChanged(double );
+	void on_inputCol_valueChanged(int );
+	void on_inputRow_valueChanged(int );
+	void on_inputLayer_valueChanged(int );
+	void on_addInput_clicked();
+	void on_tickButton_clicked();
 };
 
 #endif // CORTEXVIEWER_H

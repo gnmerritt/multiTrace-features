@@ -53,7 +53,10 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 			Assembly_t a(id, updateModel, _learningRule);
 			assemblies.back().push_back(a);
 
-			assemblyOutputBlock.back().push_back(0.0f);
+			float row_ratio = (float) .5* curRow / rows;
+			float col_ratio = (float) .5 * curCol / cols;
+
+			assemblyOutputBlock.back().push_back(row_ratio + col_ratio);
 		}
 	}
 

@@ -31,7 +31,8 @@ public:
 
 public:
 	AssemblyState() :
-		activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0) {
+		activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0), manual_input(0),
+				regional_activation(0) {
 	}
 	virtual ~AssemblyState() {
 	}
@@ -47,6 +48,8 @@ public:
 	const float ltcs; /** const because we are not modeling intra-Assembly learning */
 	float stcs;
 	float fatigue;
+
+	float manual_input; // replaces input calculations for 1 tick
 
 	/** set by Layer when it calls tick() on each assembly */
 	float regional_activation;

@@ -45,6 +45,8 @@ public:
 
 	void initializeIncConnectionStrengths(); // danger: will destroy all learning
 
+	void setActivation(float strength);
+
 	int getId() const {
 		return id;
 	}

@@ -38,7 +38,7 @@ public:
 	virtual void tick(AssemblyState::ptr state, Connection::vector *input) = 0;
 
 protected:
-	AssemblyState *currentState;
+	AssemblyState::ptr currentState;
 	Connection::vector *currentInput;
 
 	pthread_mutex_t lock;

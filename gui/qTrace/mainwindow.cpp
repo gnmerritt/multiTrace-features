@@ -5,26 +5,26 @@
 #include "cortexviewer.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    layerRowSize(1),
-    layerColSize(1),
-    numberOfLayers(1),
-    connectTo(0),
-    connectFrom(0),
-    interLayerConnectionsEnabled(false),
-    testName(""),
-    saveDirectory(""),
-    connectionTemplate_i(0),
-    learningRule_i(0),
-    updateModel_i(0)
+	QMainWindow(parent),
+	ui(new Ui::MainWindow),
+	layerRowSize(2),
+	layerColSize(2),
+	numberOfLayers(1),
+	connectTo(0),
+	connectFrom(0),
+	interLayerConnectionsEnabled(false),
+	testName(""),
+	saveDirectory(""),
+	connectionTemplate_i(0),
+	learningRule_i(0),
+	updateModel_i(0)
 {
-    ui->setupUi(this);
+	ui->setupUi(this);
 }
 
 MainWindow::~MainWindow()
 {
-    delete ui;
+	delete ui;
 }
 
 /**
@@ -34,87 +34,87 @@ MainWindow::~MainWindow()
   * @return shared pointer to the instantiated Cortex object
   */
 Cortex::ptr MainWindow::createCortexFromParameters() {
-    Cortex::ptr newCortex ( new Cortex() );
+	Cortex::ptr newCortex ( new Cortex() );
 
-    // add all the Layers
-    for (unsigned int layer = 0; layer < numberOfLayers; ++layer) {
-        newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i,
-                            Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
-    }
+	// add all the Layers
+	for (unsigned int layer = 0; layer < numberOfLayers; ++layer) {
+		newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i,
+							Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
+	}
 
-    // and then connect them
-    Layer::vector *layers = newCortex->getLayers();
-    Layer::vector::iterator eachLayer;
+	// and then connect them
+	Layer::vector *layers = newCortex->getLayers();
+	Layer::vector::iterator eachLayer;
 
-    for (eachLayer = layers->begin(); eachLayer != layers->end(); ++eachLayer) {
-        Layer::ptr thisLayer = *eachLayer;
-        newCortex->connectLayerRange(thisLayer->getId(), connectFrom, connectTo);
-    }
+	for (eachLayer = layers->begin(); eachLayer != layers->end(); ++eachLayer) {
+		Layer::ptr thisLayer = *eachLayer;
+		newCortex->connectLayerRange(thisLayer->getId(), connectFrom, connectTo);
+	}
 
-    newCortex->setTestName(testName.toStdString());
-    newCortex->setLogLocation(saveDirectory.toStdString());
+	newCortex->setTestName(testName.toStdString());
+	newCortex->setLogLocation(saveDirectory.toStdString());
 
-    return  newCortex;
+	return  newCortex;
 }
 
 void MainWindow::on_createButton_clicked()
 {
-    CortexViewer *cv = new CortexViewer();
-    cv->setCortex(createCortexFromParameters());
-    cv->show();
+	CortexViewer *cv = new CortexViewer();
+	cv->setCortex(createCortexFromParameters());
+	cv->show();
 }
 
 void MainWindow::on_layerRowSize_valueChanged(int _layerRowSize)
 {
-    layerRowSize = _layerRowSize;
+	layerRowSize = _layerRowSize;
 }
 
 void MainWindow::on_numberLayers_valueChanged(int _numberOfLayers)
 {
-    numberOfLayers = _numberOfLayers;
+	numberOfLayers = _numberOfLayers;
 }
 
 void MainWindow::on_connectFrom_valueChanged(int _connectFrom)
 {
-    connectFrom = _connectFrom;
+	connectFrom = _connectFrom;
 }
 
 void MainWindow::on_connectTo_valueChanged(int _connectTo)
 {
-    connectTo = _connectTo;
+	connectTo = _connectTo;
 }
 
 void MainWindow::on_layerConnectedToggle_toggled(bool checked)
 {
-    interLayerConnectionsEnabled = checked;
+	interLayerConnectionsEnabled = checked;
 }
 
 void MainWindow::on_connectionTemplate_currentIndexChanged(int index)
 {
-    connectionTemplate_i = index;
+	connectionTemplate_i = index;
 }
 
 void MainWindow::on_learningRule_currentIndexChanged(int index)
 {
-    learningRule_i = index;
+	learningRule_i = index;
 }
 
 void MainWindow::on_updateModel_currentIndexChanged(int index)
 {
-    updateModel_i = index;
+	updateModel_i = index;
 }
 
 void MainWindow::on_testName_textEdited(QString newString)
 {
-    testName = newString;
+	testName = newString;
 }
 
 void MainWindow::on_saveLocation_textEdited(QString newString)
 {
-    saveDirectory = newString;
+	saveDirectory = newString;
 }
 
 void MainWindow::on_layerColSize_valueChanged(int _layerColSize)
 {
-    layerColSize = _layerColSize;
+	layerColSize = _layerColSize;
 }

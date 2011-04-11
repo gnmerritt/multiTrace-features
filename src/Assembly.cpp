@@ -16,8 +16,8 @@ const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregi
 #endif
 
 Assembly::Assembly(int _id, UpdateModel::ptr _model, int _learningRule) :
-	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()), updateModel(_model), input(
-			Connection::vector()), output(Connection::vector()) {
+	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()),
+			updateModel(_model), input(Connection::vector()), output(Connection::vector()) {
 	initializeLearningRule();
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
@@ -96,6 +96,28 @@ float Assembly::tick(float regional_activation) {
 
 	// return our activation to our Layer
 	return state->output;
+}
+
+/**
+ * @brief
+ * Sets the input of this Assembly, to be applied next time tick() is called. THIS WILL BREAK LEARNING
+ *
+ * This setter will manually replace the term that is normally calculated by
+ * summing all of the incoming connections. This means that Assembly activation
+ * will be uncoupled from input its receiving, which is not a problem unless
+ * you're trying to model learning somehow. YOU HAVE BEEN WARNED.
+ *
+ * @param strength amount of activation, valid ranges on [0, 1]
+ */
+void Assembly::setActivation(float strength) {
+	if (strength > 1) {
+		strength = 1.0f;
+	}
+	if (strength < 0) {
+		strength = -1.0f;
+	}
+
+	state->manual_input = strength;
 }
 
 /**
