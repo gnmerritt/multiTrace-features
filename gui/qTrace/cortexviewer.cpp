@@ -9,7 +9,9 @@ CortexViewer::CortexViewer(QWidget *parent) :
 	ui(new Ui::CortexViewer),
 	inputLayer(0),
 	inputRow(0),
-	inputCol(0)
+	inputCol(0),
+	tickPause_s(0.25f),
+	isRunning(false)
 {
 	ui->setupUi(this);
 }
@@ -83,6 +85,25 @@ void CortexViewer::on_addInput_clicked()
 	thisCortex->triggerAssembly(inputLayer, inputRow, inputCol, inputStrength);
 }
 
+/**
+  * @brief Starts/stops Cortex::tick(), with a pause of tickPause_s
+  * @return void
+  */
+void CortexViewer::on_runStopButton_clicked()
+{
+	// already running, so we stop
+	if (isRunning) {
+		isRunning = false;
+		ui->runStopButton->setText("Run");
+	}
+	else {
+		isRunning = true;
+		ui->runStopButton->setText("Pause");
+
+		/// @todo FIGURE OUT QT THREADING
+	}
+}
+
 void CortexViewer::on_inputLayer_valueChanged(int value)
 {
 	inputLayer = value;
@@ -101,4 +122,9 @@ void CortexViewer::on_inputCol_valueChanged(int value)
 void CortexViewer::on_inputStrength_valueChanged(double value)
 {
 	inputStrength = value;
+}
+
+void CortexViewer::on_tickPause_valueChanged(double value)
+{
+	tickPause_s = value;
 }

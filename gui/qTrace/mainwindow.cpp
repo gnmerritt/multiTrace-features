@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	numberOfLayers(1),
 	connectTo(0),
 	connectFrom(0),
-	interLayerConnectionsEnabled(false),
+	interLayerConnectionsEnabled(true),
 	testName(""),
 	saveDirectory(""),
 	connectionTemplate_i(0),

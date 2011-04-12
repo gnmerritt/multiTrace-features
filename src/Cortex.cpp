@@ -129,8 +129,7 @@ void Cortex::tick() {
 void Cortex::triggerAssembly(int layerID, int row, int col, float inputStrength) {
 	if (inputStrength > 1) {
 		inputStrength = 1;
-	}
-	else if (inputStrength < 0) {
+	} else if (inputStrength < 0) {
 		inputStrength = 0;
 	}
 

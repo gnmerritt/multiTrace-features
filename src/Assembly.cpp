@@ -16,8 +16,8 @@ const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregi
 #endif
 
 Assembly::Assembly(int _id, UpdateModel::ptr _model, int _learningRule) :
-	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()),
-			updateModel(_model), input(Connection::vector()), output(Connection::vector()) {
+	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()), updateModel(_model),
+			input(Connection::vector()), output(Connection::vector()) {
 	initializeLearningRule();
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT

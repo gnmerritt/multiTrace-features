@@ -27,11 +27,15 @@ private:
 
 	int inputRow, inputCol, inputLayer;
 	float inputStrength;
+	float tickPause_s;
+	bool isRunning;
 
 private:
 	Ui::CortexViewer *ui;
 
 private slots:
+	void on_runStopButton_clicked();
+ void on_tickPause_valueChanged(double );
 	void on_inputStrength_valueChanged(double );
 	void on_inputCol_valueChanged(int );
 	void on_inputRow_valueChanged(int );

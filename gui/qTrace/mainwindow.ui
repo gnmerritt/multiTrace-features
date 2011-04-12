@@ -320,6 +320,9 @@
     <property name="text">
      <string>Inter Layer Connections?</string>
     </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QLabel" name="label_5">
     <property name="geometry">

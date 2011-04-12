@@ -1,8 +1,8 @@
-/*
+/**
  * Layer.cpp
  *
  *  @date Feb 2, 2011
- *      @author Nathan Merritt
+ *  @author Nathan Merritt
  */
 
 #include "Layer.hpp"
@@ -53,8 +53,8 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 			Assembly_t a(id, updateModel, _learningRule);
 			assemblies.back().push_back(a);
 
-			float row_ratio = (float) .5* curRow / rows;
-			float col_ratio = (float) .5 * curCol / cols;
+			float row_ratio = (float) .5 * (rows - curRow) / rows;
+			float col_ratio = (float) .5 * (cols - curCol) / cols;
 
 			assemblyOutputBlock.back().push_back(row_ratio + col_ratio);
 		}
@@ -193,7 +193,7 @@ void Layer::connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID re
 			AssemblyLocation receivingLoc(row, col, receivingID);
 			Assembly_t *receivingAssembly = &(receiving->at(row).at(col));
 
-			if (connectionPattern.areConnected(sendingLoc, receivingLoc)) {
+			if (connectionPattern->areConnected(sendingLoc, receivingLoc)) {
 				connectAssemblyToAssembly(sender.first, receivingAssembly);
 			}
 		}

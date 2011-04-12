@@ -12,36 +12,29 @@
 
 #include <cmath>
 
-/** used in ΔActivity */
-const float v = 1.5; /** normalization of sensitivity, calculateV() */
-/** C=Competition, L=Loss (exponential decay terms) */
-const float thetaC = 9;
-const float thetaL = 5;
-
-/** used in calculateInput */
-const float phi_pos = 9.0; /** input resistance */
-const float phi_neg = 5.0;
-const float external_dampening = 0.5;
-
-/** used in ΔLTCS */
-const float deltaLTCS = 0;
-
-/** used in ΔSTCS
- G=Growth, D=Decline */
-const float sigmaG = 0.1;
-const float sigmaD = 0.0001;
-const float STCS_GAIN = 0.5;
-
-/** used in ΔFatigue */
-const float thetaG = 0.007;
-const float thetaD = 0.0001;
+/** default parameterization, see @parameters */
+static const float CHOWN_2002_PARAMETERS[] = { 1.5f, // sensitivity normalization
+		9.0f, // decay due to competition
+		5.0f, // decay due to loss
+		9.0f, // input resistance (pos stimuli)
+		5.0f, // input resistance (neg stimuli)
+		0.5f, // external dampening
+		0.0f, // delta LTCS (LTCS is constant)
+		0.1f, // STCS growth
+		0.001f, // STCS decline
+		0.5f, // STCS gain
+		0.007f, // Fatigue growth
+		0.0001f // Fatigue decline
+		};
 
 //#define DEBUG_UPDATES
 
 /**
- * Constructor. Nothing really happens here, but see implicitly called UpdateModel()
+ * @brief sets up the current default parameterization
+ * @see setParameters
  */
 SonntagUpdate::SonntagUpdate() {
+	setParameters(CHOWN_2002_PARAMETERS);
 }
 
 /**
@@ -61,7 +54,7 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
 	// now add the delta functions to the inState, updating the Assembly
 	inState->output = currentState->activity;
 	inState->activity += calculateDeltaActivity();
-	inState->stcs += (calculateDeltaSTCS() * STCS_GAIN);
+	inState->stcs += calculateDeltaSTCS();
 	inState->fatigue += calculateDeltaFatigue();
 	inState->manual_input = -1.0f;
 
@@ -79,8 +72,10 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
  */
 float SonntagUpdate::calculateInput() {
 	Connection::vector::iterator input;
-	float netPosInput = 0;
 	const float netNegInput = currentState->regional_activation;
+	const float phi_pos = parameters[PHI_POS];
+	const float phi_neg = parameters[PHI_NEG];
+	float netPosInput = 0;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
 		float signal = (*input)->getOutput();
@@ -90,7 +85,7 @@ float SonntagUpdate::calculateInput() {
 	const float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
 	const float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
 
-	const float totalNetInput = posInput * (1 - negInput) * (1 - external_dampening);
+	const float totalNetInput = posInput * (1 - negInput) * (1 - parameters[EXTERNAL_DAMPENING]);
 
 #ifdef DEBUG_UPDATES
 	printf("totalNetInput: %f\n", totalNetInput);
@@ -106,6 +101,10 @@ float SonntagUpdate::calculateInput() {
  */
 float SonntagUpdate::calculateDeltaActivity() {
 	const float A = currentState->activity;
+	const float V = calculateV();
+	const float thetaC = parameters[DECAY_COMPETITION];
+	const float thetaL = parameters[DECAY_LOSS];
+
 	// allow for manual input (CSV, GUI, etc)
 	float I;
 	if (currentState->manual_input > 0) {
@@ -113,11 +112,10 @@ float SonntagUpdate::calculateDeltaActivity() {
 	} else {
 		I = calculateInput();
 	}
-	const float V = calculateV();
 
 	// equation 4.6, pg79
-	float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow((1 - A), thetaC))
-			* (1 - V);
+	const float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow((1 - A),
+			thetaC)) * (1 - V);
 
 #ifdef DEBUG_UPDATES
 	printf("current A: %f\n", A);
@@ -133,23 +131,29 @@ float SonntagUpdate::calculateDeltaActivity() {
 /**
  * From equation 4.3, pg 78
  * See derivations in SonntagUpdate.h
+ *
+ * @return V term for this tick
  */
 float SonntagUpdate::calculateV() {
-	float L = currentState->ltcs;
-	float S = currentState->stcs;
-	float F = currentState->fatigue;
+	const float L = currentState->ltcs;
+	const float S = currentState->stcs;
+	const float F = currentState->fatigue;
+	const float v = parameters[NORM_SENSITIVITY];
 
 	return ((L + S) * (1 - F)) / v;
 }
 
 /**
  * @see calculateDeltaFatigue()
+ * @return Change to STCS for this tick
  */
 float SonntagUpdate::calculateDeltaSTCS() {
-	float A = currentState->activity;
-	float S = currentState->stcs;
+	const float A = currentState->activity;
+	const float S = currentState->stcs;
+	const float sigmaG = parameters[SIGMA_GROWTH];
+	const float sigmaD = parameters[SIGMA_DECLINE];
 
-	float deltaSTCS = ((sigmaG * A) * (1 - S)) - (sigmaD * S);
+	const float deltaSTCS = ((sigmaG * A) * (1 - S)) - (sigmaD * S) * parameters[STCS_GAIN];
 
 #ifdef DEBUG_UPDATES
 	printf("deltaSTCS: %f\n", deltaSTCS);
@@ -158,23 +162,36 @@ float SonntagUpdate::calculateDeltaSTCS() {
 	return deltaSTCS;
 }
 
-/*
+/**
  * Similar equation to STCS, see calculateDeltaSTCS & derivations
  * in SonntagUpdate.h
  *
  * Squared terms removed, @see SonntagUpdate.h
  *
  * @see calculateDeltaSTCS()
+ * @return change to Fatigue term this tick
  */
 float SonntagUpdate::calculateDeltaFatigue() {
-	float A = currentState->activity;
-	float F = currentState->fatigue;
+	const float A = currentState->activity;
+	const float F = currentState->fatigue;
+	const float thetaG = parameters[FATIGUE_GROWTH];
+	const float thetaD = parameters[FATIGUE_DECLINE];
 
-	float deltaFatigue = ((thetaG * A) * (1 - F)) - (thetaD * F);
+	const float deltaFatigue = ((thetaG * A) * (1 - F)) - (thetaD * F);
 
 #ifdef DEBUG_UPDATES
 	printf("deltaFatigue: %f\n", deltaFatigue);
 #endif
 
 	return deltaFatigue;
+}
+
+/**
+ * @brief sets the parameters to a new array
+ * @param newParams array of values to use
+ */
+void SonntagUpdate::setParameters(const float newParams[]) {
+	for (int i = 0; i < PARAMETER_COUNT; ++i) {
+		parameters[i] = newParams[i];
+	}
 }

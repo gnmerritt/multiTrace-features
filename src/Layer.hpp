@@ -102,7 +102,7 @@ private:
 	LayerOutput assemblyOutputBlock;
 	int timestep;
 
-	ConnectionPattern connectionPattern;
+	ConnectionPattern::ptr connectionPattern;
 
 #ifdef DEBUG_LAYER_OUTPUT
 	FILE *layer_tick_f;

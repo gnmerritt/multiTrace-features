@@ -8,7 +8,7 @@
 #include "UNR.hpp"
 
 const float PERCENT_CONNECTED = 0.85;
-const int MAX_CONNECTION_Z = 1;
+const int MAX_CONNECTION_Z = 50; // arbitrarily high for now
 
 UNR::UNR() {
 	srand( time(NULL) );

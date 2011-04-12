@@ -36,6 +36,7 @@ public:
 	}
 
 	virtual void tick(AssemblyState::ptr state, Connection::vector *input) = 0;
+	virtual void setParameters(const float newParams[]) = 0;
 
 protected:
 	AssemblyState::ptr currentState;

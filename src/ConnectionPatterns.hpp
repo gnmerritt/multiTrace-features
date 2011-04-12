@@ -30,15 +30,12 @@ public:
 	 * @see ConnectionPatterns::classes
 	 * @return ConnectionPattern derived object of the requested tyoe
 	 */
-	static ConnectionPattern instanceOf(int id) {
+	static ConnectionPattern* instanceOf(int id) {
 		switch (id) {
 		case (UNR_PATTERN): {
-			UNR p;
-			return p;
+			return new UNR();
 		}
 		default: {
-			ConnectionPattern c;
-			return c;
 		}
 		}
 	}

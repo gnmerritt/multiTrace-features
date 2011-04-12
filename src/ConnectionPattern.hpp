@@ -9,6 +9,8 @@
 #ifndef CONNECTIONPATTERN_H_
 #define CONNECTIONPATTERN_H_
 
+#include <boost/shared_ptr.hpp>
+
 /**
  * @brief Describes an Assembly in 3-space (Row,Col,Layer)
  */
@@ -33,6 +35,9 @@ public:
  */
 class ConnectionPattern {
 public:
+	typedef boost::shared_ptr<ConnectionPattern> ptr;
+
+public:
 	ConnectionPattern() {
 	}
 	virtual ~ConnectionPattern() {
@@ -46,9 +51,7 @@ public:
 	 * @param sender Sending Assembly row, col, layer
 	 * @param receiver receiving Assembly row ,col, layer
 	 */
-	bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) {
-		return false;
-	}
+	virtual bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) = 0;
 };
 
 #endif /* CONNECTIONPATTERN_H_ */
