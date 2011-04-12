@@ -2,7 +2,7 @@
  * SonntagUpdate.cpp
  *
  *  @date Feb 2, 2011
- *      @author Nathan Merritt
+ *  @author Nathan Merritt
  *
  *  Parameters modified as suggested in:
  *  Chown E (2002) Reminiscence and arousal: a connectionist model.
@@ -13,11 +13,11 @@
 #include <cmath>
 
 /** default parameterization, see @parameters */
-static const float CHOWN_2002_PARAMETERS[] = { 1.5f, // sensitivity normalization
+static const float CHOWN_2000_PARAMETERS[] = { 1.5f, // sensitivity normalization
 		9.0f, // decay due to competition
 		5.0f, // decay due to loss
-		9.0f, // input resistance (pos stimuli)
-		5.0f, // input resistance (neg stimuli)
+		2.0f, // input resistance (pos stimuli) (used to be 9)
+		1.0f, // input resistance (neg stimuli) (used to be 5)
 		0.5f, // external dampening
 		0.0f, // delta LTCS (LTCS is constant)
 		0.1f, // STCS growth
@@ -34,7 +34,7 @@ static const float CHOWN_2002_PARAMETERS[] = { 1.5f, // sensitivity normalizatio
  * @see setParameters
  */
 SonntagUpdate::SonntagUpdate() {
-	setParameters(CHOWN_2002_PARAMETERS);
+	setParameters(CHOWN_2000_PARAMETERS);
 }
 
 /**
@@ -88,6 +88,8 @@ float SonntagUpdate::calculateInput() {
 	const float totalNetInput = posInput * (1 - negInput) * (1 - parameters[EXTERNAL_DAMPENING]);
 
 #ifdef DEBUG_UPDATES
+	printf("netPosInput: %f ", netPosInput);
+	printf("pos in: %f neg in: %f ", posInput, negInput);
 	printf("totalNetInput: %f\n", totalNetInput);
 #endif
 

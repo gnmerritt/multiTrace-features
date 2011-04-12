@@ -152,7 +152,8 @@ void Assembly::updateOutgoingConnections() {
 	Connection::vector::iterator out;
 
 	for (out = output.begin(); out != output.end(); ++out) {
-		(*out)->setActivity(state->output);
+		Connection::ptr connection = *out;
+		connection->setActivity(state->output);
 	}
 }
 
