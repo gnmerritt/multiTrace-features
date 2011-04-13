@@ -7,7 +7,8 @@
 
 #include "Assembly.hpp"
 
-const float INITIAL_TOTAL_LTCS = 0.4f;
+const float INITIAL_TOTAL_LTCS = 0.4f; // how much of an Assembly's LTCS is intra-Assembly
+const float STCS_GAIN = 0.2f; // controls spread of activity via Connection::stcs
 
 // used by debug printf's
 #ifdef DEBUG_ASSEMBLY_OUTPUT
@@ -151,9 +152,12 @@ void Assembly::setOutgoingConnections(Connection::vector out) {
 void Assembly::updateOutgoingConnections() {
 	Connection::vector::iterator out;
 
+	const float stcs_update = state->activity * STCS_GAIN;
+
 	for (out = output.begin(); out != output.end(); ++out) {
 		Connection::ptr connection = *out;
 		connection->setActivity(state->output);
+		connection->setSTCS(stcs_update);
 	}
 }
 

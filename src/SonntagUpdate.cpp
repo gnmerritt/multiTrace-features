@@ -16,8 +16,8 @@
 static const float CHOWN_2000_PARAMETERS[] = { 1.5f, // sensitivity normalization
 		9.0f, // decay due to competition
 		5.0f, // decay due to loss
-		2.0f, // input resistance (pos stimuli) (used to be 9)
-		1.0f, // input resistance (neg stimuli) (used to be 5)
+		9.0f, // input resistance (pos stimuli)
+		5.0f, // input resistance (neg stimuli)
 		0.5f, // external dampening
 		0.0f, // delta LTCS (LTCS is constant)
 		0.1f, // STCS growth
