@@ -13,18 +13,21 @@
 #include <cmath>
 
 /** default parameterization, see @parameters */
-static const float CHOWN_2000_PARAMETERS[] = { 1.5f, // sensitivity normalization
-		9.0f, // decay due to competition
-		5.0f, // decay due to loss
-		9.0f, // input resistance (pos stimuli)
-		5.0f, // input resistance (neg stimuli)
-		0.5f, // external dampening
-		0.0f, // delta LTCS (LTCS is constant)
-		0.1f, // STCS growth
-		0.001f, // STCS decline
-		0.5f, // STCS gain
-		0.007f, // Fatigue growth
-		0.0001f // Fatigue decline
+static const float CHOWN_2000_PARAMETERS[] =
+	{ 1.5f, // sensitivity normalization
+			9.0f, // decay due to competition
+			5.0f, // decay due to loss
+			9.0f, // input resistance (pos stimuli) these modulate the sigmoid: (1 + (1 + 1/x^phi))
+			3.0f, // input resistance (neg stimuli)
+			0.75f, // input resistance (regional inhibition)
+			0.75f, // input resistance (lateral inhibition)
+			0.5f, // external dampening
+			0.0f, // delta LTCS (LTCS is constant)
+			0.1f, // STCS growth
+			0.001f, // STCS decline
+			0.3f, // STCS gain
+			0.007f, // Fatigue growth
+			0.0001f // Fatigue decline
 		};
 
 //#define DEBUG_UPDATES
@@ -72,9 +75,10 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
  */
 float SonntagUpdate::calculateInput() {
 	Connection::vector::iterator input;
-	const float netNegInput = currentState->regional_activation;
 	const float phi_pos = parameters[PHI_POS];
 	const float phi_neg = parameters[PHI_NEG];
+	const float regionalInhibitionGain = parameters[REGIONAL_INHIBITION];
+	const float lateralInhibitionGain = parameters[LATERAL_INHIBITION];
 	float netPosInput = 0;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
@@ -82,13 +86,21 @@ float SonntagUpdate::calculateInput() {
 		netPosInput += signal;
 	}
 
+	const float regionalInhibition = regionalInhibitionGain * currentState->regional_activation;
+	const float lateralInhibition = lateralInhibitionGain * currentState->lateral_inhibition;
+	const float netNegInput = regionalInhibition + lateralInhibition;
+
 	const float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
 	const float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
 
 	const float totalNetInput = posInput * (1 - negInput) * (1 - parameters[EXTERNAL_DAMPENING]);
 
+	//printf("regional: %f lateral: %f netNegInput: %f negInput: %f totalInput: %f \n",
+		//	regionalInhibition, lateralInhibition, netNegInput, negInput, totalNetInput);
+
 #ifdef DEBUG_UPDATES
 	printf("netPosInput: %f ", netPosInput);
+	printf("netNegInput: %f ", netNegInput);
 	printf("pos in: %f neg in: %f ", posInput, negInput);
 	printf("totalNetInput: %f\n", totalNetInput);
 #endif

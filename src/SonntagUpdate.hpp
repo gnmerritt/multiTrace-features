@@ -50,6 +50,8 @@ public:
 		DECAY_LOSS,
 		PHI_POS, // input resistance, calculateInput()
 		PHI_NEG,
+		REGIONAL_INHIBITION,
+		LATERAL_INHIBITION,
 		EXTERNAL_DAMPENING,
 		DELTA_LTCS, // used in ΔLTCS
 		SIGMA_GROWTH, // exponential decay terms for ΔSTCS

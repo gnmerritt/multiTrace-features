@@ -12,6 +12,15 @@ const std::string layer_tick = "%d\t%f\n";
 const std::string layer_init = "Timestep\tAverageActivity\n";
 #endif
 
+// sampled Gaussian kernel filter with sigma = 1
+static const float gaussianWeight[5][5] =
+	{
+		{ 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 },
+		{ 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
+		{ 0.02564102, 0.09523809, 0.00000000, 0.09523809, 0.02564102 },
+		{ 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
+		{ 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 } };
+
 /**
  * Builds a layer that has size rows*cols. This entails the following steps:
  *
@@ -100,7 +109,9 @@ float Layer::tick() {
 		for (int col = 0; col < cols; ++col) {
 			float thisAssembly;
 
-			thisAssembly = assemblies[row][col].tick(lastActivationAverage, 0.0f);
+			const float weightedNeighborSum = getGaussianSum(row, col);
+
+			thisAssembly = assemblies[row][col].tick(lastActivationAverage, weightedNeighborSum);
 			assemblyOutputBlock[row][col] = thisAssembly;
 			currentActivation_sum += thisAssembly;
 		}
@@ -123,6 +134,55 @@ float Layer::tick() {
 	timestep++;
 
 	return lastActivationAverage;
+}
+
+/**
+ * @brief Returns how active nearby Assembly s are, weighted by a Gaussian curve
+ *
+ * @param row row of the Assembly
+ * @param col column of the Assembly
+ * @return a weighted sum of the 24 nearest Assembly s times a sampled Gaussian kernel filter
+ */
+float Layer::getGaussianSum(int row, int col) {
+	float weightedSum = 0;
+
+	for (int rowIt = 0; rowIt < 5; ++rowIt) {
+		const int currRow = row + rowIt - 2;
+
+		for (int colIt = 0; colIt < 5; ++colIt) {
+			const int currCol = col + colIt - 2;
+
+			// never add ourself, even if wrapping around in a small Layer
+			if (currRow == row && currCol == col) {
+				continue;
+			}
+
+			const float weightedOutput = gaussianWeight[rowIt][colIt]
+					* safeOutput(currRow, currCol);
+			weightedSum += weightedOutput;
+		}
+	}
+
+	return weightedSum;
+}
+
+/**
+ * @brief Safe access into the assembly vector, wraps if it would be out of bounds
+ *
+ * Returns Activity*(1 - Fatigue) for the Assembly located at [row][col] (wraps around
+ * if this would be an assembly that is out of bounds)
+ *
+ * @return float located at assemblyOutputBlock[row][col]
+ */
+float Layer::safeOutput(int row, int col) {
+	const int wrapRow = row % assemblyOutputBlock.size();
+	const int wrapCol = col % assemblyOutputBlock.back().size();
+
+	Assembly_t assembly = assemblies.at(wrapRow).at(wrapCol);
+	const float a = assembly.getOutput();
+	const float f = assembly.getFatigue();
+
+	return a * (1 - f);
 }
 
 /**

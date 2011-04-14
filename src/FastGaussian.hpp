@@ -31,7 +31,9 @@ public:
 	float getNeighborWeights(int timestep, int centerRow, int centerCol);
 
 private:
+	void updateRowSums();
 	void sumRow(int row);
+
 	float rowRange(int start, int end);
 
 private:

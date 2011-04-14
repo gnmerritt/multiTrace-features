@@ -79,6 +79,7 @@ void Assembly::initializeLearningRule() {
 float Assembly::tick(float regional_activation, float neighbors_activation) {
 	// update our internal state with layer data
 	state->regional_activation = regional_activation;
+	state->lateral_inhibition = neighbors_activation;
 
 	// tick the internal state
 	updateModel->tick(state, &input);

@@ -26,3 +26,12 @@ FastGaussian::~FastGaussian() {
 float FastGaussian::getNeighborWeights(int timestep, int centerX, int centerY) {
 }
 
+void FastGaussian::sumRow(int row) {
+}
+
+float FastGaussian::rowRange(int start, int end) {
+}
+
+void FastGaussian::updateRowSums() {
+}
+

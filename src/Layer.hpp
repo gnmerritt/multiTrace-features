@@ -87,6 +87,9 @@ private:
 	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
+	float getGaussianSum(int row, int col);
+	float safeOutput(int row, int col);
+
 	int getAssemblyID(int row, int col);
 
 public:
