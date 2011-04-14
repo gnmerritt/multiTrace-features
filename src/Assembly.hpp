@@ -41,7 +41,7 @@ public:
 	void setIncomingConnections(Connection::vector in);
 	void setOutgoingConnections(Connection::vector out);
 
-	float tick(float regional_activation);
+	float tick(float regional_activation, float neighbors_activation);
 
 	void initializeIncConnectionStrengths(); // danger: will destroy all learning
 

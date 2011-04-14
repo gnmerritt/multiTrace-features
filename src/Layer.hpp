@@ -13,6 +13,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include "FastGaussian.hpp"
+
 #include "ConnectionPatterns.hpp"
 #include "UpdateModels.hpp"
 
@@ -47,10 +49,6 @@ public:
 	typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
 	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
-	// our output block, for easy visualization by a GUI
-	typedef std::vector<float> FloatVec;
-	typedef std::vector<FloatVec> LayerOutput;
-
 public:
 	Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
 			int _layerID, bool connectToSelf);
@@ -76,7 +74,7 @@ public:
 		return rows * cols;
 	}
 
-	LayerOutput* getOutputBlock() {
+	FastGaussian::LayerOutput* getOutputBlock() {
 		return &(assemblyOutputBlock);
 	}
 
@@ -99,7 +97,7 @@ private:
 	int layerID;
 
 	float lastActivationAverage;
-	LayerOutput assemblyOutputBlock;
+	FastGaussian::LayerOutput assemblyOutputBlock;
 	int timestep;
 
 	ConnectionPattern::ptr connectionPattern;

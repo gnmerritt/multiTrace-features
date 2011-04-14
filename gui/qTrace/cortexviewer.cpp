@@ -32,7 +32,7 @@ void CortexViewer::update()
 	int ppa_cols = LAYER_IMG_WIDTH / top->cols;
 	int ppa_rows = LAYER_IMG_HEIGHT / top->rows;
 
-	Layer::LayerOutput* layerOutput = top->getOutputBlock();
+	FastGaussian::LayerOutput* layerOutput = top->getOutputBlock();
 
 	for (int col = 0; col < LAYER_IMG_WIDTH; ++col) {
 		int assemblyCol = col / ppa_cols;

@@ -44,7 +44,7 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 		assemblies.push_back(AssemblyVector());
 		assemblies.back().reserve(cols);
 
-		assemblyOutputBlock.push_back(FloatVec());
+		assemblyOutputBlock.push_back(FastGaussian::FloatVec());
 		assemblyOutputBlock.back().reserve(cols);
 
 		for (int curCol = 0; curCol < cols; ++curCol) {
@@ -100,7 +100,7 @@ float Layer::tick() {
 		for (int col = 0; col < cols; ++col) {
 			float thisAssembly;
 
-			thisAssembly = assemblies[row][col].tick(lastActivationAverage);
+			thisAssembly = assemblies[row][col].tick(lastActivationAverage, 0.0f);
 			assemblyOutputBlock[row][col] = thisAssembly;
 			currentActivation_sum += thisAssembly;
 		}
