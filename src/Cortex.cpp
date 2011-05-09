@@ -135,5 +135,5 @@ void Cortex::triggerAssembly(int layerID, int row, int col, float inputStrength)
 
 	//printf("layerID: %d, row: %d col: %d \n", layerID, row, col);
 
-	layers.at(layerID)->getAssembly(row, col).setActivation(inputStrength);
+	layers.at(layerID)->triggerAssembly(row, col, inputStrength);
 }

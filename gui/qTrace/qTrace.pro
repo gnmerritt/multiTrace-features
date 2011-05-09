@@ -12,14 +12,17 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     cortexviewer.cpp \
-    ../../src/*.cpp
+    ../../src/*.cpp \
+    layerviewer.cpp
 
 HEADERS  += mainwindow.h \
     cortexviewer.h \
-    ../../src/*.hpp
+    ../../src/*.hpp \
+    layerviewer.hpp
 
 FORMS    += mainwindow.ui \
-    cortexviewer.ui
+    cortexviewer.ui \
+    layerviewer.ui
 
 OTHER_FILES +=
 

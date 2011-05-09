@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1032</width>
-    <height>482</height>
+    <width>867</width>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QGraphicsView" name="inputImage">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>330</x>
      <y>10</y>
-     <width>281</width>
-     <height>211</height>
+     <width>521</width>
+     <height>461</height>
     </rect>
    </property>
   </widget>
@@ -40,7 +40,7 @@
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>220</y>
+     <y>390</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -53,7 +53,7 @@
    <property name="geometry">
     <rect>
      <x>160</x>
-     <y>220</y>
+     <y>390</y>
      <width>114</width>
      <height>32</height>
     </rect>
@@ -62,237 +62,11 @@
     <string>Tick</string>
    </property>
   </widget>
-  <widget class="QTabWidget" name="statsVisualizationWidget">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>0</y>
-     <width>721</width>
-     <height>481</height>
-    </rect>
-   </property>
-   <property name="tabPosition">
-    <enum>QTabWidget::North</enum>
-   </property>
-   <property name="currentIndex">
-    <number>2</number>
-   </property>
-   <property name="usesScrollButtons">
-    <bool>true</bool>
-   </property>
-   <widget class="QWidget" name="statsTab">
-    <attribute name="title">
-     <string>Statistics</string>
-    </attribute>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>20</y>
-       <width>121</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Network Statistics</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab">
-    <property name="enabled">
-     <bool>false</bool>
-    </property>
-    <attribute name="title">
-     <string>Page</string>
-    </attribute>
-   </widget>
-   <widget class="QWidget" name="visualTab">
-    <attribute name="title">
-     <string>Visualizations</string>
-    </attribute>
-    <widget class="QScrollArea" name="visualScrollArea">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>-20</y>
-       <width>721</width>
-       <height>471</height>
-      </rect>
-     </property>
-     <property name="widgetResizable">
-      <bool>true</bool>
-     </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>719</width>
-        <height>469</height>
-       </rect>
-      </property>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>20</y>
-         <width>291</width>
-         <height>51</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>This is the scrolling area</string>
-       </property>
-      </widget>
-      <widget class="QScrollBar" name="verticalScrollBar">
-       <property name="geometry">
-        <rect>
-         <x>700</x>
-         <y>0</y>
-         <width>20</width>
-         <height>461</height>
-        </rect>
-       </property>
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-      </widget>
-      <widget class="QLabel" name="layerImg">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>130</y>
-         <width>311</width>
-         <height>231</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>TextLabel</string>
-       </property>
-      </widget>
-     </widget>
-    </widget>
-   </widget>
-  </widget>
-  <widget class="QPushButton" name="addInput">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>410</y>
-     <width>114</width>
-     <height>32</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Add Input</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="inputRow">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>370</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="minimum">
-    <number>0</number>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="inputCol">
-   <property name="geometry">
-    <rect>
-     <x>210</x>
-     <y>370</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>20</x>
-     <y>290</y>
-     <width>141</width>
-     <height>20</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Input Strength [0,1]</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_4">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>370</y>
-     <width>62</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Row</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_5">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>370</y>
-     <width>62</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Column</string>
-   </property>
-  </widget>
-  <widget class="QDoubleSpinBox" name="inputStrength">
-   <property name="geometry">
-    <rect>
-     <x>180</x>
-     <y>290</y>
-     <width>62</width>
-     <height>25</height>
-    </rect>
-   </property>
-   <property name="maximum">
-    <double>1.000000000000000</double>
-   </property>
-   <property name="singleStep">
-    <double>0.050000000000000</double>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_6">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>330</y>
-     <width>62</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Layer</string>
-   </property>
-  </widget>
-  <widget class="QSpinBox" name="inputLayer">
-   <property name="geometry">
-    <rect>
-     <x>80</x>
-     <y>330</y>
-     <width>57</width>
-     <height>25</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
      <x>20</x>
-     <y>260</y>
+     <y>430</y>
      <width>111</width>
      <height>16</height>
     </rect>
@@ -305,7 +79,7 @@
    <property name="geometry">
     <rect>
      <x>180</x>
-     <y>250</y>
+     <y>420</y>
      <width>62</width>
      <height>25</height>
     </rect>

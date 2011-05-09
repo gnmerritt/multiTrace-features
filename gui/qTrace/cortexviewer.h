@@ -25,8 +25,6 @@ private:
 private:
 	Cortex::ptr thisCortex;
 
-	int inputRow, inputCol, inputLayer;
-	float inputStrength;
 	float tickPause_s;
 	bool isRunning;
 
@@ -35,12 +33,7 @@ private:
 
 private slots:
 	void on_runStopButton_clicked();
- void on_tickPause_valueChanged(double );
-	void on_inputStrength_valueChanged(double );
-	void on_inputCol_valueChanged(int );
-	void on_inputRow_valueChanged(int );
-	void on_inputLayer_valueChanged(int );
-	void on_addInput_clicked();
+	void on_tickPause_valueChanged(double );
 	void on_tickButton_clicked();
 };
 

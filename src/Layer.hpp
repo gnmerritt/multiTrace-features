@@ -78,6 +78,16 @@ public:
 		return &(assemblyOutputBlock);
 	}
 
+	void triggerAssembly(int row, int col, float inputStrength) {
+		if (inputStrength > 1) {
+			inputStrength = 1;
+		} else if (inputStrength < 0) {
+			inputStrength = 0;
+		}
+
+		getAssembly(row, col).setActivation(inputStrength);
+	}
+
 	void printOutputBlock();
 
 	AssemblyLayer_ID getAssemblyLayer();
