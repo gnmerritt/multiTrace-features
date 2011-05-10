@@ -25,14 +25,13 @@ private:
 	void update();
 
 private:
+	Ui::CortexViewer *ui;
+	QThreadEx cortexThread; /// @TODO!
+
 	Cortex::ptr thisCortex;
 
 	float tickPause_s;
 	bool isRunning;
-
-private:
-	Ui::CortexViewer *ui;
-	QThreadEx cortexThread; /// @TODO!
 
 private slots:
 	void on_runStopButton_clicked();

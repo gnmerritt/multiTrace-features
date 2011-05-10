@@ -1,7 +1,7 @@
 #include "layerviewer.hpp"
 #include "ui_layerviewer.h"
 
-static const int IMAGE_MAX = 200;
+static const int IMAGE_MAX = 300;
 
 LayerViewer::LayerViewer(QWidget *parent) :
 	QWidget(parent),

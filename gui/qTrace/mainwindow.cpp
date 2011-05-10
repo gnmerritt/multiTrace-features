@@ -37,7 +37,7 @@ Cortex::ptr MainWindow::createCortexFromParameters() {
 	Cortex::ptr newCortex ( new Cortex() );
 
 	// add all the Layers
-	for (unsigned int layer = 0; layer < numberOfLayers; ++layer) {
+	for (int layer = 0; layer < numberOfLayers; ++layer) {
 		newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i,
 							Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
 	}
