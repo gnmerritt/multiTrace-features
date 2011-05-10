@@ -22,7 +22,6 @@ public:
 	~LayerViewer();
 
 	void setLayer(Layer::ptr _thisLayer);
-	void update();
 
 private:
 	Ui::LayerViewer *ui;
@@ -33,6 +32,9 @@ private:
 
 	int inputRow, inputCol, inputLayer;
 	float inputStrength;
+
+public slots:
+	void update();
 
 private slots:
 	void on_inputCol_valueChanged(int );

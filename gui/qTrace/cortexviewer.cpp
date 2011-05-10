@@ -9,7 +9,6 @@ CortexViewer::CortexViewer(QWidget *parent) :
 	ui(new Ui::CortexViewer),
 	tickPause_s(0.25f),
 	isRunning(false),
-	layerWidgets(LayerViewer::vector())
 {
 	ui->setupUi(this);
 }
@@ -29,7 +28,10 @@ void CortexViewer::setCortex(Cortex::ptr newCortex) {
 	for (layer = layers->begin(); layer != layers->end(); ++layer) {
 		LayerViewer *lv = new LayerViewer();
 
-		layerWidgets.push_back(lv);
+		// sets new LayerViewer to receive ticks from this controller
+		lv->connect(this,
+					SIGNAL(tick()),
+					SLOT(update()));
 
 		lv->setLayer(*layer);
 		lv->show();
@@ -39,26 +41,15 @@ void CortexViewer::setCortex(Cortex::ptr newCortex) {
 }
 
 void CortexViewer::update() {
-
-
-}
-
-void CortexViewer::updateLayers() {
-	LayerViewer::vector::iterator layer;
-
-	// launch the LayerViewer widgets
-	for (layer = layerWidgets.begin(); layer != layerWidgets.end(); ++layer) {
-		LayerViewer *layerWidget = *layer;
-		layerWidget->update();
-	}
+	// empty for now
 }
 
 void CortexViewer::on_tickButton_clicked()
 {
 	thisCortex->tick();
-	update();
+	emit tick();
 
-	updateLayers();
+	update();
 }
 
 /**

@@ -18,7 +18,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     cortexviewer.h \
     ../../src/*.hpp \
-    layerviewer.hpp
+    layerviewer.hpp \
+    QtUtility.hpp
 
 FORMS    += mainwindow.ui \
     cortexviewer.ui \

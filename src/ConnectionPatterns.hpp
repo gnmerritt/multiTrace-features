@@ -36,6 +36,7 @@ public:
 			return new UNR();
 		}
 		default: {
+			return new UNR();
 		}
 		}
 	}

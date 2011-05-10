@@ -4,7 +4,7 @@
 #include <QWidget>
 
 #include "multiTrace.hpp"
-
+#include "QtUtility.hpp"
 #include "layerviewer.hpp"
 
 namespace Ui {
@@ -23,7 +23,6 @@ public:
 
 private:
 	void update();
-	void updateLayers();
 
 private:
 	Cortex::ptr thisCortex;
@@ -31,15 +30,17 @@ private:
 	float tickPause_s;
 	bool isRunning;
 
-	LayerViewer::vector layerWidgets;
-
 private:
 	Ui::CortexViewer *ui;
+	QThreadEx cortexThread; /// @TODO!
 
 private slots:
 	void on_runStopButton_clicked();
 	void on_tickPause_valueChanged(double );
 	void on_tickButton_clicked();
+
+signals:
+	void tick();
 };
 
 #endif // CORTEXVIEWER_H
