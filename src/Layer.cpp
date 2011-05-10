@@ -144,6 +144,8 @@ float Layer::tick() {
  * @return a weighted sum of the 24 nearest Assembly s times a sampled Gaussian kernel filter
  */
 float Layer::getGaussianSum(int row, int col) {
+	return 0;
+
 	float weightedSum = 0;
 
 	for (int rowIt = 0; rowIt < 5; ++rowIt) {

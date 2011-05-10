@@ -1,9 +1,13 @@
 #include "layerviewer.hpp"
 #include "ui_layerviewer.h"
 
+static const int IMAGE_MAX = 200;
+
 LayerViewer::LayerViewer(QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::LayerViewer),
+	windowSizeX(0),
+	windowSizeY(0),
 	inputRow(0),
 	inputCol(0),
 	inputLayer(0)
@@ -23,7 +27,14 @@ void LayerViewer::setLayer(Layer::ptr _thisLayer) {
 	ui->inputRow->setMaximum(thisLayer->rows - 1);
 	ui->inputCol->setMaximum(thisLayer->cols - 1);
 
-	// set size for Layer visualization window
+	// set size for Layer visualization window (pixels per Assembly)
+	int xSizeGuess = static_cast<int>(IMAGE_MAX / thisLayer->cols);
+	windowSizeX = xSizeGuess * thisLayer->cols;
+
+	int ySizeGuess = static_cast<int>(IMAGE_MAX / thisLayer->rows);
+	windowSizeY = ySizeGuess * thisLayer->rows;
+
+	update();
 }
 
 /**

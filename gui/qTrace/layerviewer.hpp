@@ -1,6 +1,7 @@
 #ifndef LAYERVIEWER_HPP
 #define LAYERVIEWER_HPP
 
+#include <vector>
 #include <QWidget>
 
 #include "multiTrace.hpp"
@@ -12,6 +13,9 @@ namespace Ui {
 class LayerViewer : public QWidget
 {
 	Q_OBJECT
+
+public:
+	typedef std::vector<LayerViewer*> vector;
 
 public:
 	explicit LayerViewer(QWidget *parent = 0);

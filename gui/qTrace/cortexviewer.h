@@ -5,6 +5,8 @@
 
 #include "multiTrace.hpp"
 
+#include "layerviewer.hpp"
+
 namespace Ui {
 	class CortexViewer;
 }
@@ -21,12 +23,15 @@ public:
 
 private:
 	void update();
+	void updateLayers();
 
 private:
 	Cortex::ptr thisCortex;
 
 	float tickPause_s;
 	bool isRunning;
+
+	LayerViewer::vector layerWidgets;
 
 private:
 	Ui::CortexViewer *ui;

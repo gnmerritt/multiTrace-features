@@ -8,7 +8,8 @@ CortexViewer::CortexViewer(QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::CortexViewer),
 	tickPause_s(0.25f),
-	isRunning(false)
+	isRunning(false),
+	layerWidgets(LayerViewer::vector())
 {
 	ui->setupUi(this);
 }
@@ -22,7 +23,17 @@ void CortexViewer::setCortex(Cortex::ptr newCortex) {
 	thisCortex = newCortex;
 
 	Layer::vector *layers = thisCortex->getLayers();
-	Layer::ptr top = layers->front();
+	Layer::vector::iterator layer;
+
+	// launch the LayerViewer widgets
+	for (layer = layers->begin(); layer != layers->end(); ++layer) {
+		LayerViewer *lv = new LayerViewer();
+
+		layerWidgets.push_back(lv);
+
+		lv->setLayer(*layer);
+		lv->show();
+	}
 
 	update();
 }
@@ -32,10 +43,22 @@ void CortexViewer::update() {
 
 }
 
+void CortexViewer::updateLayers() {
+	LayerViewer::vector::iterator layer;
+
+	// launch the LayerViewer widgets
+	for (layer = layerWidgets.begin(); layer != layerWidgets.end(); ++layer) {
+		LayerViewer *layerWidget = *layer;
+		layerWidget->update();
+	}
+}
+
 void CortexViewer::on_tickButton_clicked()
 {
 	thisCortex->tick();
 	update();
+
+	updateLayers();
 }
 
 /**
