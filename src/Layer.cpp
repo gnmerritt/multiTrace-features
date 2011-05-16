@@ -12,8 +12,11 @@ const std::string layer_tick = "%d\t%f\n";
 const std::string layer_init = "Timestep\tAverageActivity\n";
 #endif
 
+// the size of the sampling of the gaussian kernel
+#define GAUSSIAN_SAMPLE_DIMENSIONS 5
+#define GAUSSIAN_OFFSET 2
 // sampled Gaussian kernel filter with sigma = 1
-static const float gaussianWeight[5][5] =
+static const float gaussianWeight[GAUSSIAN_SAMPLE_DIMENSIONS][GAUSSIAN_SAMPLE_DIMENSIONS] =
 	{
 		{ 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 },
 		{ 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
@@ -53,7 +56,7 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 		assemblies.push_back(AssemblyVector());
 		assemblies.back().reserve(cols);
 
-		assemblyOutputBlock.push_back(FastGaussian::FloatVec());
+		assemblyOutputBlock.push_back(FloatVec());
 		assemblyOutputBlock.back().reserve(cols);
 
 		for (int curCol = 0; curCol < cols; ++curCol) {
@@ -68,6 +71,9 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 			assemblyOutputBlock.back().push_back(row_ratio + col_ratio);
 		}
 	}
+
+	// add lateral inhibition connections
+	connectLateralInhibition();
 
 	// and wire up our intra-Layer connections
 	if (connectToSelf) {
@@ -109,9 +115,7 @@ float Layer::tick() {
 		for (int col = 0; col < cols; ++col) {
 			float thisAssembly;
 
-			const float weightedNeighborSum = getGaussianSum(row, col);
-
-			thisAssembly = assemblies[row][col].tick(lastActivationAverage, weightedNeighborSum);
+			thisAssembly = assemblies[row][col].tick(lastActivationAverage);
 			assemblyOutputBlock[row][col] = thisAssembly;
 			currentActivation_sum += thisAssembly;
 		}
@@ -137,38 +141,6 @@ float Layer::tick() {
 }
 
 /**
- * @brief Returns how active nearby Assembly s are, weighted by a Gaussian curve
- *
- * @param row row of the Assembly
- * @param col column of the Assembly
- * @return a weighted sum of the 24 nearest Assembly s times a sampled Gaussian kernel filter
- */
-float Layer::getGaussianSum(int row, int col) {
-	return 0;
-
-	float weightedSum = 0;
-
-	for (int rowIt = 0; rowIt < 5; ++rowIt) {
-		const int currRow = row + rowIt - 2;
-
-		for (int colIt = 0; colIt < 5; ++colIt) {
-			const int currCol = col + colIt - 2;
-
-			// never add ourself, even if wrapping around in a small Layer
-			if (currRow == row && currCol == col) {
-				continue;
-			}
-
-			const float weightedOutput = gaussianWeight[rowIt][colIt]
-					* safeOutput(currRow, currCol);
-			weightedSum += weightedOutput;
-		}
-	}
-
-	return weightedSum;
-}
-
-/**
  * @brief Safe access into the assembly vector, wraps if it would be out of bounds
  *
  * Returns Activity*(1 - Fatigue) for the Assembly located at [row][col] (wraps around
@@ -185,6 +157,41 @@ float Layer::safeOutput(int row, int col) {
 	const float f = assembly.getFatigue();
 
 	return a * (1 - f);
+}
+
+/**
+ * Loop to build up lateral inhibition around each Assemblies.
+ */
+void Layer::connectLateralInhibition() {
+	for (unsigned int row = 0; row < assemblies.size(); ++row) {
+		for (unsigned int col = 0; col < assemblies[0].size(); ++col) {
+			// for each Assembly, loop again building up inhibition
+			// around it
+			Assembly_t* inhibited = &(assemblies[row][col]);
+
+			// loop over the weights defined in gaussianWeight
+			for (int gRow = -GAUSSIAN_OFFSET; gRow <= GAUSSIAN_OFFSET; ++gRow) {
+				for (int gCol = -GAUSSIAN_OFFSET; gCol <= GAUSSIAN_OFFSET; ++gCol) {
+					const int inhibitingRow = (gRow + row) % assemblies.size();
+					const int inhibitingCol = (gCol + col) % assemblies[0].size();
+
+					// don't ever add an Assembly as inhibiting itself
+					if (inhibitingRow == row && inhibitingCol == col) {
+						continue;
+					}
+
+					Assembly_t* inhibitor = &(assemblies[inhibitingRow][inhibitingCol]);
+
+					Connection::ptr c(new Connection());
+					c->setLTCS(gaussianWeight[gRow + GAUSSIAN_OFFSET][gCol + GAUSSIAN_OFFSET]);
+
+					inhibited->addLateralInhibition(c);
+					inhibitor->addOutgoingConnection(c);
+				}
+			}
+
+		}
+	}
 }
 
 /**

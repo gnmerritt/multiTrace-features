@@ -41,12 +41,12 @@ public:
 	 */
 	static LearningRule* instanceOf(int id, AssemblyState::ptr state, Connection::vector *input) {
 		switch (id) {
-		case (NO_LEARNING):
-			return new NoLearning(state, input);
 		case (HEBBIAN_LEARNING):
 			return new HebbianLearning (state, input);
+		case (NO_LEARNING):
+			// intentional fall through
 		default:
-			break;
+			return new NoLearning(state, input);
 		}
 	}
 

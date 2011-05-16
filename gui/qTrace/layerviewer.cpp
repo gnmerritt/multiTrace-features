@@ -49,7 +49,7 @@ void LayerViewer::update()
 	int ppa_cols = windowSizeX / thisLayer->cols;
 	int ppa_rows = windowSizeY / thisLayer->rows;
 
-	FastGaussian::LayerOutput* layerOutput = thisLayer->getOutputBlock();
+	Layer::LayerOutput* layerOutput = thisLayer->getOutputBlock();
 
 	for (int col = 0; col < windowSizeY; ++col) {
 		int assemblyCol = col / ppa_cols;

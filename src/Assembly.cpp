@@ -18,7 +18,8 @@ const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregi
 
 Assembly::Assembly(int _id, UpdateModel::ptr _model, int _learningRule) :
 	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()), updateModel(_model),
-			input(Connection::vector()), output(Connection::vector()) {
+			input(Connection::vector()), output(Connection::vector()), lateralInhibition(
+					Connection::vector()) {
 	initializeLearningRule();
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
@@ -61,6 +62,14 @@ void Assembly::addOutgoingConnection(Connection::ptr newOutput) {
 }
 
 /**
+ * Adds a lateral inhibition connection to this Assembly. This approach is used
+ * instead of something in Layer::tick() because it's a lot faster and cleaner.
+ */
+void Assembly::addLateralInhibition(Connection::ptr newInhibition) {
+	lateralInhibition.push_back(newInhibition);
+}
+
+/**
  * Run the learning rule constructor
  */
 void Assembly::initializeLearningRule() {
@@ -76,10 +85,10 @@ void Assembly::initializeLearningRule() {
  * @see UpdateModel.h
  * @see LearningRule.h
  */
-float Assembly::tick(float regional_activation, float neighbors_activation) {
+float Assembly::tick(float regional_activation) {
 	// update our internal state with layer data
 	state->regional_activation = regional_activation;
-	state->lateral_inhibition = neighbors_activation;
+	state->lateral_inhibition = calculateInhibition();
 
 	// tick the internal state
 	updateModel->tick(state, &input);
@@ -98,6 +107,22 @@ float Assembly::tick(float regional_activation, float neighbors_activation) {
 
 	// return our activation to our Layer
 	return state->output;
+}
+
+/**
+ * Simple iterator that sums input of any connections marked as inhibitory
+ *
+ */
+float Assembly::calculateInhibition() {
+	float sum = 0;
+	Connection::vector::iterator c;
+
+	for (c = lateralInhibition.begin(); c != lateralInhibition.end(); ++c) {
+		Connection::ptr connection = *c;
+		sum += connection->getOutput();
+	}
+
+	return sum;
 }
 
 /**

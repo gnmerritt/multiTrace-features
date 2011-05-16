@@ -37,11 +37,12 @@ public:
 
 	void addIncomingConnection(Connection::ptr newInput);
 	void addOutgoingConnection(Connection::ptr newOutput);
+	void addLateralInhibition(Connection::ptr newInhibition);
 
 	void setIncomingConnections(Connection::vector in);
 	void setOutgoingConnections(Connection::vector out);
 
-	float tick(float regional_activation, float neighbors_activation);
+	float tick(float regional_activation);
 
 	void initializeIncConnectionStrengths(); // danger: will destroy all learning
 
@@ -88,6 +89,7 @@ public:
 private:
 	void updateOutgoingConnections();
 	void initializeLearningRule();
+	float calculateInhibition();
 
 private:
 	int id; /** unique in a network, contains row,col,layerId @see getAssemblyID */
@@ -97,7 +99,7 @@ private:
 
 	AssemblyState::ptr state;
 	UpdateModel::ptr updateModel;
-	Connection::vector input, output;
+	Connection::vector input, output, lateralInhibition;
 	LearningRule::ptr learningRule;
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT

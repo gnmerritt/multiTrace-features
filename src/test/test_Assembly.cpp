@@ -39,7 +39,7 @@ bool noInput() {
 
 	for (i = 0; i < 20; ++i) {
 		float out = a->getOutput();
-		a->tick(0, 0);
+		a->tick(0);
 
 		if (out != (float) 0) {
 			return false;
@@ -75,7 +75,7 @@ bool singleInput() {
 
 	for (i = 0; i < 1500; ++i) {
 		float out = a->getOutput();
-		a->tick(0, 0);
+		a->tick(0);
 		assembly_last = out;
 
 		if (out > assembly_max) {
@@ -121,7 +121,7 @@ bool multipleInputs() {
 	for (i = 0; i < 1500; ++i) {
 		float out = a->getOutput();
 
-		a->tick(0, 0);
+		a->tick(0);
 		assembly_last = out;
 
 		if (out > assembly_max) {
@@ -162,7 +162,7 @@ bool testInhibition() {
 
 	for (i = 0; i < 500; ++i) {
 		float out = a->getOutput();
-		a->tick(99, 0); /** inhibition maximized here */
+		a->tick(99); /** inhibition maximized here */
 
 		if (out > assembly_max) {
 			assembly_max = out;

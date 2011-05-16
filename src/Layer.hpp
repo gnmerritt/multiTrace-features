@@ -13,8 +13,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "FastGaussian.hpp"
-
 #include "ConnectionPatterns.hpp"
 #include "UpdateModels.hpp"
 
@@ -49,6 +47,10 @@ public:
 	typedef std::pair<AssemblyLayer*, int> AssemblyLayer_ID;
 	typedef std::pair<Assembly_t*, AssemblyLocation*> LocalizedAssembly;
 
+	// Layer output block, for easy visualization by a GUI
+	typedef std::vector<float> FloatVec;
+	typedef std::vector<FloatVec> LayerOutput;
+
 public:
 	Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
 			int _layerID, bool connectToSelf);
@@ -74,7 +76,7 @@ public:
 		return rows * cols;
 	}
 
-	FastGaussian::LayerOutput* getOutputBlock() {
+	LayerOutput* getOutputBlock() {
 		return &(assemblyOutputBlock);
 	}
 
@@ -88,7 +90,7 @@ public:
 		getAssembly(row, col).setActivation(inputStrength);
 	}
 
-	void printOutputBlock();
+	void printOutputBlock(); ///@todo
 
 	AssemblyLayer_ID getAssemblyLayer();
 
@@ -97,7 +99,8 @@ private:
 	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
 	void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving);
 
-	float getGaussianSum(int row, int col);
+	void connectLateralInhibition();
+
 	float safeOutput(int row, int col);
 
 	int getAssemblyID(int row, int col);
@@ -110,7 +113,7 @@ private:
 	int layerID;
 
 	float lastActivationAverage;
-	FastGaussian::LayerOutput assemblyOutputBlock;
+	LayerOutput assemblyOutputBlock;
 	int timestep;
 
 	ConnectionPattern::ptr connectionPattern;
