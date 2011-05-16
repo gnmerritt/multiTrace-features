@@ -15,6 +15,7 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
 // the size of the sampling of the gaussian kernel
 #define GAUSSIAN_SAMPLE_DIMENSIONS 5
 #define GAUSSIAN_OFFSET 2
+static const int GAUSSIAN_SCALE = 10; // LTCS of Connections = scale*weight[row][col]
 // sampled Gaussian kernel filter with sigma = 1
 static const float gaussianWeight[GAUSSIAN_SAMPLE_DIMENSIONS][GAUSSIAN_SAMPLE_DIMENSIONS] =
 	{
@@ -183,7 +184,7 @@ void Layer::connectLateralInhibition() {
 					Assembly_t* inhibitor = &(assemblies[inhibitingRow][inhibitingCol]);
 
 					Connection::ptr c(new Connection());
-					c->setLTCS(gaussianWeight[gRow + GAUSSIAN_OFFSET][gCol + GAUSSIAN_OFFSET]);
+					c->setLTCS(GAUSSIAN_SCALE*gaussianWeight[gRow + GAUSSIAN_OFFSET][gCol + GAUSSIAN_OFFSET]);
 
 					inhibited->addLateralInhibition(c);
 					inhibitor->addOutgoingConnection(c);

@@ -571,12 +571,16 @@
   <tabstop>inputLayerType</tabstop>
   <tabstop>connectionTemplate</tabstop>
   <tabstop>layerRowSize</tabstop>
-  <tabstop>updateModel</tabstop>
   <tabstop>layerColSize</tabstop>
-  <tabstop>testLayer</tabstop>
-  <tabstop>createButton</tabstop>
-  <tabstop>testAssembly</tabstop>
+  <tabstop>localInhibitionEnabled</tabstop>
   <tabstop>learningRule</tabstop>
+  <tabstop>updateModel</tabstop>
+  <tabstop>createButton</tabstop>
+  <tabstop>testLayer</tabstop>
+  <tabstop>testAssembly</tabstop>
+  <tabstop>testName</tabstop>
+  <tabstop>saveLocationFileChooser</tabstop>
+  <tabstop>saveLocation</tabstop>
  </tabstops>
  <resources/>
  <connections/>

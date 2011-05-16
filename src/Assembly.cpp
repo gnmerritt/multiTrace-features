@@ -73,7 +73,7 @@ void Assembly::addLateralInhibition(Connection::ptr newInhibition) {
  * Run the learning rule constructor
  */
 void Assembly::initializeLearningRule() {
-	learningRule = LearningRule::ptr(LearningRules::instanceOf(ruleId, state, &(input)));
+	learningRule = LearningRule::ptr(LearningRules::instanceOf(ruleId, state, &input));
 }
 
 /**
@@ -94,7 +94,7 @@ float Assembly::tick(float regional_activation) {
 	updateModel->tick(state, &input);
 
 	// adjust incoming connections
-	learningRule->tick();
+	learningRule->tick(&input);
 
 	// push our activity to our outgoing connections
 	updateOutgoingConnections();

@@ -96,7 +96,7 @@ float SonntagUpdate::calculateInput() {
 	const float totalNetInput = posInput * (1 - negInput) * (1 - parameters[EXTERNAL_DAMPENING]);
 
 	//printf("regional: %f lateral: %f netNegInput: %f negInput: %f totalInput: %f \n",
-		//	regionalInhibition, lateralInhibition, netNegInput, negInput, totalNetInput);
+	//	regionalInhibition, lateralInhibition, netNegInput, negInput, totalNetInput);
 
 #ifdef DEBUG_UPDATES
 	printf("netPosInput: %f ", netPosInput);

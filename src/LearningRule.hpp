@@ -26,9 +26,9 @@ public:
 	virtual ~LearningRule() {
 	}
 
-	virtual void tick() = 0;
+	virtual void tick(Connection::vector*) = 0;
 
-	virtual void dropLearning() = 0;  // called if the Assembly adds/deletes connections
+	virtual void dropLearning() = 0; // called if the Assembly adds/deletes connections
 
 protected:
 	AssemblyState::ptr postSynapticState;

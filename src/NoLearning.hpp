@@ -29,7 +29,7 @@ public:
 	virtual ~NoLearning() {
 	}
 
-	void tick() {
+	void tick(Connection::vector* newInput) {
 	}
 
 	void dropLearning() {

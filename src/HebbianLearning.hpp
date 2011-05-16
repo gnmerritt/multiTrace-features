@@ -45,7 +45,7 @@ public:
 	HebbianLearning(AssemblyState::ptr state, Connection::vector *input);
 	virtual ~HebbianLearning();
 
-	void tick();
+	void tick(Connection::vector*);
 
 	void dropLearning();
 

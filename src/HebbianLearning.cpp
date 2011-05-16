@@ -13,8 +13,8 @@
 
 /** default parameterization, @see setParameters */
 static const float DEFAULT_PARAMETERS[] = { 0.001f, // learning strength
-		0.0f, // receiving learning (start)
-		0.0f, // receiving learning (stop)
+		0.1f, // receiving learning (start)
+		0.6f, // receiving learning (stop)
 		0.0f, // sending contrib threshold
 		};
 
@@ -25,7 +25,7 @@ static const float DEFAULT_PARAMETERS[] = { 0.001f, // learning strength
  * @param input Pointer to the input Connections we use for calculations
  */
 HebbianLearning::HebbianLearning(AssemblyState::ptr state, Connection::vector *input) :
-	LearningRule(state, input), storedContributions(SynapseHistory()), hasStoredLearning(false) {
+	LearningRule(state, input),  storedContributions(SynapseHistory()), hasStoredLearning(false) {
 	setParameters(DEFAULT_PARAMETERS);
 	resetStoredLearning();
 }
@@ -53,7 +53,9 @@ HebbianLearning::~HebbianLearning() {
  *
  *	@see LearningRule.hpp
  */
-void HebbianLearning::tick() {
+void HebbianLearning::tick(Connection::vector *newInput) {
+	incomingConnections = newInput;
+
 	const float last_activity = postSynapticState->output;
 	const float activity = postSynapticState->activity;
 	const float activity_derivative = activity - last_activity;
@@ -62,6 +64,7 @@ void HebbianLearning::tick() {
 	if (activity > parameters[REC_LEARNING_LOWER] && activity < parameters[REC_LEARNING_UPPER]
 			&& activity_derivative >= 0) {
 		tallyContributions();
+		printf("Tallying contributions!\n");
 	}
 
 	// crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
@@ -69,18 +72,21 @@ void HebbianLearning::tick() {
 	else if (activity > parameters[REC_LEARNING_UPPER] && last_activity
 			<= parameters[REC_LEARNING_UPPER]) {
 		hasStoredLearning = true;
+		printf("hasStoredLearning = true\n");
 	}
 
 	// Assembly fired, and now activity has dropped off. Apply stored learning.
 	else if (activity < parameters[REC_LEARNING_LOWER] && hasStoredLearning) {
 		applyLearningToConnections();
 		resetStoredLearning();
+		printf("applying learning, activity has dropped off\n");
 	}
 
 	// Assembly failed to fire, delete any learning we've stored so far
 	else if (activity < parameters[REC_LEARNING_UPPER] && activity_derivative < 0
 			&& !hasStoredLearning) {
 		resetStoredLearning();
+		printf("Assembly failed to fire, deleting learning\n");
 	}
 
 	// no default case on purpose
@@ -111,7 +117,9 @@ void HebbianLearning::tallyContributions() {
 	double totalInput = 0;
 	Connection::vector::iterator c;
 	for (c = incomingConnections->begin(); c != incomingConnections->end(); ++c) {
-		totalInput += (*c)->getOutput(); // double dereferenced b/c Connection::vector is of pointers
+		// double dereferenced b/c Connection::vector is of pointers
+		Connection::ptr connection = *c;
+		totalInput += connection->getOutput();
 	}
 
 	// pass 2: for each input, scale contribution by receivingCurve() and sendingCurve(),
