@@ -64,7 +64,7 @@ void HebbianLearning::tick(Connection::vector *newInput) {
 	if (activity > parameters[REC_LEARNING_LOWER] && activity < parameters[REC_LEARNING_UPPER]
 			&& activity_derivative >= 0) {
 		tallyContributions();
-		printf("Tallying contributions!\n");
+		//printf("Tallying contributions!\n");
 	}
 
 	// crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
@@ -72,21 +72,21 @@ void HebbianLearning::tick(Connection::vector *newInput) {
 	else if (activity > parameters[REC_LEARNING_UPPER] && last_activity
 			<= parameters[REC_LEARNING_UPPER]) {
 		hasStoredLearning = true;
-		printf("hasStoredLearning = true\n");
+		//printf("hasStoredLearning = true\n");
 	}
 
 	// Assembly fired, and now activity has dropped off. Apply stored learning.
 	else if (activity < parameters[REC_LEARNING_LOWER] && hasStoredLearning) {
 		applyLearningToConnections();
 		resetStoredLearning();
-		printf("applying learning, activity has dropped off\n");
+		//printf("applying learning, activity has dropped off\n");
 	}
 
 	// Assembly failed to fire, delete any learning we've stored so far
 	else if (activity < parameters[REC_LEARNING_UPPER] && activity_derivative < 0
 			&& !hasStoredLearning) {
 		resetStoredLearning();
-		printf("Assembly failed to fire, deleting learning\n");
+		//printf("Assembly failed to fire, deleting learning\n");
 	}
 
 	// no default case on purpose

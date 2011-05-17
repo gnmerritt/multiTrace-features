@@ -68,13 +68,12 @@ void CortexViewer::on_runStopButton_clicked()
 		for (int i = 0; i < 10; ++i) {
 			thisCortex->tick();
 			update();
+			emit tick();
 			//sleep(tickPause_s);
 		}
 
 		ui->runStopButton->setText("Run");
 		isRunning = false;
-
-		/// @todo FIGURE OUT QT THREADING
 	}
 }
 

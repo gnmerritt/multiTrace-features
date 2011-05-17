@@ -128,14 +128,15 @@ float SonntagUpdate::calculateDeltaActivity() {
 	}
 
 	// equation 4.6, pg79
-	const float deltaA = (A + I * (1 - A)) * (1 - A) * V - (pow(A, thetaL) + A * pow((1 - A),
-			thetaC)) * (1 - V);
+	const float deltaA = (A + I * (1 - A)) * (1 - A) * V - ((pow(A, thetaL) + A * pow((1 - A),
+			thetaC))) * (1 - V);
+	// wolfram input, x=A, y=I (no V term):
+	// (x + y*(1-x)) * (1-x) - (x^5 + x * (1-x)^9) from x = 0 to x = 1, y= 0 to y = 1
 
 #ifdef DEBUG_UPDATES
 	printf("current A: %f\n", A);
 	printf("current I: %f\n", I);
 	printf("V term: %f\n", V);
-
 	printf("deltaA: %f\n", deltaA);
 #endif
 
