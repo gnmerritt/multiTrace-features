@@ -211,6 +211,7 @@ void HebbianLearning::resetStoredLearning() {
  * @return learning coefficient for this point in the firing cycle
  */
 float HebbianLearning::receivingCurve(float receivingActivity) {
+	(void) receivingActivity; // unused
 	return 1.0f;
 }
 
@@ -223,6 +224,7 @@ float HebbianLearning::receivingCurve(float receivingActivity) {
  * @return how important this sending connection is, a function of its contribution
  */
 float HebbianLearning::sendingCurve(float sendingContribution) {
+	(void) sendingContribution;
 	return 1.0f;
 }
 
@@ -235,6 +237,9 @@ float HebbianLearning::sendingCurve(float sendingContribution) {
  * 	Connection lies
  */
 double HebbianLearning::contributionCurve(float contributionRank, float currentStrength) {
+	// we don't use current strength yet
+	(void) currentStrength;
+
 	// rank is from 0->1, we want -1 to 1
 	contributionRank -= 0.5f;
 

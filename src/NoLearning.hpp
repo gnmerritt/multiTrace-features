@@ -30,6 +30,7 @@ public:
 	}
 
 	void tick(Connection::vector* newInput) {
+		(void) newInput;
 	}
 
 	void dropLearning() {

@@ -81,7 +81,7 @@ void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
  */
 void Cortex::connectLayerToLayer(int fromID, int toID) {
 	// sanity checks
-	if (fromID < 0 || toID < 0 || fromID >= layers.size() || toID >= layers.size())
+	if (fromID < 0 || toID < 0 || fromID >= (int)layers.size() || toID >= (int)layers.size())
 		return;
 
 	// don't double up on connections (although both directions are allowed)

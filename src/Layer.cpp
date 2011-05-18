@@ -178,7 +178,7 @@ void Layer::connectLateralInhibition() {
 					const int inhibitingCol = (gCol + col) % assemblies[0].size();
 
 					// don't ever add an Assembly as inhibiting itself
-					if (inhibitingRow == row && inhibitingCol == col) {
+					if (inhibitingRow == (int)row && inhibitingCol == (int)col) {
 						continue;
 					}
 
