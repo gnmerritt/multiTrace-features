@@ -1,0 +1,13 @@
+(* None of these are complete, they are all lacking the normalization term which takes F, STCS, LTCS into account *)
+
+Plot3D[{(x+y)*(1-x)-(x^5+x*(1-x)^9)}, {x, 0, 1},{y, 0, 1}, PlotRange->{-1,1.5}]
+(* This is the equation as I found it in the Sonntagg thesis *)
+
+Plot3D[{(x^3+y)*(1-x)-(x^5+x*(1-x)^9)}, {x, 0, 1},{y, 0, 1}, PlotRange->{-1,1.5}]
+(* This is another variation I tried, but it seems to be /too/ difficult to get to activate *)
+
+Plot3D[{(x^2+(y-.1))*(1-x)-(x^5+x*(1-x)^9)}, {x, 0, 1},{y, 0, 1}, PlotRange->{-1,1.5}]
+(* This version takes more input to get started, and no input will cause it to decrease activation (instead of having fatigue drive deltaA < 0) *)
+
+Table[Plot3D[ {(x^2+(y-0.1)) (1-x)* v-(x^5+x (1-x)^9)(1- v)}, {x,0,1},{y,0,1},PlotRange->{-1,1.25}], {v, 0, 1, .33}]
+(* The loop will print the curve out with the "v" (normalization) term ranging from 0 to 1, a low v term indicates high Fatigue *)
