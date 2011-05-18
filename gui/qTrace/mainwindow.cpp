@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	testName(""),
 	saveDirectory(""),
 	connectionTemplate_i(0),
-	learningRule_i(0),
+	learningRule_i(1),
 	updateModel_i(0)
 {
 	ui->setupUi(this);

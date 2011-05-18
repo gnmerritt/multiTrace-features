@@ -58,21 +58,21 @@ void CortexViewer::on_runStopButton_clicked()
 	// already running, so we stop
 	if (isRunning) {
 		isRunning = false;
-		ui->runStopButton->setText("Run");
+		ui->runStopButton->setText("Multi-Tick");
 	}
 	else {
 		isRunning = true;
 		ui->runStopButton->setText("Pause");
 
 		/// @todo MAKE ME THREADED!
-		for (int i = 0; i < 10; ++i) {
+		for (int i = 0; i < ui->tickTimes->value(); ++i) {
 			thisCortex->tick();
 			update();
 			emit tick();
 			//sleep(tickPause_s);
 		}
 
-		ui->runStopButton->setText("Run");
+		ui->runStopButton->setText("Multi-Tick");
 		isRunning = false;
 	}
 }
