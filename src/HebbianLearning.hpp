@@ -67,7 +67,7 @@ private:
 
 	float receivingCurve(float receivingActivity); // function of receiving activity
 	float sendingCurve(float sendingContribution); // function of sending's % contribution
-	float contributionCurve(float contributionRank, float currentStrength); // function of how much any Connection contributed compared to its peers
+	double contributionCurve(float contributionRank, float currentStrength); // function of how much any Connection contributed compared to its peers
 
 	// functions to tally future learning at each tick, apply it
 	void tallyContributions();

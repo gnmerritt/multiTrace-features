@@ -11,11 +11,15 @@
 
 #include "HebbianLearning.hpp"
 
+//#define DEBUG_LEARNING
+//#define DEBUG_LEARNING_VERBOSE
+
 /** default parameterization, @see setParameters */
-static const float DEFAULT_PARAMETERS[] = { 0.001f, // learning strength
-		0.1f, // receiving learning (start)
-		0.6f, // receiving learning (stop)
-		0.0f, // sending contrib threshold
+static const float DEFAULT_PARAMETERS[] =
+	{ 0.01f, // learning strength
+			0.1f, // receiving learning (start)
+			0.6f, // receiving learning (stop)
+			0.0f, // sending contrib threshold
 		};
 
 /**
@@ -25,7 +29,7 @@ static const float DEFAULT_PARAMETERS[] = { 0.001f, // learning strength
  * @param input Pointer to the input Connections we use for calculations
  */
 HebbianLearning::HebbianLearning(AssemblyState::ptr state, Connection::vector *input) :
-	LearningRule(state, input),  storedContributions(SynapseHistory()), hasStoredLearning(false) {
+	LearningRule(state, input), storedContributions(SynapseHistory()), hasStoredLearning(false) {
 	setParameters(DEFAULT_PARAMETERS);
 	resetStoredLearning();
 }
@@ -64,7 +68,9 @@ void HebbianLearning::tick(Connection::vector *newInput) {
 	if (activity > parameters[REC_LEARNING_LOWER] && activity < parameters[REC_LEARNING_UPPER]
 			&& activity_derivative >= 0) {
 		tallyContributions();
-		//printf("Tallying contributions!\n");
+#ifdef DEBUG_LEARNING
+		printf("Tallying contributions!\n");
+#endif
 	}
 
 	// crossed the LEARNING_STOP boundary for the first time, mark our learning as stored
@@ -72,21 +78,28 @@ void HebbianLearning::tick(Connection::vector *newInput) {
 	else if (activity > parameters[REC_LEARNING_UPPER] && last_activity
 			<= parameters[REC_LEARNING_UPPER]) {
 		hasStoredLearning = true;
-		//printf("hasStoredLearning = true\n");
+#ifdef DEBUG_LEARNING
+		printf("hasStoredLearning = true\n");
+#endif
 	}
 
 	// Assembly fired, and now activity has dropped off. Apply stored learning.
 	else if (activity < parameters[REC_LEARNING_LOWER] && hasStoredLearning) {
 		applyLearningToConnections();
 		resetStoredLearning();
-		//printf("applying learning, activity has dropped off\n");
+#ifdef DEBUG_LEARNING
+		printf("applying learning, activity has dropped off\n");
+#endif
 	}
 
 	// Assembly failed to fire, delete any learning we've stored so far
 	else if (activity < parameters[REC_LEARNING_UPPER] && activity_derivative < 0
 			&& !hasStoredLearning) {
 		resetStoredLearning();
-		//printf("Assembly failed to fire, deleting learning\n");
+#ifdef DEBUG_LEARNING_VERBOSE
+		// this will get printed /A LOT/
+		printf("Assembly failed to fire, deleting learning\n");
+#endif
 	}
 
 	// no default case on purpose
@@ -165,13 +178,19 @@ void HebbianLearning::applyLearningToConnections() {
 	// now, decide what happens to each Connection, using contributionCurve
 	for (unsigned int i = 0; i < contributions.size(); ++i) {
 		Connection::ptr thisConnection = incomingConnections->at(contributions[i].index);
-		const float connectionRank = i / contributions.size();
+		const float connectionRank = static_cast<float>(i) /contributions.size();
 		const float thisLTCS = thisConnection->getLTCS();
 		const float connectionChange = contributionCurve(connectionRank, thisLTCS);
 
 		const float scaledConnectionChange = connectionChange * parameters[LEARNING_STRENGTH]
 				* postSynapticState->fatigue;
 		thisConnection->setLTCS(thisLTCS + scaledConnectionChange);
+
+#ifdef DEBUG_LEARNING
+		printf("rank: %f fatigue: %f contribution curve: %f\n", connectionRank,
+				postSynapticState->fatigue, connectionChange);
+		printf("changed connection weight from %f to %f\n", thisLTCS, thisConnection->getLTCS());
+#endif
 	}
 }
 
@@ -215,14 +234,17 @@ float HebbianLearning::sendingCurve(float sendingContribution) {
  * @param contributionRank a float on [-1,1] indicating where in the sorted array each
  * 	Connection lies
  */
-float HebbianLearning::contributionCurve(float contributionRank, float currentStrength) {
-	// shouldn't ever happen, but protect anyway
+double HebbianLearning::contributionCurve(float contributionRank, float currentStrength) {
+	// rank is from 0->1, we want -1 to 1
+	contributionRank -= 0.5f;
+
+	// safety first
 	if (contributionRank < -1)
 		contributionRank = -1;
 	else if (contributionRank > 1)
 		contributionRank = 1;
 
-	return pow(contributionRank, 3);
+	return pow(contributionRank, 3.0f);
 }
 
 /**
