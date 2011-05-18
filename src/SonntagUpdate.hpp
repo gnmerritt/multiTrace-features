@@ -48,6 +48,7 @@ public:
 		NORM_SENSITIVITY, // calculateV()
 		DECAY_COMPETITION, // exponential decay terms, ΔActivity
 		DECAY_LOSS,
+		ACTIVATION_DAMPENING, // recurrent activation dampening
 		PHI_POS, // input resistance, calculateInput()
 		PHI_NEG,
 		REGIONAL_INHIBITION,

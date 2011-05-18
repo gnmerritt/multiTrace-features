@@ -12,15 +12,18 @@
 
 #include <cmath>
 
+//#define DEBUG_UPDATES
+
 /** default parameterization, see @parameters */
 static const float CHOWN_2000_PARAMETERS[] =
 	{ 1.5f, // sensitivity normalization
 			9.0f, // decay due to competition
 			5.0f, // decay due to loss
+			2.0f, // recurrent activation resistance
 			9.0f, // input resistance (pos stimuli) these modulate the sigmoid: (1 + (1 + 1/x^phi))
 			3.0f, // input resistance (neg stimuli)
-			0.75f, // input resistance (regional inhibition)
-			0.75f, // input resistance (lateral inhibition)
+			1.0f, // input resistance (regional inhibition)
+			1.0f, // input resistance (lateral inhibition)
 			0.5f, // external dampening
 			0.0f, // delta LTCS (LTCS is constant)
 			0.1f, // STCS growth
@@ -29,8 +32,6 @@ static const float CHOWN_2000_PARAMETERS[] =
 			0.007f, // Fatigue growth
 			0.0001f // Fatigue decline
 		};
-
-//#define DEBUG_UPDATES
 
 /**
  * @brief sets up the current default parameterization
@@ -74,12 +75,13 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
  * See: Sonntag (eq5.6, pg104)
  */
 float SonntagUpdate::calculateInput() {
-	Connection::vector::iterator input;
 	const float phi_pos = parameters[PHI_POS];
 	const float phi_neg = parameters[PHI_NEG];
 	const float regionalInhibitionGain = parameters[REGIONAL_INHIBITION];
 	const float lateralInhibitionGain = parameters[LATERAL_INHIBITION];
+
 	float netPosInput = 0;
+	Connection::vector::iterator input;
 
 	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
 		float signal = (*input)->getOutput();
@@ -118,6 +120,7 @@ float SonntagUpdate::calculateDeltaActivity() {
 	const float V = calculateV();
 	const float thetaC = parameters[DECAY_COMPETITION];
 	const float thetaL = parameters[DECAY_LOSS];
+	const float thetaA = parameters[ACTIVATION_DAMPENING];
 
 	// allow for manual input (CSV, GUI, etc)
 	float I;
@@ -128,7 +131,7 @@ float SonntagUpdate::calculateDeltaActivity() {
 	}
 
 	// equation 4.6, pg79
-	const float deltaA = (A + I * (1 - A)) * (1 - A) * V - ((pow(A, thetaL) + A * pow((1 - A),
+	const float deltaA = (pow(A, thetaA) + I * (1 - A)) * (1 - A) * V - ((pow(A, thetaL) + A * pow((1 - A),
 			thetaC))) * (1 - V);
 	// wolfram input, x=A, y=I (no V term):
 	// (x + y*(1-x)) * (1-x) - (x^5 + x * (1-x)^9) from x = 0 to x = 1, y= 0 to y = 1
