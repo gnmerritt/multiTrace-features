@@ -7,12 +7,13 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	layerRowSize(2),
-	layerColSize(2),
+	layerRowSize(6),
+	layerColSize(6),
 	numberOfLayers(1),
-	connectTo(0),
+	connectTo(1),
 	connectFrom(0),
-	interLayerConnectionsEnabled(true),
+	interLayerConnectionsEnabled(false),
+	lateralInhibition(true),
 	testName(""),
 	saveDirectory(""),
 	connectionTemplate_i(0),
@@ -39,7 +40,8 @@ Cortex::ptr MainWindow::createCortexFromParameters() {
 	// add all the Layers
 	for (int layer = 0; layer < numberOfLayers; ++layer) {
 		newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i,
-							Cortex::DEFAULT_LAYER, layerRowSize, layerColSize);
+							Cortex::DEFAULT_LAYER, layerRowSize, layerColSize,
+							interLayerConnectionsEnabled, lateralInhibition);
 	}
 
 	// and then connect them
@@ -117,4 +119,9 @@ void MainWindow::on_saveLocation_textEdited(QString newString)
 void MainWindow::on_layerColSize_valueChanged(int _layerColSize)
 {
 	layerColSize = _layerColSize;
+}
+
+void MainWindow::on_localInhibitionEnabled_clicked(bool checked)
+{
+	lateralInhibition = checked;
 }

@@ -24,6 +24,9 @@ public:
 	void setLayer(Layer::ptr _thisLayer);
 
 private:
+	void stimulateRandomAssemblies();
+
+private:
 	Ui::LayerViewer *ui;
 	Layer::ptr thisLayer;
 	int thisLayer_id;
@@ -32,11 +35,14 @@ private:
 
 	int inputRow, inputCol, inputLayer;
 	float inputStrength;
+	float stimulateRandom;
 
 public slots:
 	void update();
 
 private slots:
+	void on_pushButton_clicked();
+	void on_stimulateRandom_valueChanged(double );
 	void on_inputCol_valueChanged(int );
 	void on_inputRow_valueChanged(int );
 	void on_inputStrength_valueChanged(double );

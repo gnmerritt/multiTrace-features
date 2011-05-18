@@ -53,7 +53,7 @@ public:
 
 public:
 	Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
-			int _layerID, bool connectToSelf);
+			int _layerID, bool connectToSelf, bool lateralInhibition);
 	virtual ~Layer();
 
 	float tick();

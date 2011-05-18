@@ -35,10 +35,10 @@ Cortex::~Cortex() {
  * @param cols number of columns in the new Layer
  */
 int Cortex::addLayer(int connectionPattern, int updateModel, int learningRule, int layerType,
-		int rows, int cols) {
+		int rows, int cols, bool selfConnected, bool lateralInhibition) {
 	if (layerType == Cortex::DEFAULT_LAYER) {
 		Layer::ptr newLayer(new Layer(connectionPattern, updateModel, learningRule, rows, cols,
-				numberOfStdLayers, false));
+				numberOfStdLayers, selfConnected, lateralInhibition));
 		numberOfStdLayers++;
 
 		layers.push_back(newLayer);
@@ -62,6 +62,10 @@ void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
 	int top = layerID + connectTo;
 
 	for (int target = bottom; target <= top; ++target) {
+		// self-connections happen in the Layer constructor
+		if (layerID == target)
+			continue;
+
 		if (target >= 0)
 			connectLayerToLayer(layerID, target);
 	}

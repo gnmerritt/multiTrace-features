@@ -42,7 +42,7 @@ static const float gaussianWeight[GAUSSIAN_SAMPLE_DIMENSIONS][GAUSSIAN_SAMPLE_DI
  * @param connectToSelf whether or not this Layer projects onto itself
  */
 Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
-		int _layerID, bool connectToSelf) :
+		int _layerID, bool connectToSelf, bool lateralInhibition) :
 	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
 			connectionPattern(ConnectionPatterns::instanceOf(_connectionPattern)) {
 	// initialize the update model
@@ -74,12 +74,13 @@ Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _r
 	}
 
 	// add lateral inhibition connections
-	connectLateralInhibition();
+	if (lateralInhibition) {
+		connectLateralInhibition();
+	}
 
 	// and wire up our intra-Layer connections
 	if (connectToSelf) {
-		AssemblyLayer_ID thisLayer = getAssemblyLayer();
-		connectLayerToLayer(thisLayer, thisLayer);
+		connectToLayer(getAssemblyLayer());
 	}
 
 #ifdef DEBUG_LAYER_OUTPUT

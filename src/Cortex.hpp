@@ -41,7 +41,7 @@ public:
 	virtual ~Cortex();
 
 	int addLayer(int connectionPattern, int updateModel, int learningRule, int layerType, int rows,
-			int cols);
+			int cols, bool selfConnected, bool lateralInhibition);
 	void connectLayerRange(int layerID, int connectFrom, int connectTo);
 	void connectLayerToLayer(int fromID, int toID);
 
