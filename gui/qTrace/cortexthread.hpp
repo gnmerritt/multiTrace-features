@@ -4,7 +4,7 @@
 #include <QObject>
 
 #include "QtUtility.hpp"
-
+#include "layerviewer.hpp"
 #include "multiTrace.hpp"
 
 class CortexThread : public QObject
@@ -13,8 +13,10 @@ class CortexThread : public QObject
 public:
 	explicit CortexThread(QObject *parent = 0);
 
+	void setCortex(Cortex::ptr _cortex);
+
 private:
-	Cortex ourCortex;
+	Cortex::ptr ourCortex;
 
 signals:
 	void redraw();

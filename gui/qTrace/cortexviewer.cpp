@@ -1,10 +1,10 @@
-#include "cortexviewer.h"
+#include "cortexviewer.hpp"
 #include "ui_cortexviewer.h"
 
 CortexViewer::CortexViewer(QWidget *parent) :
 	QWidget(parent),
 	ui(new Ui::CortexViewer),
-	tickPause_s(0.25f),
+	tickPause_s(0.01f),
 	isRunning(false)
 {
 	ui->setupUi(this);
@@ -16,23 +16,17 @@ CortexViewer::~CortexViewer()
 }
 
 void CortexViewer::setCortex(Cortex::ptr newCortex) {
-	thisCortex = newCortex;
+	cortexObj.setCortex(newCortex);
 
-	Layer::vector *layers = thisCortex->getLayers();
-	Layer::vector::iterator layer;
+	cortexObj.connect(this,
+					  SIGNAL(tick()),
+					  SLOT(tick()));
 
-	// launch the LayerViewer widgets
-	for (layer = layers->begin(); layer != layers->end(); ++layer) {
-		LayerViewer *lv = new LayerViewer();
+	cortexThread = new QThreadEx();
 
-		// sets new LayerViewer to receive ticks from this controller
-		lv->connect(this,
-					SIGNAL(tick()),
-					SLOT(update()));
+	cortexObj.moveToThread(cortexThread);
 
-		lv->setLayer(*layer);
-		lv->show();
-	}
+	cortexThread->start();
 
 	update();
 }
@@ -43,9 +37,7 @@ void CortexViewer::update() {
 
 void CortexViewer::on_tickButton_clicked()
 {
-	thisCortex->tick();
 	emit tick();
-
 	update();
 }
 
@@ -66,10 +58,9 @@ void CortexViewer::on_runStopButton_clicked()
 
 		/// @todo MAKE ME THREADED!
 		for (int i = 0; i < ui->tickTimes->value(); ++i) {
-			thisCortex->tick();
-			update();
 			emit tick();
-			//sleep(tickPause_s);
+			update();
+			sleep(tickPause_s);
 		}
 
 		ui->runStopButton->setText("Multi-Tick");

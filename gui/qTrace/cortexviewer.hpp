@@ -5,6 +5,7 @@
 
 #include "multiTrace.hpp"
 #include "QtUtility.hpp"
+#include "cortexthread.hpp"
 #include "layerviewer.hpp"
 
 namespace Ui {
@@ -26,9 +27,8 @@ private:
 
 private:
 	Ui::CortexViewer *ui;
-	QThreadEx cortexThread; /// @TODO!
-
-	Cortex::ptr thisCortex;
+	QThreadEx *cortexThread;
+	CortexThread cortexObj;
 
 	float tickPause_s;
 	bool isRunning;

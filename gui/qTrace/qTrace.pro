@@ -10,24 +10,26 @@ TARGET = qTrace
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    cortexviewer.cpp \
-    ../../src/*.cpp \
-    layerviewer.cpp
+		mainwindow.cpp \
+	cortexviewer.cpp \
+	../../src/*.cpp \
+	layerviewer.cpp \
+	cortexthread.cpp
 
 HEADERS  += mainwindow.h \
-    cortexviewer.h \
-    ../../src/*.hpp \
-    layerviewer.hpp \
-    QtUtility.hpp
+	cortexviewer.hpp \
+	../../src/*.hpp \
+	layerviewer.hpp \
+	QtUtility.hpp \
+	cortexthread.hpp
 
 FORMS    += mainwindow.ui \
-    cortexviewer.ui \
-    layerviewer.ui
+	cortexviewer.ui \
+	layerviewer.ui
 
 OTHER_FILES +=
 
 LIBS += /Users/nathan/Library/boost_1_46_0/stage/lib/libboost_serialization.a
 
 INCLUDEPATH += /Users/nathan/Library/boost \
-    ../../src
+	../../src

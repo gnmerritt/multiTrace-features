@@ -2,7 +2,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "cortexviewer.h"
+#include "cortexviewer.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
