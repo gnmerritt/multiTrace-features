@@ -52,8 +52,10 @@ public:
 	typedef std::vector<FloatVec> LayerOutput;
 
 public:
-	Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
-			int _layerID, bool connectToSelf, bool lateralInhibition);
+    Layer(ConnectionPatterns::classes _connectionPattern,
+	  UpdateModels::classes _updateModel,
+	  LearningRules::classes _learningRule,
+	  int _rows, int _cols,	int _layerID, bool connectToSelf, bool lateralInhibition);
 	virtual ~Layer();
 
 	float tick();

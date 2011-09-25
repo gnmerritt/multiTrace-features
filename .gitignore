@@ -1,1 +1,8 @@
 /doc
+CMakeFiles/
+CMakeCache.txt
+Makefile
+*.cmake
+build*
+*TAGS
+*.a

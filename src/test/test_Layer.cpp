@@ -19,7 +19,7 @@ const static float LAYER_THRESHOLD_SILENT = 0.1f;
  */
 bool noInputLayer1_1() {
 	Layer::ptr layer(new Layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
-			LearningRules::NO_LEARNING, 1, 1, 1, true)); // 1x1, layerID=1
+				   LearningRules::NO_LEARNING, 1, 1, 1, true, true)); // 1x1, layerID=1
 	int i;
 
 	for (i = 0; i < 500; ++i) {
@@ -44,7 +44,7 @@ bool noInputLayer1_1() {
  */
 bool noInputLayer30_30() {
 	Layer::ptr layer(new Layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
-			LearningRules::NO_LEARNING, 30, 30, 2, true)); // 30x30, layerID=2
+				   LearningRules::NO_LEARNING, 30, 30, 2, true, true)); // 30x30, layerID=2
 
 	for (int i = 0; i < 500; ++i) {
 		float avgOutput = layer->tick();
@@ -68,7 +68,7 @@ bool noInputLayer30_30() {
  */
 bool singleInputLayer10_10() {
 	Layer layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
-			LearningRules::NO_LEARNING, 10, 10, 3, true);
+		    LearningRules::NO_LEARNING, 10, 10, 3, true, true);
 
 	Layer::AssemblyLayer *assemblies = layer.getAssemblyLayer().first;
 	Layer::AssemblyLayer::iterator row;

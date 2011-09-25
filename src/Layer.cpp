@@ -41,8 +41,10 @@ static const float gaussianWeight[GAUSSIAN_SAMPLE_DIMENSIONS][GAUSSIAN_SAMPLE_DI
  * @param _layerID the UID of this layer within the Cortex
  * @param connectToSelf whether or not this Layer projects onto itself
  */
-Layer::Layer(int _connectionPattern, int _updateModel, int _learningRule, int _rows, int _cols,
-		int _layerID, bool connectToSelf, bool lateralInhibition) :
+Layer::Layer(ConnectionPatterns::classes _connectionPattern,
+	     UpdateModels::classes _updateModel,
+	     LearningRules::classes _learningRule,
+	     int _rows, int _cols, int _layerID, bool connectToSelf, bool lateralInhibition) :
 	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
 			connectionPattern(ConnectionPatterns::instanceOf(_connectionPattern)) {
 	// initialize the update model
