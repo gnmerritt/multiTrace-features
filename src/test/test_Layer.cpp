@@ -17,7 +17,7 @@ const static float LAYER_THRESHOLD_SILENT = 0.1f;
  *
  * @returns True if a 1x1 Layer is constructed and remains silent
  */
-bool noInputLayer1_1() {
+void noInputLayer1_1() {
 	Layer::ptr layer(new Layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
 				   LearningRules::NO_LEARNING, 1, 1, 1, true, true)); // 1x1, layerID=1
 	int i;
@@ -25,14 +25,12 @@ bool noInputLayer1_1() {
 	for (i = 0; i < 500; ++i) {
 		float avgOutput = layer->getLastRegionalActivation();
 
-		if (avgOutput > (float) 0.1f) {
-			return false;
-		}
+		LT(avgOutput, 0.1f);
 
 		layer->tick();
 	}
 
-	return true;
+	PASSED(NO_INPUT_LAYER_1_1)
 }
 
 /**
@@ -42,19 +40,17 @@ bool noInputLayer1_1() {
  *
  * @returns True if a 30x30 layer can be created and ticked
  */
-bool noInputLayer30_30() {
+void noInputLayer30_30() {
 	Layer::ptr layer(new Layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
 				   LearningRules::NO_LEARNING, 30, 30, 2, true, true)); // 30x30, layerID=2
 
 	for (int i = 0; i < 500; ++i) {
 		float avgOutput = layer->tick();
 
-		if (avgOutput > (float) 0.1f) {
-			return false;
-		}
+		LT(avgOutput, 0.1f);
 	}
 
-	return true;
+	PASSED(NO_INPUT_LAYER_30_30)
 }
 
 /**
@@ -66,7 +62,7 @@ bool noInputLayer30_30() {
  * @returns True if 20 hyper-active connections to each Assembly can drive
  * activity in the whole layer
  */
-bool singleInputLayer10_10() {
+void singleInputLayer10_10() {
 	Layer layer(ConnectionPatterns::UNR_PATTERN, UpdateModels::SONNTAG_UPDATE,
 		    LearningRules::NO_LEARNING, 10, 10, 3, true, true);
 
@@ -111,16 +107,17 @@ bool singleInputLayer10_10() {
 			max = avgOutput;
 		}
 
-		if (avgOutput > 1) {
-			printf("output exceeded 1, failing");
-			return false;
-		}
+		LTE(avgOutput, 1.0f);
 	}
 
-	if (max >= LAYER_THRESHOLD_ACTIVE) {
-		return true;
-	}
 
-	printf("layer did not fully activate, failing");
-	return false;
+	GTE(max, LAYER_THRESHOLD_ACTIVE);
+
+	PASSED(ACTIVE_LAYER_10_10)
+}
+
+int main() {
+    noInputLayer1_1();
+    noInputLayer30_30();
+    singleInputLayer10_10();
 }

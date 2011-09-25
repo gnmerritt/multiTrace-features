@@ -17,3 +17,5 @@ include_directories(
 )
 
 add_subdirectory(src)
+
+enable_testing()

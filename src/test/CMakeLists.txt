@@ -1,22 +1,17 @@
-# TODO: use ADD_TEST instead
 
-set(SOURCES_LIST
-  test_Layer.cpp
-  test_Assembly.cpp
-  runTests.cpp
-)
-
-#add_executable( runTests ${SOURCES_LIST} )
-#target_link_libraries( runTests
-#  MultiTrace
-#  ${Boost_LIBRARIES}
-#)
-
-ENABLE_TESTING()
-
+# Single Assembly only
 add_executable(AssemblyTest test_Assembly.cpp)
 target_link_libraries( AssemblyTest
   MultiTrace
   ${Boost_LIBRARIES}
 )
-add_test(AssemblyTest ${CMAKE_CURRENT_BINARY_DIR}/AssemblyTest Hello )
+add_test(AssemblyTest ${CMAKE_CURRENT_BINARY_DIR}/AssemblyTest )
+
+# Layer-level tests (the majority)
+add_executable(LayerTest test_Layer.cpp)
+target_link_libraries( LayerTest
+  MultiTrace
+  ${Boost_LIBRARIES}
+)
+add_test(LayerTest ${CMAKE_CURRENT_BINARY_DIR}/LayerTest )
+
