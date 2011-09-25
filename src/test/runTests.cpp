@@ -16,35 +16,7 @@
  * @see testInhibition()
  */
 int main() {
-	printf("Assembly-level tests:\n\n");
 
-	printf("No Input baseline test...");
-	if (noInput()) {
-		printf("passed!\n");
-	} else {
-		printf("***FAILED***\n");
-	}
-
-	printf("Single Input fire then decay test...");
-	if (singleInput()) {
-		printf("passed!\n");
-	} else {
-		printf("***FAILED***\n");
-	}
-
-	printf("Double Input, fire & fire then decay test...");
-	if (multipleInputs()) {
-		printf("passed!\n");
-	} else {
-		printf("***FAILED***\n");
-	}
-
-	printf("Regional inhbition test: no firing, constant max input...");
-	if (testInhibition()) {
-		printf("passed!\n");
-	} else {
-		printf("***FAILED***\n");
-	}
 
 	printf("\nLayer-level tests:\n\n");
 

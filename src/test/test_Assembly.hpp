@@ -13,6 +13,8 @@
 #ifndef TEST_ASSEMBLY_H_
 #define TEST_ASSEMBLY_H_
 
+#include "Tests.h"
+
 #include "AssemblyIncludes.hpp"
 
 #define DEBUG_ASSEMBLY_OUTPUT
@@ -20,9 +22,9 @@
 Assembly* initializeAssembly();
 
 // Assembly-level
-bool noInput();
-bool singleInput();
-bool multipleInputs();
-bool testInhibition();
+void noInput();
+void singleInput();
+void multipleInputs();
+void testInhibition();
 
 #endif /* TEST_ASSEMBLY_H_ */

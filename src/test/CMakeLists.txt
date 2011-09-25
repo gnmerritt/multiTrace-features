@@ -6,10 +6,17 @@ set(SOURCES_LIST
   runTests.cpp
 )
 
-add_executable( runTests ${SOURCES_LIST} )
-target_link_libraries( runTests
+#add_executable( runTests ${SOURCES_LIST} )
+#target_link_libraries( runTests
+#  MultiTrace
+#  ${Boost_LIBRARIES}
+#)
+
+ENABLE_TESTING()
+
+add_executable(AssemblyTest test_Assembly.cpp)
+target_link_libraries( AssemblyTest
   MultiTrace
   ${Boost_LIBRARIES}
 )
-
-#ADD_TEST(AssemblyTest ${CMAKE_CURRENT_BINARY_DIR}/SimpleTest Hello )
+add_test(AssemblyTest ${CMAKE_CURRENT_BINARY_DIR}/AssemblyTest Hello )

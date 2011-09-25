@@ -33,32 +33,30 @@ Assembly* initializeAssembly() {
  *
  * @return true if activation stays at 0
  */
-bool noInput() {
+void noInput() {
 	Assembly *a = initializeAssembly();
 	int i;
 
-	for (i = 0; i < 20; ++i) {
+	for (i = 0; i < 50; ++i) {
 		float out = a->getOutput();
 		a->tick(0);
 
-		if (out != (float) 0) {
-			return false;
-		}
+		EQ_FLOAT(out, 0);
 	}
 
-	return true;
+	PASSED(NO_INPUT_FLAT)
 }
 
 /**
  * A single input test case for our Assembly
  *
  * A single connection is initialized (awkwardly) and it's activity is
- * set to maximum. The Assembly is then allowed to run for 500 ticks, and its
+ * set to maximum. The Assembly is then allowed to run for 1500 ticks, and its
  * maximum output is tracked.
  *
  * @return true if the Assembly becomes highly activated (fires) after this input
  */
-bool singleInput() {
+void singleInput() {
 	Assembly *a = initializeAssembly();
 	int i;
 
@@ -82,14 +80,16 @@ bool singleInput() {
 			assembly_max = out;
 		}
 
-		c->setActivity(0); // shut the activity off after 1 tick
+                // shut the activity off after 10 tick
+		if (i > 10) {
+		    c->setActivity(0);
+		}
 	}
 
-	if (assembly_max > FIRING_THRESH && assembly_last < 0.2) {
-		return true;
-	}
+	GT(assembly_max, FIRING_THRESH);
+	LT(assembly_last, 0.2f);
 
-	return false;
+	PASSED(SINGLE_INPUT_FIRE)
 }
 
 /**
@@ -101,7 +101,7 @@ bool singleInput() {
  * @see singleInput()
  * @return true if the Assembly fires twice (2nd time after the second input)
  */
-bool multipleInputs() {
+void multipleInputs() {
 	Assembly *a = initializeAssembly();
 	int i;
 
@@ -135,11 +135,10 @@ bool multipleInputs() {
 		}
 	}
 
-	if (assembly_max > FIRING_THRESH && assembly_last < 0.2) {
-		return true;
-	}
+	GT(assembly_max, FIRING_THRESH);
+	LT(assembly_last, 0.2f);
 
-	return false;
+	PASSED(FIRE_TWICE)
 }
 
 /**
@@ -148,7 +147,7 @@ bool multipleInputs() {
  *
  * @return true if the Assembly does not fully fire (some increase in Activity is okay)
  */
-bool testInhibition() {
+void testInhibition() {
 	Assembly *a = initializeAssembly();
 	int i;
 
@@ -169,10 +168,14 @@ bool testInhibition() {
 		}
 	}
 
-	if (assembly_max > FIRING_THRESH) {
-		return false;
-	}
+	LT(assembly_max, FIRING_THRESH);
 
-	return true;
+	PASSED(INHIBITION_TEST)
 }
 
+int main() {
+	noInput();
+	singleInput();
+	multipleInputs();
+	testInhibition();
+}
