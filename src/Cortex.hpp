@@ -43,7 +43,7 @@ public:
     int addLayer(ConnectionPatterns::classes _connectionPattern,
 		 UpdateModels::classes _updateModel,
 		 LearningRules::classes _learningRule,
-		 int layerType, int rows, int cols, bool selfConnected, bool lateralInhibition);
+		 LayerType layerType, int rows, int cols, bool selfConnected, bool lateralInhibition);
 	void connectLayerRange(int layerID, int connectFrom, int connectTo);
 	void connectLayerToLayer(int fromID, int toID);
 

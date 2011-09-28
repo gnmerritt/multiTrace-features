@@ -42,7 +42,7 @@ Cortex::ptr MainWindow::createCortexFromParameters() {
 	    newCortex->addLayer((ConnectionPatterns::classes)connectionTemplate_i,
 				(UpdateModels::classes)updateModel_i,
 				(LearningRules::classes)learningRule_i,
-				layerRowSize, layerColSize, layer,
+				Cortex::DEFAULT_LAYER, layerRowSize, layerColSize,
 				interLayerConnectionsEnabled, lateralInhibition);
 	}
 

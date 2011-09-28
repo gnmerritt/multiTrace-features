@@ -37,7 +37,7 @@ Cortex::~Cortex() {
 int Cortex::addLayer(ConnectionPatterns::classes connectionPattern,
 		     UpdateModels::classes updateModel,
 		     LearningRules::classes learningRule,
-		     int layerType, int rows, int cols, bool selfConnected, bool lateralInhibition) {
+		     LayerType layerType, int rows, int cols, bool selfConnected, bool lateralInhibition) {
 	if (layerType == Cortex::DEFAULT_LAYER) {
 		Layer::ptr newLayer(new Layer(connectionPattern, updateModel, learningRule, rows, cols,
 				numberOfStdLayers, selfConnected, lateralInhibition));
