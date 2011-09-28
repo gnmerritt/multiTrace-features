@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "mainwindow.h"
+#include "mainwindow.hpp"
 #include "ui_mainwindow.h"
 #include "cortexviewer.hpp"
 
@@ -39,9 +39,11 @@ Cortex::ptr MainWindow::createCortexFromParameters() {
 
 	// add all the Layers
 	for (int layer = 0; layer < numberOfLayers; ++layer) {
-		newCortex->addLayer(connectionTemplate_i, updateModel_i, learningRule_i,
-							Cortex::DEFAULT_LAYER, layerRowSize, layerColSize,
-							interLayerConnectionsEnabled, lateralInhibition);
+	    newCortex->addLayer((ConnectionPatterns::classes)connectionTemplate_i,
+				(UpdateModels::classes)updateModel_i,
+				(LearningRules::classes)learningRule_i,
+				layerRowSize, layerColSize, layer,
+				interLayerConnectionsEnabled, lateralInhibition);
 	}
 
 	// and then connect them

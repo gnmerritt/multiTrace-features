@@ -6,3 +6,5 @@ Makefile
 build*
 *TAGS
 *.a
+moc_*
+ui_*
