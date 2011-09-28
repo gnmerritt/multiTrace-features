@@ -213,7 +213,7 @@ void Layer::connectToLayer(AssemblyLayer_ID target) {
  *  implements the first part of the iterator, which runs on every Assembly
  *  in the sending layer
  *
- *	@see connectAssemblyToLayer()
+ *  @see connectAssemblyToLayer()
  *  @sideeffect populates output connections of Assemblies in sendingLayer
  *  @param sender Layer&ID we're projecting connections from (efferent)
  *  @param receiver Layer&ID we're connecting to (afferent)
@@ -266,8 +266,11 @@ void Layer::connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID re
 			AssemblyLocation receivingLoc(row, col, receivingID);
 			Assembly_t *receivingAssembly = &(receiving->at(row).at(col));
 
-			if (connectionPattern->areConnected(sendingLoc, receivingLoc)) {
-				connectAssemblyToAssembly(sender.first, receivingAssembly);
+			float strength = connectionPattern->areConnected(sendingLoc, receivingLoc);
+
+			// initial strength of 0 is allowed
+			if (strength >= 0.0f) {
+			    connectAssemblyToAssembly(sender.first, receivingAssembly);
 			}
 		}
 	}
@@ -290,6 +293,9 @@ void Layer::connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving
 
 	sending->addOutgoingConnection(c);
 	receiving->addIncomingConnection(c);
+
+	const float distance = sending->distanceTo(receiving);
+	c->setDistance(distance);
 }
 
 /*

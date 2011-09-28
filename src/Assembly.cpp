@@ -5,6 +5,8 @@
  *      @author Nathan Merritt
  */
 
+#include <math.h>
+
 #include "Assembly.hpp"
 
 const float INITIAL_TOTAL_LTCS = 0.4f; // how much of an Assembly's LTCS is intra-Assembly
@@ -172,6 +174,20 @@ void Assembly::setOutgoingConnections(Connection::vector out) {
 }
 
 /**
+ * Returns the distance squared between two Assemblies
+ *
+ * @param other the Assembly we're finding distance to
+ * @return square of euclidean distance between two Assemblys
+ */
+float Assembly::distanceTo(Assembly* other) {
+    float diff_x = pow((getCol() - other->getCol()), 2);
+    float diff_y = pow((getRow() - other->getRow()), 2);
+    float diff_z = pow((getLayer() - other->getLayer()), 2);
+
+    return diff_x + diff_y + diff_z;
+}
+
+/**
  * Sets the activation level of each outgoing connection to our output,
  * so that we communicate with connected assemblies.
  */
@@ -188,8 +204,8 @@ void Assembly::updateOutgoingConnections() {
 }
 
 /**
- * Intra-unit LTCS doesn't change.
- * So we have (1-LTCS) to spread among each of our n incoming connections
+ * Intra-unit LTCS doesn't change, so we have (1-LTCS) to spread among
+ * each of our n incoming connections.
  *
  * @see updateOutgoingConnections()
  */
@@ -204,7 +220,7 @@ void Assembly::initializeIncConnectionStrengths() {
 	float perConnection = (1 - INITIAL_TOTAL_LTCS) / numConnections;
 
 	for (in = input.begin(); in != input.end(); ++in) {
-		(*in)->setLTCS(perConnection);
+		(*in)->setInitialLTCS(perConnection);
 	}
 
 	learningRule->dropLearning();

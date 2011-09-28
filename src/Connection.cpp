@@ -8,7 +8,7 @@
 #include "Connection.hpp"
 
 Connection::Connection() :
-	ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), activity(INITIAL_ACTIVITY), last_activity(INITIAL_ACTIVITY) {
+    ltcs(INITIAL_LTCS), stcs(INITIAL_STCS), distance(-1.0f), activity(INITIAL_ACTIVITY), last_activity(INITIAL_ACTIVITY) {
 	pthread_mutex_init(&lock, NULL);
 }
 
@@ -37,6 +37,38 @@ void Connection::setLTCS(float _ltcs) {
 	changes.push_back(delta);
 	ltcs = _ltcs;
 	pthread_mutex_unlock(&lock);
+}
+
+/**
+ * Initial connection strength is inversely related to the distance
+ * the connection spans.
+ *
+ * @param _ltcs scaled initial strength
+ */
+void Connection::setInitialLTCS(float _ltcs) {
+    pthread_mutex_lock(&lock);
+
+    if (distance > 0) {
+	setLTCS(_ltcs/distance);
+    }
+    else {
+	setLTCS(_ltcs);
+    }
+
+    pthread_mutex_unlock(&lock);
+}
+
+void Connection::setDistance(float _distance) {
+    pthread_mutex_lock(&lock);
+    distance = _distance;
+    pthread_mutex_unlock(&lock);
+}
+
+float Connection::getDistance() {
+    pthread_mutex_lock(&lock);
+    float _distance = distance;
+    pthread_mutex_unlock(&lock);
+    return _distance;
 }
 
 void Connection::setSTCS(float _stcs) {

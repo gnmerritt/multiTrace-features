@@ -41,11 +41,15 @@ public:
 
 	float getLTCS();
 	void setLTCS(float _ltcs);
+    void setInitialLTCS(float _ltcs);
+    void setDistance(float _distance);
+    float getDistance();
 	void setSTCS(float _stcs);
 	void setActivity(float _activity);
 
 private:
 	float ltcs, stcs; /** connection strengths, see Sonntag (1991, pg94) */
+    float distance; /** euclidean distance between the two assemblies */
 
 	float activity; /** activity of the presynaptic Assembly */
 	float last_activity; /** activity(t-1), for derivatives */

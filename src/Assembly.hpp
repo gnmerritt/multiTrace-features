@@ -42,6 +42,8 @@ public:
 	void setIncomingConnections(Connection::vector in);
 	void setOutgoingConnections(Connection::vector out);
 
+    float distanceTo(Assembly* other);
+
 	float tick(float regional_activation);
 
 	void initializeIncConnectionStrengths(); // danger: will destroy all learning
