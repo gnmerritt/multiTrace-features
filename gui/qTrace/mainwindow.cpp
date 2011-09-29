@@ -35,30 +35,30 @@ MainWindow::~MainWindow()
   * @return shared pointer to the instantiated Cortex object
   */
 Cortex::ptr MainWindow::createCortexFromParameters() {
-	Cortex::ptr newCortex ( new Cortex() );
+    Cortex::ptr newCortex ( new Cortex() );
 
-	// add all the Layers
-	for (int layer = 0; layer < numberOfLayers; ++layer) {
-	    newCortex->addLayer((ConnectionPatterns::classes)connectionTemplate_i,
-				(UpdateModels::classes)updateModel_i,
-				(LearningRules::classes)learningRule_i,
-				Cortex::DEFAULT_LAYER, layerRowSize, layerColSize,
-				interLayerConnectionsEnabled, lateralInhibition);
-	}
+    // add all the Layers
+    for (int layer = 0; layer < numberOfLayers; ++layer) {
+	newCortex->addLayer((ConnectionPatterns::classes)connectionTemplate_i,
+			    (UpdateModels::classes)updateModel_i,
+			    (LearningRules::classes)learningRule_i,
+			    Cortex::DEFAULT_LAYER, layerRowSize, layerColSize,
+			    interLayerConnectionsEnabled, lateralInhibition);
+    }
 
-	// and then connect them
-	Layer::vector *layers = newCortex->getLayers();
-	Layer::vector::iterator eachLayer;
+    // and then connect them
+    Layer::vector layers = newCortex->getLayers();
+    Layer::vector::iterator eachLayer;
 
-	for (eachLayer = layers->begin(); eachLayer != layers->end(); ++eachLayer) {
-		Layer::ptr thisLayer = *eachLayer;
-		newCortex->connectLayerRange(thisLayer->getId(), connectFrom, connectTo);
-	}
+    for (eachLayer = layers.begin(); eachLayer != layers.end(); ++eachLayer) {
+	Layer::ptr thisLayer = *eachLayer;
+	newCortex->connectLayerRange(thisLayer->getId(), connectFrom, connectTo);
+    }
 
-	newCortex->setTestName(testName.toStdString());
-	newCortex->setLogLocation(saveDirectory.toStdString());
+    newCortex->setTestName(testName.toStdString());
+    newCortex->setLogLocation(saveDirectory.toStdString());
 
-	return  newCortex;
+    return  newCortex;
 }
 
 void MainWindow::on_createButton_clicked()

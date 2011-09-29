@@ -97,31 +97,30 @@ public:
 	AssemblyLayer_ID getAssemblyLayer();
 
 private:
-	void connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer);
-	void connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer);
-    void connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving); // TODO: passing pointers around here is stupid, fix it
+    void connectAssemblyToLayer(int row, int col, AssemblyLayer_ID receivingLayer);
+    void connectAssemblyToAssembly(Assembly_t &sending, Assembly_t &receiving);
 
-	void connectLateralInhibition();
+    void connectLateralInhibition();
 
-	float safeOutput(int row, int col);
+    float safeOutput(int row, int col);
 
-	int getAssemblyID(int row, int col);
+    int getAssemblyID(int row, int col);
 
 public:
-	int rows, cols;
+    int rows, cols;
 
 private:
-	AssemblyLayer assemblies;
-	int layerID;
+    AssemblyLayer assemblies;
+    int layerID;
 
-	float lastActivationAverage;
-	LayerOutput assemblyOutputBlock;
-	int timestep;
+    float lastActivationAverage;
+    LayerOutput assemblyOutputBlock;
+    int timestep;
 
-	ConnectionPattern::ptr connectionPattern;
+    ConnectionPattern::ptr connectionPattern;
 
 #ifdef DEBUG_LAYER_OUTPUT
-	FILE *layer_tick_f;
+    FILE *layer_tick_f;
 #endif
 };
 

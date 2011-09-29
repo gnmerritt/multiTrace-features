@@ -42,7 +42,7 @@ public:
 	void setIncomingConnections(Connection::vector in);
 	void setOutgoingConnections(Connection::vector out);
 
-    float distanceTo(Assembly* other);
+    float distanceTo(const Assembly &other);
 
 	float tick(float regional_activation);
 

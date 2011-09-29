@@ -5,6 +5,8 @@
  *  @author Nathan Merritt
  */
 
+#include <cstdio>
+
 #include "Layer.hpp"
 
 #ifdef DEBUG_LAYER_OUTPUT
@@ -198,16 +200,6 @@ void Layer::connectLateralInhibition() {
 	}
 }
 
-/**
- * Simple public method to connect this Layer to another given it's AssemblyLayer_ID
- *
- * @param target receiver Layer & ID we're connecting to
- * @see connectLayerToLayer()
- */
-void Layer::connectToLayer(AssemblyLayer_ID target) {
-	connectLayerToLayer(getAssemblyLayer(), target);
-}
-
 /** Iterate over the AssemblyLater and check connectivity between
  *  any two Assemblies. Runs n^2, but we have to do it... This method
  *  implements the first part of the iterator, which runs on every Assembly
@@ -218,31 +210,24 @@ void Layer::connectToLayer(AssemblyLayer_ID target) {
  *  @param sender Layer&ID we're projecting connections from (efferent)
  *  @param receiver Layer&ID we're connecting to (afferent)
  */
-void Layer::connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID receivingLayer) {
-	AssemblyLayer *projecting = sendingLayer.first;
-	int projectingID = sendingLayer.second;
-
-	// do all the connecting
-	for (unsigned int row = 0; row < projecting->size(); ++row) {
-		for (unsigned int col = 0; col < projecting->at(row).size(); ++col) {
-			AssemblyLocation location(row, col, projectingID);
-
-			LocalizedAssembly sendingAssembly(&(projecting->at(row)[col]), &location);
-
-			connectAssemblyToLayer(sendingAssembly, receivingLayer);
-		}
+void Layer::connectToLayer(AssemblyLayer_ID receivingLayer) {
+    // do all the connecting
+    for (int row = 0; row < rows; ++row) {
+	for (int col = 0; col < cols; ++col) {
+	    connectAssemblyToLayer(row, col, receivingLayer);
 	}
+    }
 
-	// and now recalculate the incoming connection weights in the receivingLayer
-	AssemblyLayer::iterator row;
-	AssemblyVector::iterator col;
-	AssemblyLayer *receiving = receivingLayer.first;
+    // and now recalculate the incoming connection weights in the receivingLayer
+    AssemblyLayer::iterator row;
+    AssemblyVector::iterator col;
+    AssemblyLayer *receiving = receivingLayer.first;
 
-	for (row = receiving->begin(); row != receiving->end(); ++row) {
-		for (col = row->begin(); col != row->end(); ++col) {
-			col->initializeIncConnectionStrengths();
-		}
+    for (row = receiving->begin(); row != receiving->end(); ++row) {
+	for (col = row->begin(); col != row->end(); ++col) {
+	    col->initializeIncConnectionStrengths();
 	}
+    }
 }
 
 /**
@@ -254,23 +239,23 @@ void Layer::connectLayerToLayer(AssemblyLayer_ID sendingLayer, AssemblyLayer_ID 
  * @param sender The Assembly whose output we're building
  * @param receivingLayer the Layer we're connecting to
  */
-void Layer::connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID receivingLayer) {
+void Layer::connectAssemblyToLayer(int sourceRow, int sourceCol, AssemblyLayer_ID receivingLayer) {
 	AssemblyLayer *receiving = receivingLayer.first;
 	int receivingID = receivingLayer.second;
 
-	AssemblyLocation sendingLoc = *sender.second;
+	AssemblyLocation sendingLoc(sourceRow, sourceCol, layerID);
 
 	for (unsigned int row = 0; row < receiving->size(); ++row) {
 		for (unsigned int col = 0; col < receiving->at(row).size(); ++col) {
 
 			AssemblyLocation receivingLoc(row, col, receivingID);
-			Assembly_t *receivingAssembly = &(receiving->at(row).at(col));
 
 			float strength = connectionPattern->areConnected(sendingLoc, receivingLoc);
 
 			// initial strength of 0 is allowed
 			if (strength >= 0.0f) {
-			    connectAssemblyToAssembly(sender.first, receivingAssembly);
+			    connectAssemblyToAssembly(assemblies.at(sourceRow).at(sourceCol),
+						      receiving->at(row).at(col));
 			}
 		}
 	}
@@ -283,19 +268,19 @@ void Layer::connectAssemblyToLayer(LocalizedAssembly sender, AssemblyLayer_ID re
  * @param receiving Add a Connection to this Assembly's input
  *
  */
-void Layer::connectAssemblyToAssembly(Assembly_t* sending, Assembly_t* receiving) {
-	// Don't connect an Assembly to itself
-	if (receiving == sending) {
-		return;
-	}
+void Layer::connectAssemblyToAssembly(Assembly_t &sending, Assembly_t &receiving) {
+    // Don't connect an Assembly to itself
+    if (receiving.getId() == sending.getId()) {
+	return;
+    }
 
-	Connection::ptr c(new Connection());
+    Connection::ptr c(new Connection());
 
-	sending->addOutgoingConnection(c);
-	receiving->addIncomingConnection(c);
+    sending.addOutgoingConnection(c);
+    receiving.addIncomingConnection(c);
 
-	const float distance = sending->distanceTo(receiving);
-	c->setDistance(distance);
+    const float distance = sending.distanceTo(receiving);
+    c->setDistance(distance);
 }
 
 /*

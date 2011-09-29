@@ -5,6 +5,8 @@
  *      @author Nathan Merritt
  */
 
+#include <cstdio>
+
 #include "Cortex.hpp"
 
 /**
@@ -13,8 +15,8 @@
  * Doesn't do much work, all the fun stuff is done via addLayer and connectLayerRange
  */
 Cortex::Cortex() :
-	layers(Layer::vector()), connectedLayers(ConnectionMap()), numberOfStdLayers(0), testName(""),
-			logLocation("") {
+    layers(Layer::vector()), connectedLayers(ConnectionMap()), numberOfStdLayers(0), testName(""),
+    logLocation("") {
 }
 
 Cortex::~Cortex() {
@@ -60,17 +62,19 @@ int Cortex::addLayer(ConnectionPatterns::classes connectionPattern,
  * @see connectLayerRange()
  */
 void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
-	int bottom = layerID + connectFrom;
-	int top = layerID + connectTo;
+    int bottom = layerID + connectFrom;
+    int top = layerID + connectTo;
 
-	for (int target = bottom; target <= top; ++target) {
-		// self-connections happen in the Layer constructor
-		if (layerID == target)
-			continue;
-
-		if (target >= 0)
-			connectLayerToLayer(layerID, target);
+    for (int target = bottom; target <= top; ++target) {
+	// self-connections happen in the Layer constructor
+	if (layerID == target) {
+	    continue;
 	}
+
+	if (target >= 0) {
+	    connectLayerToLayer(layerID, target);
+	}
+    }
 }
 
 /**
@@ -82,20 +86,22 @@ void Cortex::connectLayerRange(int layerID, int connectFrom, int connectTo) {
  * @param toID Layer connections "synapse on"
  */
 void Cortex::connectLayerToLayer(int fromID, int toID) {
-	// sanity checks
-	if (fromID < 0 || toID < 0 || fromID >= (int)layers.size() || toID >= (int)layers.size())
-		return;
+    // sanity checks
+    if (fromID < 0 || toID < 0 || fromID >= (int)layers.size() || toID >= (int)layers.size()) {
+	return;
+    }
 
-	// don't double up on connections (although both directions are allowed)
-	LayerConnection newConnection(fromID, toID);
-	if (connectedLayers.find(newConnection) != connectedLayers.end()) {
-		return;
-	}
+    // don't double up on connections (although both directions are allowed)
+    LayerConnection newConnection(fromID, toID);
+    if (connectedLayers.find(newConnection) != connectedLayers.end()) {
+	return;
+    }
 
-	Layer::AssemblyLayer_ID target = layers[toID]->getAssemblyLayer();
+    Layer::AssemblyLayer_ID target = layers[toID]->getAssemblyLayer();
 
-	layers[fromID]->connectToLayer(target);
-	connectedLayers.insert(newConnection);
+    layers[fromID]->connectToLayer(target);
+
+    connectedLayers.insert(newConnection);
 }
 
 /**

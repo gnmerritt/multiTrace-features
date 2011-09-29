@@ -19,8 +19,8 @@ void CortexViewer::setCortex(Cortex::ptr newCortex) {
 	cortexObj.setCortex(newCortex);
 
 	cortexObj.connect(this,
-					  SIGNAL(tick()),
-					  SLOT(tick()));
+			  SIGNAL(tick()),
+			  SLOT(tick()));
 
 	cortexThread = new QThreadEx();
 

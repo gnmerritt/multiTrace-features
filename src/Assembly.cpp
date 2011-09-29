@@ -5,6 +5,7 @@
  *      @author Nathan Merritt
  */
 
+#include <cstdio>
 #include <math.h>
 
 #include "Assembly.hpp"
@@ -179,10 +180,10 @@ void Assembly::setOutgoingConnections(Connection::vector out) {
  * @param other the Assembly we're finding distance to
  * @return square of euclidean distance between two Assemblys
  */
-float Assembly::distanceTo(Assembly* other) {
-    float diff_x = pow((getCol() - other->getCol()), 2);
-    float diff_y = pow((getRow() - other->getRow()), 2);
-    float diff_z = pow((getLayer() - other->getLayer()), 2);
+float Assembly::distanceTo(const Assembly &other) {
+    float diff_x = pow((getCol() - other.getCol()), 2);
+    float diff_y = pow((getRow() - other.getRow()), 2);
+    float diff_z = pow((getLayer() - other.getLayer()), 2);
 
     return diff_x + diff_y + diff_z;
 }
@@ -216,9 +217,9 @@ void Assembly::initializeIncConnectionStrengths() {
 		numConnections = 1;
 	}
 
-	Connection::vector::iterator in;
 	float perConnection = (1 - INITIAL_TOTAL_LTCS) / numConnections;
 
+	Connection::vector::iterator in;
 	for (in = input.begin(); in != input.end(); ++in) {
 		(*in)->setInitialLTCS(perConnection);
 	}

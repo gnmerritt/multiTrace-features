@@ -46,16 +46,12 @@ void Connection::setLTCS(float _ltcs) {
  * @param _ltcs scaled initial strength
  */
 void Connection::setInitialLTCS(float _ltcs) {
-    pthread_mutex_lock(&lock);
-
     if (distance > 0) {
 	setLTCS(_ltcs/distance);
     }
     else {
 	setLTCS(_ltcs);
     }
-
-    pthread_mutex_unlock(&lock);
 }
 
 void Connection::setDistance(float _distance) {

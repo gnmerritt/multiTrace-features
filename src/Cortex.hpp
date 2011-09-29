@@ -51,8 +51,8 @@ public:
 
 	void triggerAssembly(int layerID, int row, int col, float inputStrength);
 
-	Layer::vector* getLayers() {
-		return &layers;
+	Layer::vector getLayers() {
+		return layers;
 	}
 
 	void setTestName(std::string name) {
