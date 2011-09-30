@@ -174,8 +174,8 @@ void testInhibition() {
 }
 
 int main() {
-	noInput();
-	singleInput();
-	multipleInputs();
-	testInhibition();
+    noInput();
+    singleInput();
+    multipleInputs();
+    testInhibition();
 }

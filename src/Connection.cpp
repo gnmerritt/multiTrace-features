@@ -5,6 +5,9 @@
  *  @author Nathan Merritt
  */
 
+#include <cstdio>
+#include <cmath>
+
 #include "Connection.hpp"
 
 Connection::Connection() :
@@ -54,9 +57,9 @@ void Connection::setInitialLTCS(float _ltcs) {
     }
 }
 
-void Connection::setDistance(float _distance) {
+void Connection::setDistance(float _distanceSqd) {
     pthread_mutex_lock(&lock);
-    distance = _distance;
+    distance = sqrt(_distanceSqd);
     pthread_mutex_unlock(&lock);
 }
 

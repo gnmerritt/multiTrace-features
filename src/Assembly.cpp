@@ -44,6 +44,32 @@ Assembly::~Assembly() {
 }
 
 /**
+ * Accessors for Row, Column & Layer
+ */
+int Assembly::getLayer() const {
+    if (id < MINIMUM_FULL_ID) {
+	return 0;
+    }
+    const int bigLayer = id - getRow() - getCol();
+
+    return bigLayer / MINIMUM_FULL_ID;
+}
+
+int Assembly::getRow() const {
+    if (id < MINIMUM_FULL_ID) {
+	return 0;
+    }
+    return ((id % ROW_ID) - getCol()) / 1000;
+}
+
+int Assembly::getCol() const {
+    if (id < MINIMUM_FULL_ID) {
+	return 0;
+    }
+    return id % COLUMN_ID;
+}
+
+/**
  * Used to wire up inter-Assembly connections
  *
  * @see connectAssemblyToAssembly()

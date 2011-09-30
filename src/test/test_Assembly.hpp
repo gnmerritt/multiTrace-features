@@ -22,6 +22,7 @@
 Assembly* initializeAssembly();
 
 // Assembly-level
+void assemblyDistance();
 void noInput();
 void singleInput();
 void multipleInputs();

@@ -53,21 +53,10 @@ public:
 	int getId() const {
 		return id;
 	}
-	int getLayer() const {
-		if (id < MINIMUM_FULL_ID)
-			return 0;
-		return id - getRow() - getCol();
-	}
-	int getRow() const {
-		if (id < MINIMUM_FULL_ID)
-			return 0;
-		return ((id % ROW_ID) - getCol()) / 1000;
-	}
-	int getCol() const {
-		if (id < MINIMUM_FULL_ID)
-			return 0;
-		return id % COLUMN_ID;
-	}
+
+    int getLayer() const;
+    int getRow() const;
+    int getCol() const;
 
 	float getActivation() const { // A(t)
 		return state->activity;
