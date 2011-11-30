@@ -16,5 +16,6 @@
 void noInputLayer1_1();
 void noInputLayer30_30();
 void singleInputLayer10_10();
+void lateralInhibition();
 
 #endif /* TEST_LAYER_H_ */

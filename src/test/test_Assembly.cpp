@@ -1,3 +1,4 @@
+
 /*
  * test_Assembly.cpp
  *
@@ -16,13 +17,13 @@ static int assemblyCounter = 0;
  * @return a pointer to the configured Assembly
  */
 Assembly* initializeAssembly() {
-	UpdateModel::ptr update ( new SonntagUpdate() );
+    UpdateModel::ptr update ( new SonntagUpdate() );
 
-	assemblyCounter++;
+    assemblyCounter++;
 
-	Assembly *assembly = new Assembly(assemblyCounter, update, LearningRules::NO_LEARNING);
+    Assembly *assembly = new Assembly(assemblyCounter, update, LearningRules::NO_LEARNING);
 
-	return assembly;
+    return assembly;
 }
 
 /**
@@ -34,17 +35,19 @@ Assembly* initializeAssembly() {
  * @return true if activation stays at 0
  */
 void noInput() {
-	Assembly *a = initializeAssembly();
-	int i;
+    Assembly *a = initializeAssembly();
+    int i;
 
-	for (i = 0; i < 50; ++i) {
-		float out = a->getOutput();
-		a->tick(0);
+    
 
-		EQ_FLOAT(out, 0);
-	}
+    for (i = 0; i < 50; ++i) {
+	float out = a->getOutput();
+	a->tick(0);
 
-	PASSED(NO_INPUT_FLAT)
+	EQ_FLOAT(out, 0);
+    }
+
+    PASSED(NO_INPUT_FLAT)
 }
 
 /**
@@ -57,39 +60,44 @@ void noInput() {
  * @return true if the Assembly becomes highly activated (fires) after this input
  */
 void singleInput() {
-	Assembly *a = initializeAssembly();
-	int i;
+    Assembly *a = initializeAssembly();
+    int i;
 
-	// awkward, I know...
-	Connection::vector input;
-	Connection::ptr c (new Connection());
-	input.push_back(c);
+    // awkward, I know...
+    Connection::vector input;
+    Connection::ptr c (new Connection());
+    input.push_back(c);
 
-	a->setIncomingConnections(input);
-	c->setActivity((float) 99);
+    float fakeActivity = 99.0f;
+    float fakeSTCS = 0.0f;
 
-	float assembly_last;
-	float assembly_max = 0;
+    a->setIncomingConnections(input);
+    c->setLTCS(1.0f);
+    c->setSTCS(&fakeSTCS);
+    c->setActivity(&fakeActivity);
 
-	for (i = 0; i < 1500; ++i) {
-		float out = a->getOutput();
-		a->tick(0);
-		assembly_last = out;
+    float assembly_last;
+    float assembly_max = 0;
 
-		if (out > assembly_max) {
-			assembly_max = out;
-		}
+    for (i = 0; i < 1500; ++i) {
+	float out = a->getOutput();
+	a->tick(0);
+	assembly_last = out;
 
-                // shut the activity off after 10 tick
-		if (i > 10) {
-		    c->setActivity(0);
-		}
+	if (out > assembly_max) {
+	    assembly_max = out;
 	}
 
-	GT(assembly_max, FIRING_THRESH);
-	LT(assembly_last, 0.2f);
+	// shut the activity off after 10 tick
+	if (i > 10) {
+	    fakeActivity = 0.0f;
+	}
+    }
 
-	PASSED(SINGLE_INPUT_FIRE)
+    GT(assembly_max, FIRING_THRESH);
+    LT(assembly_last, 0.2f);
+
+    PASSED(SINGLE_INPUT_FIRE)
 }
 
 /**
@@ -102,43 +110,48 @@ void singleInput() {
  * @return true if the Assembly fires twice (2nd time after the second input)
  */
 void multipleInputs() {
-	Assembly *a = initializeAssembly();
-	int i;
+    Assembly *a = initializeAssembly();
+    int i;
 
-	const int SECOND_INPUT = 250;
+    const int SECOND_INPUT = 250;
 
-	// awkward, I know...
-	Connection::vector input;
-	Connection::ptr c (new Connection());
-	input.push_back(c);
+    // awkward, I know...
+    Connection::vector input;
+    Connection::ptr c (new Connection());
+    input.push_back(c);
 
-	a->setIncomingConnections(input);
-	c->setActivity((float) 99);
+    float fakeActivity = 99.0f;
+    float fakeSTCS = 0.5f;
 
-	float assembly_last;
-	float assembly_max = 0;
+    a->setIncomingConnections(input);
+    c->setActivity(&fakeActivity);
+    c->setSTCS(&fakeSTCS);
+    c->setLTCS(0.5f);
 
-	for (i = 0; i < 1500; ++i) {
-		float out = a->getOutput();
+    float assembly_last;
+    float assembly_max = 0;
 
-		a->tick(0);
-		assembly_last = out;
+    for (i = 0; i < 1500; ++i) {
+	float out = a->getActivation();
 
-		if (out > assembly_max) {
-			assembly_max = out;
-		}
+	a->tick(0);
+	assembly_last = out;
 
-		if (i > SECOND_INPUT && i < (SECOND_INPUT + 10)) {
-			c->setActivity((float) 99);
-		} else {
-			c->setActivity(0); // shut the activity off after 1 tick
-		}
+	if (out > assembly_max) {
+	    assembly_max = out;
 	}
 
-	GT(assembly_max, FIRING_THRESH);
-	LT(assembly_last, 0.2f);
+	if (i > SECOND_INPUT && i < (SECOND_INPUT + 10)) {
+	    fakeActivity = 99.0f;
+	} else {
+	    fakeActivity = 0.0f; // shut the activity off after 1 tick
+	}
+    }
 
-	PASSED(FIRE_TWICE)
+    GT(assembly_max, FIRING_THRESH);
+    LT(assembly_last, 0.2f);
+
+    PASSED(FIRE_TWICE)
 }
 
 /**
@@ -148,29 +161,30 @@ void multipleInputs() {
  * @return true if the Assembly does not fully fire (some increase in Activity is okay)
  */
 void testInhibition() {
-	Assembly *a = initializeAssembly();
-	int i;
+    Assembly *a = initializeAssembly();
+    int i;
 
-	Connection::ptr c ( new Connection() );
+    Connection::ptr c ( new Connection() );
 
-	a->addIncomingConnection(c);
+    a->addIncomingConnection(c);
 
-	c->setActivity((float) 99);
+    float fakeActivity = 99.0f;
+    c->setActivity(&fakeActivity);
 
-	float assembly_max = 0;
+    float assembly_max = 0;
 
-	for (i = 0; i < 500; ++i) {
-		float out = a->getOutput();
-		a->tick(99); /** inhibition maximized here */
+    for (i = 0; i < 500; ++i) {
+	float out = a->getOutput();
+	a->tick(99); /** inhibition maximized here */
 
-		if (out > assembly_max) {
-			assembly_max = out;
-		}
+	if (out > assembly_max) {
+	    assembly_max = out;
 	}
+    }
 
-	LT(assembly_max, FIRING_THRESH);
+    LT(assembly_max, FIRING_THRESH);
 
-	PASSED(INHIBITION_TEST)
+    PASSED(INHIBITION_TEST)
 }
 
 int main() {

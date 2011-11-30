@@ -32,7 +32,8 @@ public:
 public:
 	AssemblyState() :
 		activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0), manual_input(0),
-				regional_activation(0), lateral_inhibition(0) {
+		regional_activation(0), lateral_inhibition(0)
+	{
 	}
 	virtual ~AssemblyState() {
 	}
@@ -40,7 +41,8 @@ public:
 	//Copy constructor
 	AssemblyState(const AssemblyState &a) :
 		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs), fatigue(a.fatigue),
-				regional_activation(a.regional_activation) {
+		regional_activation(a.regional_activation)
+	{
 	}
 	/** multiTRACE variables */
 	float activity;

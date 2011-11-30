@@ -20,26 +20,26 @@ const std::string assembly_init = "Timestep\tActivity\tLTCS\tSTCS\tFatigue\tregi
 #endif
 
 Assembly::Assembly(int _id, UpdateModel::ptr _model, int _learningRule) :
-	id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()), updateModel(_model),
-			input(Connection::vector()), output(Connection::vector()), lateralInhibition(
-					Connection::vector()) {
-	initializeLearningRule();
+    id(_id), ruleId(_learningRule), timestep(0), state(new AssemblyState()), updateModel(_model),
+    input(Connection::vector()), output(Connection::vector()), lateralInhibition(Connection::vector())
+{
+    initializeLearningRule();
 
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-	std::stringstream out;
-	out << "/tmp/assembly_" << getId() << ".xls";
+    std::stringstream out;
+    out << "/tmp/assembly_" << getId() << ".xls";
 
-	std::string filename = out.str();
+    std::string filename = out.str();
 
-	tick_f = fopen(filename.c_str(), "w");
+    tick_f = fopen(filename.c_str(), "w");
 
-	fprintf(tick_f, "%s", assembly_init.c_str());
+    fprintf(tick_f, "%s", assembly_init.c_str());
 #endif
 }
 
 Assembly::~Assembly() {
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-	fclose(tick_f);
+    fclose(tick_f);
 #endif
 }
 
@@ -48,7 +48,7 @@ Assembly::~Assembly() {
  */
 int Assembly::getLayer() const {
     if (id < MINIMUM_FULL_ID) {
-	return 0;
+        return 0;
     }
     const int bigLayer = id - getRow() - getCol();
 
@@ -57,14 +57,14 @@ int Assembly::getLayer() const {
 
 int Assembly::getRow() const {
     if (id < MINIMUM_FULL_ID) {
-	return 0;
+        return 0;
     }
     return ((id % ROW_ID) - getCol()) / 1000;
 }
 
 int Assembly::getCol() const {
     if (id < MINIMUM_FULL_ID) {
-	return 0;
+        return 0;
     }
     return id % COLUMN_ID;
 }
@@ -77,7 +77,7 @@ int Assembly::getCol() const {
  * @sideeffect reinitializes the initial connection strengths (undoes learning)
  */
 void Assembly::addIncomingConnection(Connection::ptr newInput) {
-	input.push_back(newInput);
+    input.push_back(newInput);
 }
 
 /**
@@ -87,7 +87,11 @@ void Assembly::addIncomingConnection(Connection::ptr newInput) {
  * @param newOutput Connection added to our output vector
  */
 void Assembly::addOutgoingConnection(Connection::ptr newOutput) {
-	output.push_back(newOutput);
+    output.push_back(newOutput);
+
+    newOutput->setSTCS(&(state->stcs));
+    newOutput->setActivity(&(state->activity));
+    newOutput->setLastActivity(&(state->output));
 }
 
 /**
@@ -95,14 +99,14 @@ void Assembly::addOutgoingConnection(Connection::ptr newOutput) {
  * instead of something in Layer::tick() because it's a lot faster and cleaner.
  */
 void Assembly::addLateralInhibition(Connection::ptr newInhibition) {
-	lateralInhibition.push_back(newInhibition);
+    lateralInhibition.push_back(newInhibition);
 }
 
 /**
  * Run the learning rule constructor
  */
 void Assembly::initializeLearningRule() {
-	learningRule = LearningRule::ptr(LearningRules::instanceOf(ruleId, state, &input));
+    learningRule = LearningRule::ptr(LearningRules::instanceOf(ruleId, state, &input));
 }
 
 /**
@@ -115,27 +119,24 @@ void Assembly::initializeLearningRule() {
  * @see LearningRule.h
  */
 float Assembly::tick(float regional_activation) {
-	// update our internal state with layer data
-	state->regional_activation = regional_activation;
-	state->lateral_inhibition = calculateInhibition();
+    // update our internal state with layer data
+    state->regional_activation = regional_activation;
+    state->lateral_inhibition = calculateInhibition();
 
-	// tick the internal state
-	updateModel->tick(state, &input);
+    // tick the internal state
+    updateModel->tick(state, &input);
 
-	// adjust incoming connections
-	learningRule->tick(&input);
+    // adjust incoming connections
+    learningRule->tick(&input);
 
-	// push our activity to our outgoing connections
-	updateOutgoingConnections();
-
-	// log timestep activity to our debug file in /tmp
+    // log timestep activity to our debug file in /tmp
 #ifdef DEBUG_ASSEMBLY_OUTPUT
-	fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
-			getFatigue(), getRegionalInhibition());
+    fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
+	    getFatigue(), getRegionalInhibition());
 #endif
 
-	// return our activation to our Layer
-	return state->output;
+    // return our activation to our Layer
+    return state->output;
 }
 
 /**
@@ -143,15 +144,15 @@ float Assembly::tick(float regional_activation) {
  *
  */
 float Assembly::calculateInhibition() {
-	float sum = 0;
-	Connection::vector::iterator c;
+    float sum = 0;
+    Connection::vector::iterator c;
 
-	for (c = lateralInhibition.begin(); c != lateralInhibition.end(); ++c) {
-		Connection::ptr connection = *c;
-		sum += connection->getOutput();
-	}
+    for (c = lateralInhibition.begin(); c != lateralInhibition.end(); ++c) {
+	Connection::ptr connection = *c;
+	sum += connection->getOutput();
+    }
 
-	return sum;
+    return sum;
 }
 
 /**
@@ -166,14 +167,14 @@ float Assembly::calculateInhibition() {
  * @param strength amount of activation, valid ranges on [0, 1]
  */
 void Assembly::setActivation(float strength) {
-	if (strength > 1) {
-		strength = 1.0f;
-	}
-	if (strength < 0) {
-		strength = -1.0f;
-	}
+    if (strength > 1) {
+	strength = 1.0f;
+    }
+    if (strength < 0) {
+	strength = -1.0f;
+    }
 
-	state->manual_input = strength;
+    state->manual_input = strength;
 }
 
 /**
@@ -183,10 +184,10 @@ void Assembly::setActivation(float strength) {
  * @param in a pointer to a ConnectionVector which we will use as input
  */
 void Assembly::setIncomingConnections(Connection::vector in) {
-	input = in;
+    input = in;
 
-	initializeLearningRule();
-	initializeIncConnectionStrengths();
+    initializeLearningRule();
+    initializeIncConnectionStrengths();
 }
 
 /**
@@ -197,7 +198,7 @@ void Assembly::setIncomingConnections(Connection::vector in) {
  * @param out a pointer to a ConnectionVector which we will keep updated with our activity
  */
 void Assembly::setOutgoingConnections(Connection::vector out) {
-	output = out;
+    output = out;
 }
 
 /**
@@ -215,41 +216,22 @@ float Assembly::distanceTo(const Assembly &other) {
 }
 
 /**
- * Sets the activation level of each outgoing connection to our output,
- * so that we communicate with connected assemblies.
- */
-void Assembly::updateOutgoingConnections() {
-	Connection::vector::iterator out;
-
-	const float stcs_update = state->activity * STCS_GAIN;
-
-	for (out = output.begin(); out != output.end(); ++out) {
-		Connection::ptr connection = *out;
-		connection->setActivity(state->output);
-		connection->setSTCS(stcs_update);
-	}
-}
-
-/**
  * Intra-unit LTCS doesn't change, so we have (1-LTCS) to spread among
  * each of our n incoming connections.
  *
  * @see updateOutgoingConnections()
  */
 void Assembly::initializeIncConnectionStrengths() {
-	int numConnections = input.size();
+    const int numConnections = input.empty() ? 0 : input.size() ;
 
-	if (numConnections == 0) {
-		numConnections = 1;
-	}
+    float perConnection = (1 - INITIAL_TOTAL_LTCS) / numConnections;
 
-	float perConnection = (1 - INITIAL_TOTAL_LTCS) / numConnections;
+    Connection::vector::iterator in;
+    for (in = input.begin(); in != input.end(); ++in) {
+	//(*in)->setInitialLTCS(perConnection);
+	(*in)->setLTCS(perConnection);
+    }
 
-	Connection::vector::iterator in;
-	for (in = input.begin(); in != input.end(); ++in) {
-		(*in)->setInitialLTCS(perConnection);
-	}
-
-	learningRule->dropLearning();
+    learningRule->dropLearning();
 }
 

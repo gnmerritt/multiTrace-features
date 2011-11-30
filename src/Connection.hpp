@@ -13,9 +13,9 @@
 
 #include <boost/shared_ptr.hpp>
 
-const float INITIAL_LTCS = 0;
-const float INITIAL_STCS = 0;
-const float INITIAL_ACTIVITY = 0;
+const float INITIAL_LTCS = 0.0f;
+const float INITIAL_STCS = 0.0f;
+const float INITIAL_ACTIVITY = 0.0f;
 
 /**
  * 	@brief Stores a sending Assembly's recent output, and both Assembly pointers
@@ -30,33 +30,40 @@ const float INITIAL_ACTIVITY = 0;
  */
 class Connection {
 public:
-	typedef boost::shared_ptr<Connection> ptr;
-	typedef std::vector<Connection::ptr> vector;
+    typedef boost::shared_ptr<Connection> ptr;
+    typedef std::vector<Connection::ptr> vector;
 
 public:
-	Connection();
-	virtual ~Connection();
+    Connection();
+    virtual ~Connection();
 
-	float getOutput();
+    float getOutput();
 
-	float getLTCS();
-	void setLTCS(float _ltcs);
+    void setSTCS(float* _stcs);
+    void setActivity(float* _activity);
+    void setLastActivity(float* _lastActivity);
+
+    float getLTCS();
+    void setLTCS(float _ltcs);
     void setInitialLTCS(float _ltcs);
     void setDistance(float _distance);
     float getDistance();
-	void setSTCS(float _stcs);
-	void setActivity(float _activity);
 
 private:
-	float ltcs, stcs; /** connection strengths, see Sonntag (1991, pg94) */
+    void checkState();
+
+private:
+    float ltcs, *stcs; /** connection strengths, see Sonntag (1991, pg94) */
     float distance; /** euclidean distance between the two assemblies */
 
-	float activity; /** activity of the presynaptic Assembly */
-	float last_activity; /** activity(t-1), for derivatives */
+    float *activity; /** activity of the presynaptic Assembly */
+    float *last_activity; /** activity(t-1), for derivatives */
 
-	std::vector<float> changes;
+    bool isInitialized;
 
-	pthread_mutex_t lock;
+    std::vector<float> changes;
+
+    pthread_mutex_t lock;
 };
 
 #endif /* CONNECTION_H_ */

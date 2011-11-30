@@ -20,20 +20,20 @@ const std::string layer_init = "Timestep\tAverageActivity\n";
 static const int GAUSSIAN_SCALE = 10; // LTCS of Connections = scale*weight[row][col]
 // sampled Gaussian kernel filter with sigma = 1
 static const float gaussianWeight[GAUSSIAN_SAMPLE_DIMENSIONS][GAUSSIAN_SAMPLE_DIMENSIONS] =
-	{
-		{ 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 },
-		{ 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
-		{ 0.02564102, 0.09523809, 0.00000000, 0.09523809, 0.02564102 },
-		{ 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
-		{ 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 } };
+{
+    { 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 },
+    { 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
+    { 0.02564102, 0.09523809, 0.00000000, 0.09523809, 0.02564102 },
+    { 0.01465201, 0.05860805, 0.09523809, 0.05860805, 0.01465201 },
+    { 0.00366300, 0.01465201, 0.02564102, 0.01465201, 0.00366300 } };
 
 /**
  * Builds a layer that has size rows*cols. This entails the following steps:
  *
- *	Initializing an UpdateModel (1 for now), per-column eventually
- *	Constructing the Assemblies
- *	For each Assembly, use the ConnectionPattern to build input/output ConnectionVectors
- *	  Initially these are only intra-Layer
+ *      Initializing an UpdateModel (1 for now), per-column eventually
+ *      Constructing the Assemblies
+ *      For each Assembly, use the ConnectionPattern to build input/output ConnectionVectors
+ *        Initially these are only intra-Layer
  *
  * @param _connectionPattern which pattern to use in this Layer
  * @param _updateModel passed down to each Assembly, controls state variable updating
@@ -44,69 +44,69 @@ static const float gaussianWeight[GAUSSIAN_SAMPLE_DIMENSIONS][GAUSSIAN_SAMPLE_DI
  * @param connectToSelf whether or not this Layer projects onto itself
  */
 Layer::Layer(ConnectionPatterns::classes _connectionPattern,
-	     UpdateModels::classes _updateModel,
-	     LearningRules::classes _learningRule,
-	     int _rows, int _cols, int _layerID, bool connectToSelf, bool lateralInhibition) :
-	rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
-			connectionPattern(ConnectionPatterns::instanceOf(_connectionPattern)) {
-	// initialize the update model
-	// TODO: make this threaded
-	UpdateModel::ptr updateModel(UpdateModels::instanceOf(_updateModel));
+             UpdateModels::classes _updateModel,
+             LearningRules::classes _learningRule,
+             int _rows, int _cols, int _layerID, bool connectToSelf, bool lateralInhibition) :
+    rows(_rows), cols(_cols), layerID(_layerID), lastActivationAverage(0.0f), timestep(0),
+    connectionPattern(ConnectionPatterns::instanceOf(_connectionPattern)) {
+    // initialize the update model
+    // TODO: make this threaded
+    UpdateModel::ptr updateModel(UpdateModels::instanceOf(_updateModel));
 
-	assemblies.reserve(rows);
-	assemblyOutputBlock.reserve(rows);
+    assemblies.reserve(rows);
+    assemblyOutputBlock.reserve(rows);
 
-	// build a row by col sized AssemblyLayer (2d vector)
-	for (int curRow = 0; curRow < rows; ++curRow) {
-		assemblies.push_back(AssemblyVector());
-		assemblies.back().reserve(cols);
+    // build a row by col sized AssemblyLayer (2d vector)
+    for (int curRow = 0; curRow < rows; ++curRow) {
+	assemblies.push_back(AssemblyVector());
+	assemblies.back().reserve(cols);
 
-		assemblyOutputBlock.push_back(FloatVec());
-		assemblyOutputBlock.back().reserve(cols);
+	assemblyOutputBlock.push_back(FloatVec());
+	assemblyOutputBlock.back().reserve(cols);
 
-		for (int curCol = 0; curCol < cols; ++curCol) {
-			int id = getAssemblyID(curRow, curCol);
+	for (int curCol = 0; curCol < cols; ++curCol) {
+	    int id = getAssemblyID(curRow, curCol);
 
-			Assembly_t a(id, updateModel, _learningRule);
-			assemblies.back().push_back(a);
+	    Assembly_t a(id, updateModel, _learningRule);
+	    assemblies.back().push_back(a);
 
-			float row_ratio = (float) .5 * (rows - curRow) / rows;
-			float col_ratio = (float) .5 * (cols - curCol) / cols;
+	    float row_ratio = (float) .5 * (rows - curRow) / rows;
+	    float col_ratio = (float) .5 * (cols - curCol) / cols;
 
-			assemblyOutputBlock.back().push_back(row_ratio + col_ratio);
-		}
+	    assemblyOutputBlock.back().push_back(row_ratio + col_ratio);
 	}
+    }
 
-	// add lateral inhibition connections
-	if (lateralInhibition) {
-		connectLateralInhibition();
-	}
+    // add lateral inhibition connections
+    if (lateralInhibition) {
+	connectLateralInhibition();
+    }
 
-	// and wire up our intra-Layer connections
-	if (connectToSelf) {
-		connectToLayer(getAssemblyLayer());
-	}
+    // and wire up our intra-Layer connections
+    if (connectToSelf) {
+	connectToLayer(getAssemblyLayer());
+    }
 
 #ifdef DEBUG_LAYER_OUTPUT
-	std::stringstream out;
-	out << "/tmp/layer_" << getId() << ".xls";
+    std::stringstream out;
+    out << "/tmp/layer_" << getId() << ".xls";
 
-	std::string filename = out.str();
+    std::string filename = out.str();
 
-	layer_tick_f = fopen(filename.c_str(), "w");
+    layer_tick_f = fopen(filename.c_str(), "w");
 
-	fprintf(layer_tick_f, "%s", layer_init.c_str());
+    fprintf(layer_tick_f, "%s", layer_init.c_str());
 #endif
 }
 
 Layer::~Layer() {
 #ifdef DEBUG_LAYER_OUTPUT
-	fclose(layer_tick_f);
+    fclose(layer_tick_f);
 #endif
 }
 
 Layer::AssemblyLayer_ID Layer::getAssemblyLayer() {
-	return AssemblyLayer_ID(&assemblies, layerID);
+    return AssemblyLayer_ID(&assemblies, layerID);
 }
 
 /**
@@ -114,36 +114,36 @@ Layer::AssemblyLayer_ID Layer::getAssemblyLayer() {
  * all the Assemblies within this Layer.
  */
 float Layer::tick() {
-	float currentActivation_sum = 0;
+    float currentActivation_sum = 0;
 
-	// tick all the Assemblies, and remember their output
-	for (int row = 0; row < rows; ++row) {
-		for (int col = 0; col < cols; ++col) {
-			float thisAssembly;
+    // tick all the Assemblies, and remember their output
+    for (int row = 0; row < rows; ++row) {
+	for (int col = 0; col < cols; ++col) {
+	    float thisAssembly;
 
-			thisAssembly = assemblies[row][col].tick(lastActivationAverage);
-			assemblyOutputBlock[row][col] = thisAssembly;
-			currentActivation_sum += thisAssembly;
-		}
+	    thisAssembly = assemblies[row][col].tick(lastActivationAverage);
+	    assemblyOutputBlock[row][col] = thisAssembly;
+	    currentActivation_sum += thisAssembly;
 	}
+    }
 
-	// print to our debug file
+    // print to our debug file
 #ifdef DEBUG_LAYER_OUTPUT
-	//fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
-	printf(layer_tick.c_str(), timestep, lastActivationAverage);
+    //fprintf(layer_tick_f, layer_tick.c_str(), timestep, lastActivationAverage);
+    printf(layer_tick.c_str(), timestep, lastActivationAverage);
 #endif
 
-	// update the average activation (used for Regional Inhibition)
-	int numAssemblies = rows * cols;
-	if (numAssemblies == 0) {
-		numAssemblies = 1;
-	}
+    // update the average activation (used for Regional Inhibition)
+    int numAssemblies = rows * cols;
+    if (numAssemblies == 0) {
+	numAssemblies = 1;
+    }
 
-	lastActivationAverage = currentActivation_sum / numAssemblies;
+    lastActivationAverage = currentActivation_sum / numAssemblies;
 
-	timestep++;
+    timestep++;
 
-	return lastActivationAverage;
+    return lastActivationAverage;
 }
 
 /**
@@ -155,49 +155,53 @@ float Layer::tick() {
  * @return float located at assemblyOutputBlock[row][col]
  */
 float Layer::safeOutput(int row, int col) {
-	const int wrapRow = row % assemblyOutputBlock.size();
-	const int wrapCol = col % assemblyOutputBlock.back().size();
+    const int wrapRow = row % assemblyOutputBlock.size();
+    const int wrapCol = col % assemblyOutputBlock.back().size();
 
-	Assembly_t assembly = assemblies.at(wrapRow).at(wrapCol);
-	const float a = assembly.getOutput();
-	const float f = assembly.getFatigue();
+    Assembly_t assembly = assemblies.at(wrapRow).at(wrapCol);
+    const float a = assembly.getOutput();
+    const float f = assembly.getFatigue();
 
-	return a * (1 - f);
+    return a * (1 - f);
 }
 
 /**
  * Loop to build up lateral inhibition around each Assemblies.
  */
 void Layer::connectLateralInhibition() {
-	for (unsigned int row = 0; row < assemblies.size(); ++row) {
-		for (unsigned int col = 0; col < assemblies[0].size(); ++col) {
-			// for each Assembly, loop again building up inhibition
-			// around it
-			Assembly_t* inhibited = &(assemblies[row][col]);
+    for (unsigned int row = 0; row < assemblies.size(); ++row) {
+        for (unsigned int col = 0; col < assemblies[0].size(); ++col) {
+            // for each Assembly, loop again building up inhibition
+            // around it
+            Assembly_t* inhibited = &(assemblies[row][col]);
 
-			// loop over the weights defined in gaussianWeight
-			for (int gRow = -GAUSSIAN_OFFSET; gRow <= GAUSSIAN_OFFSET; ++gRow) {
-				for (int gCol = -GAUSSIAN_OFFSET; gCol <= GAUSSIAN_OFFSET; ++gCol) {
-					const int inhibitingRow = (gRow + row) % assemblies.size();
-					const int inhibitingCol = (gCol + col) % assemblies[0].size();
+            // loop over the weights defined in gaussianWeight
+            for (int gRow = -GAUSSIAN_OFFSET; gRow <= GAUSSIAN_OFFSET; ++gRow) {
+                for (int gCol = -GAUSSIAN_OFFSET; gCol <= GAUSSIAN_OFFSET; ++gCol) {
+                    const int inhibitingRow = (gRow + row) % assemblies.size();
+                    const int inhibitingCol = (gCol + col) % assemblies[0].size();
 
-					// don't ever add an Assembly as inhibiting itself
-					if (inhibitingRow == (int)row && inhibitingCol == (int)col) {
-						continue;
-					}
+                    // don't ever add an Assembly as inhibiting itself
+                    if (inhibitingRow == (int)row && inhibitingCol == (int)col) {
+                        continue;
+                    }
 
-					Assembly_t* inhibitor = &(assemblies[inhibitingRow][inhibitingCol]);
+                    Assembly_t* inhibitor = &(assemblies[inhibitingRow][inhibitingCol]);
 
-					Connection::ptr c(new Connection());
-					c->setLTCS(GAUSSIAN_SCALE*gaussianWeight[gRow + GAUSSIAN_OFFSET][gCol + GAUSSIAN_OFFSET]);
+                    Connection::ptr c(new Connection());
+                    const float inhibitionMagnitude = GAUSSIAN_SCALE*
+                        gaussianWeight[gRow + GAUSSIAN_OFFSET][gCol + GAUSSIAN_OFFSET];
 
-					inhibited->addLateralInhibition(c);
-					inhibitor->addOutgoingConnection(c);
-				}
-			}
+                    //printf("Added inhibition of: %f at (%d,%d)\n", inhibitionMagnitude,
+                    //       inhibitingCol, inhibitingRow);
+                    c->setLTCS(inhibitionMagnitude);
 
-		}
-	}
+                    inhibited->addLateralInhibition(c);
+                    inhibitor->addOutgoingConnection(c);
+                }
+            }
+        }
+    }
 }
 
 /** Iterate over the AssemblyLater and check connectivity between
@@ -213,9 +217,9 @@ void Layer::connectLateralInhibition() {
 void Layer::connectToLayer(AssemblyLayer_ID receivingLayer) {
     // do all the connecting
     for (int row = 0; row < rows; ++row) {
-	for (int col = 0; col < cols; ++col) {
-	    connectAssemblyToLayer(row, col, receivingLayer);
-	}
+        for (int col = 0; col < cols; ++col) {
+            connectAssemblyToLayer(row, col, receivingLayer);
+        }
     }
 
     // and now recalculate the incoming connection weights in the receivingLayer
@@ -224,9 +228,9 @@ void Layer::connectToLayer(AssemblyLayer_ID receivingLayer) {
     AssemblyLayer *receiving = receivingLayer.first;
 
     for (row = receiving->begin(); row != receiving->end(); ++row) {
-	for (col = row->begin(); col != row->end(); ++col) {
-	    col->initializeIncConnectionStrengths();
-	}
+        for (col = row->begin(); col != row->end(); ++col) {
+            col->initializeIncConnectionStrengths();
+        }
     }
 }
 
@@ -240,25 +244,25 @@ void Layer::connectToLayer(AssemblyLayer_ID receivingLayer) {
  * @param receivingLayer the Layer we're connecting to
  */
 void Layer::connectAssemblyToLayer(int sourceRow, int sourceCol, AssemblyLayer_ID receivingLayer) {
-	AssemblyLayer *receiving = receivingLayer.first;
-	int receivingID = receivingLayer.second;
+    AssemblyLayer *receiving = receivingLayer.first;
+    int receivingID = receivingLayer.second;
 
-	AssemblyLocation sendingLoc(sourceRow, sourceCol, layerID);
+    AssemblyLocation sendingLoc(sourceRow, sourceCol, layerID);
 
-	for (unsigned int row = 0; row < receiving->size(); ++row) {
-		for (unsigned int col = 0; col < receiving->at(row).size(); ++col) {
+    for (unsigned int row = 0; row < receiving->size(); ++row) {
+	for (unsigned int col = 0; col < receiving->at(row).size(); ++col) {
 
-			AssemblyLocation receivingLoc(row, col, receivingID);
+	    AssemblyLocation receivingLoc(row, col, receivingID);
 
-			float strength = connectionPattern->areConnected(sendingLoc, receivingLoc);
+	    float strength = connectionPattern->areConnected(sendingLoc, receivingLoc);
 
-			// initial strength of 0 is allowed
-			if (strength >= 0.0f) {
-			    connectAssemblyToAssembly(assemblies.at(sourceRow).at(sourceCol),
-						      receiving->at(row).at(col));
-			}
-		}
+	    // initial strength of 0 is allowed
+	    if (strength >= 0.0f) {
+		connectAssemblyToAssembly(assemblies.at(sourceRow).at(sourceCol),
+					  receiving->at(row).at(col));
+	    }
 	}
+    }
 }
 
 /**
@@ -271,7 +275,7 @@ void Layer::connectAssemblyToLayer(int sourceRow, int sourceCol, AssemblyLayer_I
 void Layer::connectAssemblyToAssembly(Assembly_t &sending, Assembly_t &receiving) {
     // Don't connect an Assembly to itself
     if (receiving.getId() == sending.getId()) {
-	return;
+        return;
     }
 
     Connection::ptr c(new Connection());
@@ -293,10 +297,10 @@ void Layer::connectAssemblyToAssembly(Assembly_t &sending, Assembly_t &receiving
  * @return the unique identification number of the Assembly at (col,row,layerID)
  */
 int Layer::getAssemblyID(int row, int col) {
-	int layer_field = layerID * 1000000;
-	int row_field = row * 1000;
+    int layer_field = layerID * 1000000;
+    int row_field = row * 1000;
 
-	int id = layer_field + row_field + col;
+    int id = layer_field + row_field + col;
 
-	return id;
+    return id;
 }

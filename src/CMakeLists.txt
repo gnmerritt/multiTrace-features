@@ -11,3 +11,4 @@ set(SOURCES_LIST
 add_library( MultiTrace ${SOURCES_LIST} )
 
 add_subdirectory(test)
+add_subdirectory(include)
