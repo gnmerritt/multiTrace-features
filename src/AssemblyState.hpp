@@ -27,35 +27,35 @@ const float INITIAL_INTRA_LTCS = 0.5;
  */
 class AssemblyState {
 public:
-	typedef boost::shared_ptr<AssemblyState> ptr;
+     typedef boost::shared_ptr<AssemblyState> ptr;
 
 public:
-	AssemblyState() :
-		activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0), manual_input(0),
-		regional_activation(0), lateral_inhibition(0)
-	{
-	}
-	virtual ~AssemblyState() {
-	}
+     AssemblyState() :
+          activity(0), output(0), ltcs(INITIAL_INTRA_LTCS), stcs(0), fatigue(0), manual_input(0),
+          regional_activation(0), lateral_inhibition(0)
+          {
+          }
+     virtual ~AssemblyState() {
+     }
 
-	//Copy constructor
-	AssemblyState(const AssemblyState &a) :
-		activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs), fatigue(a.fatigue),
-		regional_activation(a.regional_activation)
-	{
-	}
-	/** multiTRACE variables */
-	float activity;
-	float output;
-	const float ltcs; /** const because we are not modeling intra-Assembly learning */
-	float stcs;
-	float fatigue;
+     //Copy constructor
+     AssemblyState(const AssemblyState &a) :
+          activity(a.activity), output(a.output), ltcs(a.ltcs), stcs(a.stcs), fatigue(a.fatigue),
+          regional_activation(a.regional_activation)
+          {
+          }
+     /** multiTRACE variables */
+     float activity;
+     float output;
+     const float ltcs; /** const because we are not modeling intra-Assembly learning */
+     float stcs;
+     float fatigue;
 
-	float manual_input; // replaces input calculations for 1 tick
+     float manual_input; // replaces input calculations for 1 tick
 
-	/** set by Layer when it calls tick() on each assembly */
-	float regional_activation;
-	float lateral_inhibition;
+     /** set by Layer when it calls tick() on each assembly */
+     float regional_activation;
+     float lateral_inhibition;
 };
 
 #endif /* ASSEMBLYSTATE_H_ */

@@ -11,11 +11,11 @@ const float PERCENT_CONNECTED = 0.85;
 const int MAX_CONNECTION_Z = 50; // arbitrarily high for now
 
 UNR::UNR() {
-	srand( time(NULL) );
+     srand( time(NULL) );
 }
 
 UNR::~UNR() {
-	// TODO Auto-generated destructor stub
+     // TODO Auto-generated destructor stub
 }
 
 /**
@@ -29,14 +29,14 @@ UNR::~UNR() {
  * @return true if the two Assemblies are connected;
  */
 bool UNR::areConnected(AssemblyLocation sender, AssemblyLocation receiver) {
-	// first check how far apart the locations (Layer only)
-	int layerDifference = abs(sender.layer - receiver.layer);
+     // first check how far apart the locations (Layer only)
+     int layerDifference = abs(sender.layer - receiver.layer);
 
-	if (layerDifference > MAX_CONNECTION_Z) {
-		return false;
-	}
+     if (layerDifference > MAX_CONNECTION_Z) {
+          return false;
+     }
 
-	float random = rand()/double(RAND_MAX);
+     float random = rand()/double(RAND_MAX);
 
-	return (random < PERCENT_CONNECTED);
+     return (random < PERCENT_CONNECTED);
 }

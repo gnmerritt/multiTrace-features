@@ -1,7 +1,7 @@
 /**
  * ConnectionPatterns.h
  *
- *	@brief Static factory for ConnectionPattern derived classes
+ *      @brief Static factory for ConnectionPattern derived classes
  *
  *  @date Mar 24, 2011
  *      @author Nathan Merritt
@@ -15,35 +15,35 @@
 
 class ConnectionPatterns {
 public:
-	virtual ~ConnectionPatterns() {
-	}
+     virtual ~ConnectionPatterns() {
+     }
 
-	enum classes {
-		UNR_PATTERN,
-	};
+     enum classes {
+          UNR_PATTERN,
+     };
 
-	/**
-	 * Builds and returns an object of an unknown type that inherits
-	 * from ConnectionPattern. Used for dynamic type control.
-	 *
-	 * @param id ID of ConnectionPattern derived class
-	 * @see ConnectionPatterns::classes
-	 * @return ConnectionPattern derived object of the requested tyoe
-	 */
-	static ConnectionPattern* instanceOf(int id) {
-		switch (id) {
-		case (UNR_PATTERN): {
-			return new UNR();
-		}
-		default: {
-			return new UNR();
-		}
-		}
-	}
+     /**
+      * Builds and returns an object of an unknown type that inherits
+      * from ConnectionPattern. Used for dynamic type control.
+      *
+      * @param id ID of ConnectionPattern derived class
+      * @see ConnectionPatterns::classes
+      * @return ConnectionPattern derived object of the requested tyoe
+      */
+     static ConnectionPattern* instanceOf(int id) {
+          switch (id) {
+          case (UNR_PATTERN): {
+               return new UNR();
+          }
+          default: {
+               return new UNR();
+          }
+          }
+     }
 
 private:
-	ConnectionPatterns() {
-	}
+     ConnectionPatterns() {
+     }
 };
 
 #endif /* CONNECTIONPATTERNS_H_ */

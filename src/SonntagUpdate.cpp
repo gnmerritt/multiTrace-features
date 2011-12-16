@@ -16,29 +16,29 @@
 
 /** default parameterization, see @parameters */
 static const float CHOWN_2000_PARAMETERS[] =
-	{ 1.5f, // sensitivity normalization
-			9.0f, // decay due to competition
-			5.0f, // decay due to loss
-			2.0f, // recurrent activation resistance
-			9.0f, // input resistance (pos stimuli) these modulate the sigmoid: (1 + (1 + 1/x^phi))
-			3.0f, // input resistance (neg stimuli)
-			1.0f, // input resistance (regional inhibition)
-			1.0f, // input resistance (lateral inhibition)
-			0.5f, // external dampening
-			0.0f, // delta LTCS (LTCS is constant)
-			0.1f, // STCS growth
-			0.001f, // STCS decline
-			0.3f, // STCS gain
-			0.007f, // Fatigue growth
-			0.0001f // Fatigue decline
-		};
+{ 1.5f, // sensitivity normalization
+  9.0f, // decay due to competition
+  5.0f, // decay due to loss
+  2.0f, // recurrent activation resistance
+  9.0f, // input resistance (pos stimuli) these modulate the sigmoid: (1 + (1 + 1/x^phi))
+  3.0f, // input resistance (neg stimuli)
+  1.0f, // input resistance (regional inhibition)
+  1.0f, // input resistance (lateral inhibition)
+  0.5f, // external dampening
+  0.0f, // delta LTCS (LTCS is constant)
+  0.1f, // STCS growth
+  0.001f, // STCS decline
+  0.3f, // STCS gain
+  0.007f, // Fatigue growth
+  0.0001f // Fatigue decline
+};
 
 /**
  * @brief sets up the current default parameterization
  * @see setParameters
  */
 SonntagUpdate::SonntagUpdate() {
-	setParameters(CHOWN_2000_PARAMETERS);
+     setParameters(CHOWN_2000_PARAMETERS);
 }
 
 /**
@@ -49,20 +49,20 @@ SonntagUpdate::SonntagUpdate() {
  * @param input pointer to the Assembly's vector of input connections
  */
 void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) {
-	pthread_mutex_lock(&lock);
+     pthread_mutex_lock(&lock);
 
-	// store parameters locally for helper methods
-	currentState = inState;
-	currentInput = input;
+     // store parameters locally for helper methods
+     currentState = inState;
+     currentInput = input;
 
-	// now add the delta functions to the inState, updating the Assembly
-	inState->output = currentState->activity;
-	inState->activity += calculateDeltaActivity();
-	inState->stcs += calculateDeltaSTCS();
-	inState->fatigue += calculateDeltaFatigue();
-	inState->manual_input = -1.0f;
+     // now add the delta functions to the inState, updating the Assembly
+     inState->output = currentState->activity;
+     inState->activity += calculateDeltaActivity();
+     inState->stcs += calculateDeltaSTCS();
+     inState->fatigue += calculateDeltaFatigue();
+     inState->manual_input = -1.0f;
 
-	pthread_mutex_unlock(&lock);
+     pthread_mutex_unlock(&lock);
 }
 
 /**
@@ -75,39 +75,39 @@ void SonntagUpdate::tick(AssemblyState::ptr inState, Connection::vector *input) 
  * See: Sonntag (eq5.6, pg104)
  */
 float SonntagUpdate::calculateInput() {
-	const float phi_pos = parameters[PHI_POS];
-	const float phi_neg = parameters[PHI_NEG];
-	const float regionalInhibitionGain = parameters[REGIONAL_INHIBITION];
-	const float lateralInhibitionGain = parameters[LATERAL_INHIBITION];
+     const float phi_pos = parameters[PHI_POS];
+     const float phi_neg = parameters[PHI_NEG];
+     const float regionalInhibitionGain = parameters[REGIONAL_INHIBITION];
+     const float lateralInhibitionGain = parameters[LATERAL_INHIBITION];
 
-	float netPosInput = 0;
-	Connection::vector::iterator input;
+     float netPosInput = 0;
+     Connection::vector::iterator input;
 
-	for (input = currentInput->begin(); input != currentInput->end(); ++input) {
-		float signal = (*input)->getOutput();
-		netPosInput += signal;
-	}
+     for (input = currentInput->begin(); input != currentInput->end(); ++input) {
+          float signal = (*input)->getOutput();
+          netPosInput += signal;
+     }
 
-	const float regionalInhibition = regionalInhibitionGain * currentState->regional_activation;
-	const float lateralInhibition = lateralInhibitionGain * currentState->lateral_inhibition;
-	const float netNegInput = regionalInhibition + lateralInhibition;
+     const float regionalInhibition = regionalInhibitionGain * currentState->regional_activation;
+     const float lateralInhibition = lateralInhibitionGain * currentState->lateral_inhibition;
+     const float netNegInput = regionalInhibition + lateralInhibition;
 
-	const float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
-	const float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
+     const float posInput = 1 / (1 + (1 / pow(netPosInput, phi_pos)));
+     const float negInput = 1 / (1 + (1 / pow(netNegInput, phi_neg)));
 
-	const float totalNetInput = posInput * (1 - negInput) * (1 - parameters[EXTERNAL_DAMPENING]);
+     const float totalNetInput = posInput * (1 - negInput) * (1 - parameters[EXTERNAL_DAMPENING]);
 
-	//printf("regional: %f lateral: %f netNegInput: %f negInput: %f totalInput: %f \n",
-	//	regionalInhibition, lateralInhibition, netNegInput, negInput, totalNetInput);
+     //printf("regional: %f lateral: %f netNegInput: %f negInput: %f totalInput: %f \n",
+     //      regionalInhibition, lateralInhibition, netNegInput, negInput, totalNetInput);
 
 #ifdef DEBUG_UPDATES
-	printf("netPosInput: %f ", netPosInput);
-	printf("netNegInput: %f ", netNegInput);
-	printf("pos in: %f neg in: %f ", posInput, negInput);
-	printf("totalNetInput: %f\n", totalNetInput);
+     printf("netPosInput: %f ", netPosInput);
+     printf("netNegInput: %f ", netNegInput);
+     printf("pos in: %f neg in: %f ", posInput, negInput);
+     printf("totalNetInput: %f\n", totalNetInput);
 #endif
 
-	return totalNetInput;
+     return totalNetInput;
 }
 
 /**
@@ -116,34 +116,34 @@ float SonntagUpdate::calculateInput() {
  * @see SonntagUpdate.h
  */
 float SonntagUpdate::calculateDeltaActivity() {
-	const float A = currentState->activity;
-	const float V = calculateV();
-	const float thetaC = parameters[DECAY_COMPETITION];
-	const float thetaL = parameters[DECAY_LOSS];
-	const float thetaA = parameters[ACTIVATION_DAMPENING];
+     const float A = currentState->activity;
+     const float V = calculateV();
+     const float thetaC = parameters[DECAY_COMPETITION];
+     const float thetaL = parameters[DECAY_LOSS];
+     const float thetaA = parameters[ACTIVATION_DAMPENING];
 
-	// allow for manual input (CSV, GUI, etc)
-	float I;
-	if (currentState->manual_input > 0) {
-		I = currentState->manual_input;
-	} else {
-		I = calculateInput();
-	}
+     // allow for manual input (CSV, GUI, etc)
+     float I;
+     if (currentState->manual_input > 0) {
+          I = currentState->manual_input;
+     } else {
+          I = calculateInput();
+     }
 
-	// equation 4.6, pg79
-	const float deltaA = (pow(A, thetaA) + I * (1 - A)) * (1 - A) * V - ((pow(A, thetaL) + A * pow((1 - A),
-			thetaC))) * (1 - V);
-	// wolfram input, x=A, y=I (no V term):
-	// (x + y*(1-x)) * (1-x) - (x^5 + x * (1-x)^9) from x = 0 to x = 1, y= 0 to y = 1
+     // equation 4.6, pg79
+     const float deltaA = (pow(A, thetaA) + I * (1 - A)) * (1 - A) * V - ((pow(A, thetaL) + A * pow((1 - A),
+                                                                                                    thetaC))) * (1 - V);
+     // wolfram input, x=A, y=I (no V term):
+     // (x + y*(1-x)) * (1-x) - (x^5 + x * (1-x)^9) from x = 0 to x = 1, y= 0 to y = 1
 
 #ifdef DEBUG_UPDATES
-	printf("current A: %f\n", A);
-	printf("current I: %f\n", I);
-	printf("V term: %f\n", V);
-	printf("deltaA: %f\n", deltaA);
+     printf("current A: %f\n", A);
+     printf("current I: %f\n", I);
+     printf("V term: %f\n", V);
+     printf("deltaA: %f\n", deltaA);
 #endif
 
-	return deltaA;
+     return deltaA;
 }
 
 /**
@@ -153,12 +153,12 @@ float SonntagUpdate::calculateDeltaActivity() {
  * @return V term for this tick
  */
 float SonntagUpdate::calculateV() {
-	const float L = currentState->ltcs;
-	const float S = currentState->stcs;
-	const float F = currentState->fatigue;
-	const float v = parameters[NORM_SENSITIVITY];
+     const float L = currentState->ltcs;
+     const float S = currentState->stcs;
+     const float F = currentState->fatigue;
+     const float v = parameters[NORM_SENSITIVITY];
 
-	return ((L + S) * (1 - F)) / v;
+     return ((L + S) * (1 - F)) / v;
 }
 
 /**
@@ -166,18 +166,18 @@ float SonntagUpdate::calculateV() {
  * @return Change to STCS for this tick
  */
 float SonntagUpdate::calculateDeltaSTCS() {
-	const float A = currentState->activity;
-	const float S = currentState->stcs;
-	const float sigmaG = parameters[SIGMA_GROWTH];
-	const float sigmaD = parameters[SIGMA_DECLINE];
+     const float A = currentState->activity;
+     const float S = currentState->stcs;
+     const float sigmaG = parameters[SIGMA_GROWTH];
+     const float sigmaD = parameters[SIGMA_DECLINE];
 
-	const float deltaSTCS = ((sigmaG * A) * (1 - S)) - (sigmaD * S) * parameters[STCS_GAIN];
+     const float deltaSTCS = ((sigmaG * A) * (1 - S)) - (sigmaD * S) * parameters[STCS_GAIN];
 
 #ifdef DEBUG_UPDATES
-	printf("deltaSTCS: %f\n", deltaSTCS);
+     printf("deltaSTCS: %f\n", deltaSTCS);
 #endif
 
-	return deltaSTCS;
+     return deltaSTCS;
 }
 
 /**
@@ -190,18 +190,18 @@ float SonntagUpdate::calculateDeltaSTCS() {
  * @return change to Fatigue term this tick
  */
 float SonntagUpdate::calculateDeltaFatigue() {
-	const float A = currentState->activity;
-	const float F = currentState->fatigue;
-	const float thetaG = parameters[FATIGUE_GROWTH];
-	const float thetaD = parameters[FATIGUE_DECLINE];
+     const float A = currentState->activity;
+     const float F = currentState->fatigue;
+     const float thetaG = parameters[FATIGUE_GROWTH];
+     const float thetaD = parameters[FATIGUE_DECLINE];
 
-	const float deltaFatigue = ((thetaG * A) * (1 - F)) - (thetaD * F);
+     const float deltaFatigue = ((thetaG * A) * (1 - F)) - (thetaD * F);
 
 #ifdef DEBUG_UPDATES
-	printf("deltaFatigue: %f\n", deltaFatigue);
+     printf("deltaFatigue: %f\n", deltaFatigue);
 #endif
 
-	return deltaFatigue;
+     return deltaFatigue;
 }
 
 /**
@@ -209,7 +209,7 @@ float SonntagUpdate::calculateDeltaFatigue() {
  * @param newParams array of values to use
  */
 void SonntagUpdate::setParameters(const float newParams[]) {
-	for (int i = 0; i < PARAMETER_COUNT; ++i) {
-		parameters[i] = newParams[i];
-	}
+     for (int i = 0; i < PARAMETER_COUNT; ++i) {
+          parameters[i] = newParams[i];
+     }
 }

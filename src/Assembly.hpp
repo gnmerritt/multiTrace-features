@@ -98,4 +98,3 @@ private:
 };
 
 #endif /* ASSEMBLY_H_ */
-

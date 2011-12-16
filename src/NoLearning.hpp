@@ -14,27 +14,27 @@
 #include "LearningRule.hpp"
 
 /**
- * 	@brief Placeholder class since LearningRule is abstract
+ *      @brief Placeholder class since LearningRule is abstract
  *
- * 	Placeholder class for when we don't want the network to automatically update
- *	its connection strenths (ie: learn)
+ *      Placeholder class for when we don't want the network to automatically update
+ *      its connection strenths (ie: learn)
  *
- *	Exists because LearningRule is abstract and cannot be instantiated.
+ *      Exists because LearningRule is abstract and cannot be instantiated.
  */
 class NoLearning: public LearningRule {
 public:
-	NoLearning(AssemblyState::ptr state, Connection::vector *input) :
-		LearningRule(state, input) {
-	}
-	virtual ~NoLearning() {
-	}
+     NoLearning(AssemblyState::ptr state, Connection::vector *input) :
+          LearningRule(state, input) {
+     }
+     virtual ~NoLearning() {
+     }
 
-	void tick(Connection::vector* newInput) {
-		(void) newInput;
-	}
+     void tick(Connection::vector* newInput) {
+          (void) newInput;
+     }
 
-	void dropLearning() {
-	}
+     void dropLearning() {
+     }
 };
 
 #endif /* NOLEARNING_H_ */

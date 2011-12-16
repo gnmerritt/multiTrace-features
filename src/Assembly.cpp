@@ -132,7 +132,7 @@ float Assembly::tick(float regional_activation) {
     // log timestep activity to our debug file in /tmp
 #ifdef DEBUG_ASSEMBLY_OUTPUT
     fprintf(tick_f, assembly_tick.c_str(), ++timestep, getActivation(), getLTCS(), getSTCS(),
-	    getFatigue(), getRegionalInhibition());
+            getFatigue(), getRegionalInhibition());
 #endif
 
     // return our activation to our Layer
@@ -148,8 +148,8 @@ float Assembly::calculateInhibition() {
     Connection::vector::iterator c;
 
     for (c = lateralInhibition.begin(); c != lateralInhibition.end(); ++c) {
-	Connection::ptr connection = *c;
-	sum += connection->getOutput();
+         Connection::ptr connection = *c;
+         sum += connection->getOutput();
     }
 
     return sum;
@@ -168,10 +168,10 @@ float Assembly::calculateInhibition() {
  */
 void Assembly::setActivation(float strength) {
     if (strength > 1) {
-	strength = 1.0f;
+         strength = 1.0f;
     }
     if (strength < 0) {
-	strength = -1.0f;
+         strength = -1.0f;
     }
 
     state->manual_input = strength;
@@ -228,10 +228,9 @@ void Assembly::initializeIncConnectionStrengths() {
 
     Connection::vector::iterator in;
     for (in = input.begin(); in != input.end(); ++in) {
-	//(*in)->setInitialLTCS(perConnection);
-	(*in)->setLTCS(perConnection);
+         //(*in)->setInitialLTCS(perConnection);
+         (*in)->setLTCS(perConnection);
     }
 
     learningRule->dropLearning();
 }
-

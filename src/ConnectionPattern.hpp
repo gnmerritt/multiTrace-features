@@ -16,15 +16,15 @@
  */
 class AssemblyLocation {
 public:
-	AssemblyLocation(int _row, int _col, int _layer) :
-		row(_row), column(_col), layer(_layer) {
+     AssemblyLocation(int _row, int _col, int _layer) :
+          row(_row), column(_col), layer(_layer) {
 
-	}
-	virtual ~AssemblyLocation() {
-	}
+     }
+     virtual ~AssemblyLocation() {
+     }
 
 public:
-	int row, column, layer;
+     int row, column, layer;
 };
 
 /** @brief Control structure for connecting two Layer s
@@ -35,23 +35,23 @@ public:
  */
 class ConnectionPattern {
 public:
-	typedef boost::shared_ptr<ConnectionPattern> ptr;
+     typedef boost::shared_ptr<ConnectionPattern> ptr;
 
 public:
-	ConnectionPattern() {
-	}
-	virtual ~ConnectionPattern() {
-	}
+     ConnectionPattern() {
+     }
+     virtual ~ConnectionPattern() {
+     }
 
-	/**
-	 * Determines whether two Assembly s should be connected, given their AssemblyLocation
-	 * inside this Cortex. Not all derived classes will use this data, but it is provided
-	 * by default.
-	 *
-	 * @param sender Sending Assembly row, col, layer
-	 * @param receiver receiving Assembly row ,col, layer
-	 */
-	virtual bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) = 0;
+     /**
+      * Determines whether two Assembly s should be connected, given their AssemblyLocation
+      * inside this Cortex. Not all derived classes will use this data, but it is provided
+      * by default.
+      *
+      * @param sender Sending Assembly row, col, layer
+      * @param receiver receiving Assembly row ,col, layer
+      */
+     virtual bool areConnected(AssemblyLocation sender, AssemblyLocation receiver) = 0;
 };
 
 #endif /* CONNECTIONPATTERN_H_ */

@@ -1,7 +1,7 @@
 /**
  * Cortex.h
  *
- *	@brief Layer container, implements global inhibition, manages wiring
+ *      @brief Layer container, implements global inhibition, manages wiring
  *
  * Manages a group of connection Layers, coordinating their construction,
  * wiring and interacting with a GUI to characterize their activity.
@@ -27,53 +27,53 @@
 
 class Cortex {
 public:
-	typedef boost::shared_ptr<Cortex> ptr;
+     typedef boost::shared_ptr<Cortex> ptr;
 
-	typedef std::pair<int, int> LayerConnection;
-	typedef std::set<LayerConnection> ConnectionMap;
+     typedef std::pair<int, int> LayerConnection;
+     typedef std::set<LayerConnection> ConnectionMap;
 
-	enum LayerType {
-		DEFAULT_LAYER, INPUT_LAYER,
-	};
+     enum LayerType {
+          DEFAULT_LAYER, INPUT_LAYER,
+     };
 
 public:
-	Cortex();
-	virtual ~Cortex();
+     Cortex();
+     virtual ~Cortex();
 
-    int addLayer(ConnectionPatterns::classes _connectionPattern,
-		 UpdateModels::classes _updateModel,
-		 LearningRules::classes _learningRule,
-		 LayerType layerType, int rows, int cols, bool selfConnected, bool lateralInhibition);
-	void connectLayerRange(int layerID, int connectFrom, int connectTo);
-	void connectLayerToLayer(int fromID, int toID);
+     int addLayer(ConnectionPatterns::classes _connectionPattern,
+                  UpdateModels::classes _updateModel,
+                  LearningRules::classes _learningRule,
+                  LayerType layerType, int rows, int cols, bool selfConnected, bool lateralInhibition);
+     void connectLayerRange(int layerID, int connectFrom, int connectTo);
+     void connectLayerToLayer(int fromID, int toID);
 
-	void tick(); // will tick all the layers
+     void tick(); // will tick all the layers
 
-	void triggerAssembly(int layerID, int row, int col, float inputStrength);
+     void triggerAssembly(int layerID, int row, int col, float inputStrength);
 
-	Layer::vector getLayers() {
-		return layers;
-	}
+     Layer::vector getLayers() {
+          return layers;
+     }
 
-	void setTestName(std::string name) {
-		testName = name;
-	}
+     void setTestName(std::string name) {
+          testName = name;
+     }
 
-	void setLogLocation(std::string location) {
-		logLocation = location;
-	}
+     void setLogLocation(std::string location) {
+          logLocation = location;
+     }
 
 private:
-	Layer::vector layers;
-	ConnectionMap connectedLayers;
-	int numberOfStdLayers;
+     Layer::vector layers;
+     ConnectionMap connectedLayers;
+     int numberOfStdLayers;
 
-	float averageLayerActivation;
+     float averageLayerActivation;
 
-	float arousal;
-	float learningRate; // not sure this goes here?
+     float arousal;
+     float learningRate; // not sure this goes here?
 
-	std::string testName, logLocation;
+     std::string testName, logLocation;
 };
 
 #endif /* CORTEX_H_ */
